@@ -14,7 +14,9 @@ private:
     GamePlatform(size_t size);
     GamePlatform(const GamePlatform& other);
     GamePlatform& operator=(const GamePlatform& other);
+
     ~GamePlatform();
+    
     void printGame(size_t index) const;
     void printGameList() const;
     void printMostExpensive() const;
