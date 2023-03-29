@@ -1,6 +1,6 @@
 #pragma once
 #include "Const.h"
-#include "CompleteDate.h"
+#include "TimeDate.h"
 #include "Permissions.h"
 
 class File{
@@ -9,12 +9,12 @@ private:
     char content[MAX_CONTENT_LEN];
     Permissions permissions;
     size_t size = 0;
-    CompleteDate createTime;
-    CompleteDate editTime;
+    TimeDate createTime;
+    TimeDate editTime;
 public:
     File();
-    File(const char* name, size_t createDay, size_t createMonth, size_t createYear,
-    size_t creatHours, size_t createMins, size_t createSeconds, const char* permissions);
+    File(const char* name, unsigned createDay, unsigned createMonth, unsigned createYear,
+    unsigned creatHours, unsigned createMins, unsigned createSeconds, const char* permissions);
 
     void setName(const char* name);
     void setContent(const char* content);
@@ -24,14 +24,14 @@ public:
     const char* getContent()const;
     bool getPermission(char group , char right) const;
     const char* getPermissions()const;
-    const CompleteDate& getCreate() const;
-    const CompleteDate& getEdit() const;
+    const TimeDate& getCreate() const;
+    const TimeDate& getEdit() const;
     size_t getSize() const;
     void printContent(char group) const;
     void printInfo() const;
     void addContent(const char* content);
-    void setEdit(size_t editDay, size_t editMonth, size_t editYear,
-                size_t editHours, size_t editMins, size_t editSeconds);
+    void setEdit(unsigned editDay, unsigned editMonth, unsigned editYear,
+                unsigned editHours, unsigned editMins, unsigned editSeconds);
     void deleteFile();
 
 };

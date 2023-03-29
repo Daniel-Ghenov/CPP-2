@@ -3,8 +3,8 @@
 File::File() {}
 
 
-File::File(const char* name, size_t createDay, size_t createMonth, size_t createYear,
-    size_t creatHours, size_t createMins, size_t createSeconds, const char* permissions): 
+File::File(const char* name, unsigned createDay, unsigned createMonth, unsigned createYear,
+    unsigned creatHours, unsigned createMins, unsigned createSeconds, const char* permissions): 
     createTime (createDay, createMonth, createYear,creatHours, createMins, createSeconds)
     , permissions(permissions){
 
@@ -37,10 +37,10 @@ size_t File::getSize() const {
 bool File::getPermission(char group , char right) const{
     return permissions.getPermission(group, right);
 }
-const CompleteDate& File::getCreate() const{
+const TimeDate& File::getCreate() const{
     return createTime;
 }
-const CompleteDate& File::getEdit() const{
+const TimeDate& File::getEdit() const{
     return editTime;
 }
 void File::setPermission(char group, char right, bool set){
@@ -65,8 +65,8 @@ void File::addContent(const char* content){
     strcpy_s(this->content + size, leftSpace, content);
     setSize();
 }
-void File::setEdit(size_t editDay, size_t editMonth, size_t editYear,
-            size_t editHours, size_t editMins, size_t editSeconds){
+void File::setEdit(unsigned editDay, unsigned editMonth, unsigned editYear,
+            unsigned editHours, unsigned editMins, unsigned editSeconds){
     editTime.setDate(editDay, editMonth, editYear,editHours, editMins, editSeconds);
 }
 void File::deleteFile(){

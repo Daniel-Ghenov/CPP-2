@@ -31,8 +31,8 @@ int System::findName(const char* name) const{
     std::cout<<"Error file not found"<<std::endl;
     return -1;
 }
-void System::addFile(const char* name, size_t createDay, size_t createMonth, size_t createYear,
-    size_t creatHours, size_t createMins, size_t createSeconds, const char* permissions){
+void System::addFile(const char* name, unsigned createDay, unsigned createMonth, unsigned createYear,
+    unsigned creatHours, unsigned createMins, unsigned createSeconds, const char* permissions){
 
     if(currSize == maxSize)
         return;
@@ -40,8 +40,8 @@ void System::addFile(const char* name, size_t createDay, size_t createMonth, siz
                     creatHours, createMins, createSeconds, permissions);
 
 }
-void System::editFile(const char* name, const char* content, size_t editDay, size_t editMonth, size_t editYear,
-                    size_t editHours, size_t editMins, size_t editSeconds, char user){
+void System::editFile(const char* name, const char* content, unsigned editDay, unsigned editMonth, unsigned editYear,
+                    unsigned editHours, unsigned editMins, unsigned editSeconds, char user){
 
     int file = findName(name);
     if(file == -1 || !files[file].getPermission(user, 'w')){
@@ -51,8 +51,8 @@ void System::editFile(const char* name, const char* content, size_t editDay, siz
     files[file].setContent(content);
     files[file].setEdit(editDay, editMonth, editYear, editHours, editMins, editSeconds);
 }
-void System::addInFile(const char* name, const char* content, size_t editDay, size_t editMonth, size_t editYear,
-                    size_t editHours, size_t editMins, size_t editSeconds, char user){
+void System::addInFile(const char* name, const char* content, unsigned editDay, unsigned editMonth, unsigned editYear,
+                    unsigned editHours, unsigned editMins, unsigned editSeconds, char user){
     
     int file = findName(name);
     if(file == -1 || !files[file].getPermission(user, 'w')){
@@ -143,4 +143,5 @@ void System::sort(SortOptions sort){
  System& System::operator=(const System& other){
     free();
     copyFrom(other);
+    return *this;
  }
