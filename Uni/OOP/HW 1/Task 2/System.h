@@ -2,7 +2,7 @@
 #include "SortFunctions.h"
 #include <algorithm>
 
-typedef bool (* shouldSwap)(const File& file1, const File& file2);
+typedef bool (*shouldSwap)(const File& file1, const File& file2);
 
 enum class SortOptions{
     name,

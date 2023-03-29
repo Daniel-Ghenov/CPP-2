@@ -141,6 +141,9 @@ void System::sort(SortOptions sort){
  }
 
  System& System::operator=(const System& other){
+    if(this == &other)
+        return *this;
+
     free();
     copyFrom(other);
     return *this;
