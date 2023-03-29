@@ -3,11 +3,11 @@
 
 class Time
 {
-	size_t seconds;		//Taken from Angel Dimitriev
-	size_t mins; 
-	size_t hours; 
+	unsigned seconds;		//Taken from Angel Dimitriev
+	unsigned mins; 
+	unsigned hours; 
 
-	size_t convertToSeconds() const
+	unsigned convertToSeconds() const
 	{
 		return 3600 * hours + 60 * mins + seconds;
 	}
@@ -15,17 +15,17 @@ class Time
 
 public:
 	Time(); // 00:00:00
-	Time(size_t hours, size_t mins, size_t seconds);
-	Time(size_t seconds);
+	Time(unsigned hours, unsigned mins, unsigned seconds);
+	Time(unsigned seconds);
 
 
-	size_t getSeconds() const;
-	size_t getMins() const;
-	size_t getHours() const;
+	unsigned getSeconds() const;
+	unsigned getMins() const;
+	unsigned getHours() const;
 
-	void setSeconds(size_t seconds);
-	void setMins(size_t mins);
-	void setHours(size_t hours);
+	void setSeconds(unsigned seconds);
+	void setMins(unsigned mins);
+	void setHours(unsigned hours);
 
 	void tick();
 

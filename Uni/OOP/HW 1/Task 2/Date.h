@@ -7,9 +7,9 @@ class Date
 	{
 		31,28,31,30,31,30,31,31,30,31,30,31
 	};
-	size_t day = 1;
-	size_t month = 1;
-	size_t year = 1;
+	unsigned day = 1;
+	unsigned month = 1;
+	unsigned year = 1;
 
 	bool isLeapYear() const;
 
@@ -18,14 +18,14 @@ class Date
 
 public:
 	Date();
-	Date(size_t day, size_t month, size_t year);
-	size_t getDay() const;
-	size_t getMonth() const;
-	size_t getYear() const;
+	Date(unsigned day, unsigned month, unsigned year);
+	unsigned getDay() const;
+	unsigned getMonth() const;
+	unsigned getYear() const;
 
-	void setDay(size_t day);
-	void setMonth(size_t month);
-	void setYear(size_t year);
+	void setDay(unsigned day);
+	void setMonth(unsigned month);
+	void setYear(unsigned year);
 
 	bool isEqualTo(const Date& d) const;
 

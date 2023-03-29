@@ -1,27 +1,27 @@
 #include "Date.h"
 Date::Date():Date(1,1,1){}
 
-Date::Date(size_t day, size_t month, size_t year)
+Date::Date(unsigned day, unsigned month, unsigned year)
 {
 	setYear(year);
 	setMonth(month);
 	setDay(day);
 }
 
-size_t Date::getDay() const
+unsigned Date::getDay() const
 {
 	return day;
 }
-size_t Date::getMonth() const
+unsigned Date::getMonth() const
 {
 	return month;
 }
-size_t Date::getYear() const
+unsigned Date::getYear() const
 {
 	return year;
 }
 
-void Date::setYear(size_t year)
+void Date::setYear(unsigned year)
 {
 	if (year == this->year)
 		return;
@@ -35,7 +35,7 @@ void Date::setYear(size_t year)
 	isModified = true;
 
 }
-void Date::setDay(size_t day)
+void Date::setDay(unsigned day)
 {
 	if (day == this->day)
 		return;
@@ -46,7 +46,7 @@ void Date::setDay(size_t day)
 
 	isModified = true;
 }
-void Date::setMonth(size_t month)
+void Date::setMonth(unsigned month)
 {
 	if (month == this->month)
 		return;

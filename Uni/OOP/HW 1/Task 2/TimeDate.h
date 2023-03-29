@@ -1,6 +1,7 @@
 #pragma once
 #include "Time.h"
 #include "Date.h"
+#include <cstring>
 
 class TimeDate{
 private:

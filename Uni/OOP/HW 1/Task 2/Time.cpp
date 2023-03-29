@@ -1,6 +1,6 @@
 #include "Time.h"
 
-Time::Time(size_t hours, size_t mins, size_t seconds)
+Time::Time(unsigned hours, unsigned mins, unsigned seconds)
 {
 	setHours(hours);
 	setMins(mins);
@@ -10,7 +10,7 @@ Time::Time(size_t hours, size_t mins, size_t seconds)
 Time::Time() : Time(0, 0, 0)
 {}
 
-Time::Time(size_t seconds)
+Time::Time(unsigned seconds)
 {
 	hours = seconds / 3600;
 	seconds %= 3600;
@@ -22,32 +22,32 @@ Time::Time(size_t seconds)
 }
 
 
-size_t Time::getSeconds() const
+unsigned Time::getSeconds() const
 {
 	return seconds;
 }
-size_t Time::getMins() const
+unsigned Time::getMins() const
 {
 	return mins;
 }
-size_t Time::getHours() const
+unsigned Time::getHours() const
 {
 	return hours;
 }
 
-void Time::setSeconds(size_t seconds)
+void Time::setSeconds(unsigned seconds)
 {
 	if (seconds > 59)
 		seconds = 59;
 	this->seconds = seconds;
 }
-void Time::setMins(size_t mins)
+void Time::setMins(unsigned mins)
 {
 	if (mins > 59)
 		mins = 59;
 	this->mins = mins;
 }
-void Time::setHours(size_t hours)
+void Time::setHours(unsigned hours)
 {
 	if (hours > 23)
 		hours = 23;
@@ -56,7 +56,7 @@ void Time::setHours(size_t hours)
 
 void Time::tick()
 {
-	size_t seconds = convertToSeconds();
+	unsigned seconds = convertToSeconds();
 	seconds++;
 	Time newObj(seconds);
 
@@ -65,8 +65,8 @@ void Time::tick()
 
 int Time::compare(const Time& other) const
 {
-	size_t mySeconds = convertToSeconds();
-	size_t otherSeconds = other.convertToSeconds();
+	unsigned mySeconds = convertToSeconds();
+	unsigned otherSeconds = other.convertToSeconds();
 
 	if (mySeconds > otherSeconds)
 		return 1;
@@ -77,10 +77,10 @@ int Time::compare(const Time& other) const
 }
 Time Time::getDiff(const Time& other) const
 {
-	size_t mySeconds = convertToSeconds();
-	size_t otherSeconds = other.convertToSeconds();
+	unsigned mySeconds = convertToSeconds();
+	unsigned otherSeconds = other.convertToSeconds();
 
-	size_t diff;
+	unsigned diff;
 
 	if (mySeconds > otherSeconds)
 		diff = mySeconds - otherSeconds;

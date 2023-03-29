@@ -25,3 +25,4 @@ public:
     void print() const;
 
 };
+void swap(Game& game1, Game& game2);
