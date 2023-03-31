@@ -12,15 +12,18 @@ void System::copyFrom(const System& other){
     maxSize = other.maxSize;
     currSize = other.currSize;
 }
-System::System():System(0){}
-System::System(size_t size): maxSize(size){
+
+System::System(size_t size){
+    if(size == 0)
+        return;
+    maxSize = size;
 
     File* files = new File[maxSize];
     this->files = files;
 }
 System::~System(){
 
-    delete[] files;
+    free();
 }
 int System::findName(const char* name) const{
 
@@ -62,11 +65,11 @@ void System::addInFile(const char* name, const char* content, unsigned editDay, 
     files[file].addContent(content);
     files[file].setEdit(editDay, editMonth, editYear, editHours, editMins, editSeconds);
 }
-void System::deleteFile(const char* name){
+void System::deleteFile(const char* name, char user){
 
     int file = findName(name);
-    if(file == -1)
-        return; 
+    if(file == -1 || !files[file].getPermission(user, 'x'))
+        return;
 
     std::swap(files[file], files[--currSize]);
     files[currSize].deleteFile();

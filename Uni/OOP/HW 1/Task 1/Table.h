@@ -12,6 +12,7 @@ private:
     size_t widths[MAX_ROWS];
     size_t rowCount = 0;
     size_t colCount = 0;
+    
     int getCol(const char*) const;
     void printAlign() const;
     void saveAlign(std::ofstream&) const;

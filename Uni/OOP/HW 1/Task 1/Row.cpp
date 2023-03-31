@@ -31,16 +31,16 @@ void Row::readFromFile(std::ifstream& inFile){
         inFile.ignore();
 
     char buffer[MAX_ROW_LEN];
-    inFile.getline(buffer, MAX_ROW_LEN);
+    inFile.getline(buffer, MAX_ROW_LEN);    
 
-    std::stringstream ss(buffer);
+    std::stringstream ss(buffer);   //we put each line in a stringstream 
 
     ss.ignore();
     size_t colCount = 0;
     while(!ss.eof()){
         char valueBuff[MAX_VALUE_LEN];
         while(ss.peek() == ' ') ss.ignore();
-        ss.getline(valueBuff, MAX_VALUE_LEN, '|');
+        ss.getline(valueBuff, MAX_VALUE_LEN, '|');  //we cycle using '|' as a delim to get each value
         values[colCount++].setVal(valueBuff);
     }
     this->colCount = colCount - 1;

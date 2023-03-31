@@ -7,6 +7,7 @@ private:
     Rights permissions[GROUPS_NUM];
     char null = '\0';
     int charToGroup(char group) const;
+    
 public:
     Permissions() = default;
     Permissions(const char* permissions);

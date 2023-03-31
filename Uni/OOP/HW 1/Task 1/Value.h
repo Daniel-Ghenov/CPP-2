@@ -8,11 +8,11 @@
 
 struct Value{
 private:
-    char val[MAX_VALUE_LEN];
+    char val[MAX_VALUE_LEN] = "\0";
     void getSpaces(Alignment, size_t, size_t, int&, int&) const;
     void removeSpaces();
 public:
-    Value();
+    Value() = default;
     Value( const char*);
     void setVal(const char*);
     const char* getVal() const;

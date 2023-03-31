@@ -11,7 +11,7 @@ void Value::getSpaces(Alignment align, size_t width, size_t len, int& leadingSpa
     switch(align){
     case  Alignment::center :
         leadingSpace = (width - len) / 2;
-        followSpace = width - (len + leadingSpace);
+        followSpace = width - (len + leadingSpace); //determine the ammount of leading and following spaces
         break;
     case Alignment::left :
         followSpace = width - len;
@@ -20,20 +20,22 @@ void Value::getSpaces(Alignment align, size_t width, size_t len, int& leadingSpa
         leadingSpace = width - len;
     }
 }
+
 void Value::removeSpaces(){
     size_t termZero = 0;
     for(size_t i {0}; i < MAX_VALUE_LEN; i++){
         if(val[i] == '\0'){
-            termZero = i;
+            termZero = i;       //determine the idx of the \0
         }
     }
     for(size_t i = termZero; i > 0; i--){
         if(val[i] == ' ')
-            val[i] = '\0';
+            val[i] = '\0';  //we cycle to remove all following spaces
         else
             break;
     }
 }
+
 void Value::setVal(const char* val){
     strcpy(this->val, val);
     removeSpaces();
@@ -44,7 +46,7 @@ const char* Value::getVal() const{
 Value::Value(const char* str){
     strcpy(val, str);
 }
-Value::Value(): Value("\0") {}
+
 void Value::print(Alignment align, size_t width) const{
     int len = strlen(val);
     int leadingSpace = 0, followSpace = 0;

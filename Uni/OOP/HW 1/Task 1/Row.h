@@ -9,6 +9,7 @@ class Row{
 private:
     Value values[MAX_COLS];
     size_t colCount = 0;
+    
 public:
     const char* getValue(size_t) const;
     void setValue(size_t, const char*);
