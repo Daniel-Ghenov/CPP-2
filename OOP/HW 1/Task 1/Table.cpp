@@ -1,5 +1,4 @@
 #include "Table.h"
-
 void Table::setWidth(size_t col){
     widths[col] = 0;
     for(size_t i {0}; i < rowCount; i++){
@@ -104,7 +103,7 @@ void Table::changeColName(size_t colNum, const char* name){
 int Table::getCol(const char* colName) const {
     for(size_t i{0}; i < colCount ; i++){
         if(strcmp(colName, names.getValue(i))){
-            return i;   //returning the index of the column with colName
+            return i;
         }
     }
     return -1;
@@ -118,14 +117,14 @@ void Table::changeValue(size_t rowNum, const char* colName, const char* val){
     int colNum = getCol(colName);
     if(colNum == -1)
         return;
-    rows[rowNum - 1].setValue(colNum, val); //a change value which takes the columnName and sets the rowNum-idx as a value
+    rows[rowNum - 1].setValue(colNum, val);
 }
 void Table::changeValue(const char* colName, const char* oldVal, const char* newVal){
     int colNum = getCol(colName);
     if(colNum == -1)
         return;
     for(size_t i {0}; i < rowCount; i++){
-        if(strcmp(oldVal, rows[i].getValue(colNum)) == 0)   //cycling to find the first instance of oldVal and set it to newVal
+        if(strcmp(oldVal, rows[i].getValue(colNum)) == 0)
             rows[i].setValue(colNum, newVal);
     } 
 }
@@ -134,7 +133,7 @@ void Table::selectRows(const char* colName, const char* val) const{
     if(colNum == -1)
         return;
     Table selected;
-    selected.setNames(this->names); //creating a new table with only rows that have 'val'
+    selected.setNames(this->names);
 
     for(size_t i {0}; i < rowCount; i++){
         if(strcmp(val,rows[i].getValue(colNum)) == 0);
@@ -148,7 +147,7 @@ void Table::saveToFile(std::ofstream& outFile) const {
     names.saveToFile(outFile, alignments, widths);
     saveAlign(outFile);
     for(size_t i {0}; i < rowCount; i++){
-        rows[i].saveToFile(outFile, alignments, widths);   
+        rows[i].saveToFile(outFile, alignments, widths);
     }
 
 }

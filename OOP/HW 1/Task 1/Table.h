@@ -12,7 +12,6 @@ private:
     size_t widths[MAX_ROWS];
     size_t rowCount = 0;
     size_t colCount = 0;
-    
     int getCol(const char*) const;
     void printAlign() const;
     void saveAlign(std::ofstream&) const;
@@ -21,17 +20,15 @@ private:
     void setWidth(size_t);
     void setAlignment(Alignment&, bool, bool) const ;
 public:
-    Table() = default;
-
     void print() const;
-    const Row& getRow(size_t index) const;
-    void changeColName(const char* oldName, const char* name);
+    const Row& getRow(size_t) const;
+    void changeColName(size_t, const char*);
     void setNames(const Row&);
     void addRow(const Row&);
-    void changeValue(size_t rowNum, const char* colName, const char* val);
-    void changeValue(const char* colName, const char* oldVal, const char* newVal);
-    void selectRows(const char* colName, const char* val) const;
-    void saveToFile(std::ofstream& outFile) const;
-    void readFromFile(std::ifstream& inFile);
+    void changeValue(size_t, const char*, const char*);
+    void changeValue(const char*, const char*, const char*);
+    void selectRows(const char*, const char*) const;
+    void saveToFile(std::ofstream&) const;
+    void readFromFile(std::ifstream&);
 
 };
