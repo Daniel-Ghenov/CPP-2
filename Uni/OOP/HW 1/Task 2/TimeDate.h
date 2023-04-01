@@ -5,7 +5,7 @@
 
 class TimeDate{
 private:
-    Time time;
+    Time time;  //a class which connects both time and date
     Date date;
 public:
     TimeDate();

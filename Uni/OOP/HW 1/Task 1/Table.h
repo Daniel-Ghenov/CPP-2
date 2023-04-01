@@ -33,5 +33,11 @@ public:
     void selectRows(const char* colName, const char* val) const;
     void saveToFile(std::ofstream& outFile) const;
     void readFromFile(std::ifstream& inFile);
+    int getRowCount() const;
+    void setRowCount(size_t num);
+    // void setColCount(size_t num);
+    // size_t getColCount() const;
+    // void setAlignments(const Alignment* align);
+    // const Alignment* getAlignments() const;
 
 };

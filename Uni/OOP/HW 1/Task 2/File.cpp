@@ -61,9 +61,9 @@ void File::printInfo() const{
     permissions.print();
 }
 void File::addContent(const char* content){
-    int leftSpace = MAX_CONTENT_LEN - size;
-    strcpy_s(this->content + size, leftSpace, content);
-    setSize();
+    int leftSpace = MAX_CONTENT_LEN - size; 
+    strcpy_s(this->content + size, leftSpace, content); //we increment the content pointer to get to the end of the file
+    setSize();                                          // so we can concatenate
 }
 void File::setEdit(unsigned editDay, unsigned editMonth, unsigned editYear,
             unsigned editHours, unsigned editMins, unsigned editSeconds){

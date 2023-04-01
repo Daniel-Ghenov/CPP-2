@@ -5,7 +5,7 @@ Rights::Rights(): Rights("---"){ }
 Rights::Rights(const char* rights) {
     setRights(rights);
 }
-bool Rights::isValidRights(const char* rights){
+bool Rights::isValidRights(const char* rights){ //validating the string taken inside rights
     if(strlen(rights) < 3)
         return false;
     return ((rights[0] == 'r' || rights[0] == '-') &&
@@ -31,7 +31,7 @@ bool Rights::hasRight(char right) const{
     return false;
 }
 
-void Rights::setRead(bool set){
+void Rights::setRead(bool set){ //transforming bools into a char
     if(set)
         rights[0] = 'r';
     else    
@@ -60,9 +60,7 @@ void Rights::setRight(char right, bool set){
 void Rights::setRights(const char* rights){
     if(!isValidRights(rights))
         return;
-    this->rights[0] = rights[0];
-    this->rights[1] = rights[1];
-    this->rights[2] = rights[2];
+    strcpy(this->rights, rights);
 }
 const char* Rights::getRights() const{
     return rights;

@@ -98,12 +98,15 @@ const Row& Table::getRow(size_t number) const {
 void Table::setNames(const Row& names){
     this->names = names;
 }
-void Table::changeColName(size_t colNum, const char* name){
+void Table::changeColName(const char* oldName, const char* name){
+    int colNum = getCol(oldName);
+    if(colNum == -1)
+        return;
     names.setValue(colNum, name);
 }
 int Table::getCol(const char* colName) const {
     for(size_t i{0}; i < colCount ; i++){
-        if(strcmp(colName, names.getValue(i))){
+        if(strcmp(colName, names.getValue(i)) == 0){
             return i;   //returning the index of the column with colName
         }
     }
@@ -125,22 +128,24 @@ void Table::changeValue(const char* colName, const char* oldVal, const char* new
     if(colNum == -1)
         return;
     for(size_t i {0}; i < rowCount; i++){
-        if(strcmp(oldVal, rows[i].getValue(colNum)) == 0)   //cycling to find the first instance of oldVal and set it to newVal
+        if(strcmp(oldVal, rows[i].getValue(colNum)) == 0){   //cycling to find the first instance of oldVal and set it to newVal
             rows[i].setValue(colNum, newVal);
+            break;
+        }
     } 
 }
 void Table::selectRows(const char* colName, const char* val) const{    
     int colNum = getCol(colName);
     if(colNum == -1)
         return;
-    Table selected;
-    selected.setNames(this->names); //creating a new table with only rows that have 'val'
+
+    names.print(alignments, widths);
+    printAlign();
 
     for(size_t i {0}; i < rowCount; i++){
-        if(strcmp(val,rows[i].getValue(colNum)) == 0);
-        selected.addRow(this->getRow(i));
+        if(strcmp(val,rows[i].getValue(colNum)) == 0)
+            rows[i].print(alignments, widths);
     }
-    selected.print();
 }
 void Table::saveToFile(std::ofstream& outFile) const {
     if(!outFile.is_open())
@@ -168,3 +173,27 @@ void Table::readFromFile(std::ifstream& inFile){
     setWidths();
 
 }
+int Table::getRowCount() const{
+    return rowCount;
+}
+void Table::setRowCount(size_t num){
+    if(num > MAX_ROWS)
+        return;
+    rowCount = num;
+}
+// void Table::setColCount(size_t num){
+//     if(num > MAX_COLS)
+//         return;
+//     colCount = num;
+// }
+// size_t Table::getColCount() const{
+//     return colCount;
+// }
+// void Table::setAlignments(const Alignment* align){
+//     for(size_t i {0}; i < MAX_COLS; i++){
+//         alignments[i] = align[i];
+//     }
+// }
+// const Alignment* Table::getAlignments() const{
+//     return alignments;
+// }   

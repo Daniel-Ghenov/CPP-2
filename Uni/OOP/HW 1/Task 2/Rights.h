@@ -5,7 +5,7 @@
 
 struct Rights{
 private:
-    char rights[RIGHTS_NUM];
+    char rights[RIGHTS_NUM];    //a group of all the rights for one user
     
     bool isValidRights(const char* rights);
 public:

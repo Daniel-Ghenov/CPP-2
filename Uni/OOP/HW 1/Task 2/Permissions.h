@@ -4,9 +4,11 @@
 
 struct Permissions{
 private:
-    Rights permissions[GROUPS_NUM];
-    char null = '\0';
-    int charToGroup(char group) const;
+    Rights permissions[GROUPS_NUM]; // three users make one group of permissions
+    char null = '\0';   //we have a null char so that printing is straight-forward
+                        //the null is also not a problem as it would be inside the padding of file anyway
+
+    int charToGroup(char group) const;  
     
 public:
     Permissions() = default;

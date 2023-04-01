@@ -1,7 +1,7 @@
 #include "Permissions.h"
 
 int Permissions::charToGroup(char group) const{
-    if(group == 'u')
+    if(group == 'u')    //we transform the char into an index for the array inside 'Rights'
         return 0;
     if(group == 'g')
         return 1;
@@ -24,7 +24,7 @@ void Permissions::setPermissions(const char* permissions){
     }
 }
 const char* Permissions::getPermissions() const{
-    return (char *)this;
+    return (const char *)permissions;  //we give a pointer to the start of permissions
 }
 bool Permissions::getPermission(char group , char right) const{
     if(charToGroup(group) == -1)

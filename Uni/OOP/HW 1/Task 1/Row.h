@@ -17,4 +17,5 @@ public:
     void print(const Alignment*,const size_t*) const;
     void saveToFile(std::ofstream&, const Alignment*,const size_t*) const;
     void readFromFile(std::ifstream&);
+    void addValue(const char* value);
 };

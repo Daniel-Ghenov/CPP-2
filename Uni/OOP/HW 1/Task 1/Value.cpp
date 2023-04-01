@@ -26,9 +26,10 @@ void Value::removeSpaces(){
     for(size_t i {0}; i < MAX_VALUE_LEN; i++){
         if(val[i] == '\0'){
             termZero = i;       //determine the idx of the \0
+            break;
         }
     }
-    for(size_t i = termZero; i > 0; i--){
+    for(size_t i = termZero - 1; i > 0; i--){
         if(val[i] == ' ')
             val[i] = '\0';  //we cycle to remove all following spaces
         else
@@ -68,12 +69,13 @@ void Value::saveToFile(std::ofstream& outFile, Alignment align, size_t width) co
     int len = strlen(val);
     int leadingSpace = 0, followSpace = 0;
     getSpaces(align, width, len, leadingSpace, followSpace);
-    outFile<<'|';
     for(size_t i {0}; i < leadingSpace; i++)
         outFile<<' ';
     outFile<<val;
     for(size_t i {0}; i < followSpace; i++)
         outFile<<' ';
+    outFile<<'|';
+
 }
 void Value::readFromFile(std::ifstream& inFile){
     if(!inFile.is_open())
