@@ -71,5 +71,5 @@
     // "editor.fontFamily": "scientifica",
     // "editor.fontFamily": "Monocraft"
     "editor.fontFamily": "Consolas, 'Courier New', monospace",
-    
+    "C_Cpp.errorSquiggles": "enabled"
 }
