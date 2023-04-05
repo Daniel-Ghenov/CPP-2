@@ -63,4 +63,18 @@ void List::print() const {
         iter = iter->next;
     }
 }
+void List::pop_back(){
+    if(head->next == nullptr){
+        head->data = 0;
+        return;
+    }
+    Node* ntlast = head;
+
+    while(ntlast->next->next != nullptr){
+        ntlast = ntlast->next;
+    }
+    delete ntlast->next;
+    ntlast->next = nullptr;
+
+}
 

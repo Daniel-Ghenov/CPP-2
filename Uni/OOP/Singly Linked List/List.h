@@ -8,6 +8,7 @@ private:
 
     void free();
     void copyFrom(const List& other);
+
 public:
     List() = default;
     List(int data);
@@ -17,7 +18,10 @@ public:
 
     void push_back(int data);
     void add(int data);
+    void pop_back();
+
     void print() const;
+
 
     Node* tail();
 };
