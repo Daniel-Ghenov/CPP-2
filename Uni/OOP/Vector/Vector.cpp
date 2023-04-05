@@ -117,7 +117,7 @@ size_t Vector<T>::capacity(){
 template <class T>
 void Vector<T>::reserve(size_t number){
     if(number > _size){
-        re_size(number);
+        resize(number);
     }
 }
 

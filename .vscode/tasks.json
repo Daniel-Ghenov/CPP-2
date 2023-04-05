@@ -8,7 +8,7 @@
             "args": [
                 "-g",
                 "-std=c++2b",
-                "${workspaceFolder}/*.cpp",
+                "${fileDirname}/*.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],

@@ -26,7 +26,7 @@ public:
     T* data();
     const T& front();
     const T& back();
-    bool operator bool() const;
+    operator bool() const;
 
     void resize(size_t size);   //Size Modifications
     void resize(size_t size, const T& fill);
