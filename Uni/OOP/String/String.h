@@ -10,6 +10,7 @@ private:
     size_t _capacity = DEFAULT_CAP;
 
     void copyFrom(const String& other);
+    void free();
 
 public:
 

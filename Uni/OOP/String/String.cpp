@@ -1,6 +1,6 @@
 #include "String.h"
 
-void String::clear(){
+void String::free(){
     delete[] _data;
     _data = nullptr;
     _capacity = _size = 0;
@@ -35,7 +35,7 @@ String::String(): String("\0"){
     
 }
 String::~String(){
-    clear();
+    free();
 }
 
 String::String(const String& other){
@@ -44,13 +44,13 @@ String::String(const String& other){
 
 String& String::operator=(const String& other){
     if(this != &other){
-        clear();
+        free();
         copyFrom(other);
     }
     return *this;
 }
 String& String::operator=(const char* other){
-    clear();
+    free();
     copyFrom(other);
 
     return *this;
@@ -87,6 +87,10 @@ void String::resize(size_t size){
     _capacity = _size * UPSIZE_BY;
 
 }
+void String::clear(){
+    (*this) = "\0";
+}
+
 void String::shrink_to_fit(){
     _capacity = _size;    
 }
@@ -143,7 +147,7 @@ char& String::back(){
 
 String& String::operator+=(const String& other){
 
-    char* newString = new char[size() + other.size() + 1];
+    char* newString = new char[_size + other._size + 1];
     newString[0] = '\0';
 
     strconcat(newString, _data);
