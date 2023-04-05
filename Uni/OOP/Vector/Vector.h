@@ -20,12 +20,14 @@ public:
     Vector& operator=(const Vector<T>& other);
     Vector(const Vector<T>& other);
 
+
     T& operator[](size_t number);   //Data access
     const T& operator[](size_t number) const;
     T* data();
     const T& front();
     const T& back();
-    
+    bool operator bool() const;
+
     void resize(size_t size);   //Size Modifications
     void resize(size_t size, const T& fill);
     size_t size();
