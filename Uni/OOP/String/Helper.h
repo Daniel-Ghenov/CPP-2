@@ -1,0 +1,9 @@
+#pragma once
+#include <iostream>
+
+int strcomp(const char* first, const char* second);
+void strcopy_s(char* Destination,size_t size, const char* Source);
+void strcopy(const char* Destination, const char* Source);
+void strconcat(const char* Destination, const char* Source);
+unsigned strleng(const char* str);
+int strfind(const char* findIn, const char* toFind);
