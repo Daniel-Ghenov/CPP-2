@@ -1,5 +1,6 @@
 #pragma once
 
+
 struct Node{
 private:
 
@@ -10,7 +11,7 @@ public:
     Node(int data);
     Node(const Node& other);
     Node& operator=(const Node& other);
-
+    Node(const Node& other);
 
     friend class List;
 };

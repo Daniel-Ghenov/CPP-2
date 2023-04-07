@@ -17,8 +17,12 @@ public:
     List(const List& other);
 
     void push_back(int data);
-    void add(int data);
+    void push_front(int data);
     void pop_back();
+    void pop_front();
+    void remove(size_t index);
+    void insert(size_t index, int data);
+    bool containts(int data);
 
     void print() const;
 
