@@ -61,7 +61,7 @@ void Node::copyFrom(const Node& other){
 
     _sons = new Node* [other._capacity];
     for(size_t i {0}; i < other._size; i++){
-        _sons[i] = other._sons[i];
+        *(_sons[i]) = *(other._sons[i]);
     }
 
     _data = other._data;
