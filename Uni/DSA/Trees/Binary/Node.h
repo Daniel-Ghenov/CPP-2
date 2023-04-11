@@ -2,18 +2,21 @@
 
 class Node{
 private:
-    int _data = 0;
-    Node* _left = nullptr;
-    Node* _right = nullptr;
+    int data = 0;
+    Node* left = nullptr;
+    Node* right = nullptr;
 
 public:
     Node() = default;
-    Node(int data);
     Node(const Node& other);
-    ~Node();
     Node& operator=(const Node& other);
+    ~Node();
+    Node(int data);
 
 
 private:
+    void free();
     void copyFrom(const Node& other);
+
+    friend class Tree;
 };

@@ -65,7 +65,9 @@
         "xtree": "cpp",
         "fstream": "cpp",
         "cinttypes": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "complex": "cpp",
+        "set": "cpp"
     },
     "editor.fontSize": 13,
     "editor.cursorStyle": "line",

@@ -159,4 +159,39 @@ void List::print() const {
     }
 }
 
+int List::find(int data) const{
+    size_t index = 0;
+    Node*iter = head;
+    while(iter != nullptr){
+        if(iter->data == data){
+            return index;
+        }
+        index++;
+        iter = iter->next;
+    }
+    return -1;
 
+}
+
+void List::swap(size_t idx1, size_t idx2){
+
+    Node* iter1 = head;
+    Node* iter2;
+
+    if(idx1 > idx2){
+        swap(idx1, idx2);
+    }
+
+    while(idx1--){
+        iter1 = iter1->next;
+    }
+    iter2 = iter1;
+    idx2 -= idx1;
+    while(idx2--){
+        iter2 = iter2->next;
+    }
+    swap(iter1->data, iter2->data);
+
+
+
+}
