@@ -102,6 +102,7 @@ void List::remove(size_t index){
         index--;
         iter = iter->next;
     }
+    
     if(index == 1){
         delete[] iter->next;
         iter->next = nullptr;
