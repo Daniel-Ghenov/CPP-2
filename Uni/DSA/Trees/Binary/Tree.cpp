@@ -4,6 +4,9 @@ Tree::Tree(const Tree& other){
     copyFrom(other);
 
 }
+Tree::Tree(int data){
+    root = new Node(data);
+}
 
 Tree& Tree::operator=(const Tree& other){
 
@@ -43,18 +46,6 @@ void Tree::print() const{
 
 
 
-
-void Tree::free(){
-    (*root).~Node();
-    root = nullptr;
-
-}
-
-void Tree::copyFrom(const Tree& other){
-    (*root) = (*other.root);
-
-}
-
 Node* Tree::_add(int data, Node* current){
     
     if(current == nullptr){
@@ -70,9 +61,8 @@ Node* Tree::_add(int data, Node* current){
     return current;
     
 }
-void Tree::_remove(int data, Node* current){
-    
-    
+Node* Tree::_remove(int data, Node* current){
+    //WIP
 }
 void Tree::_print(Node* current) const{
     
@@ -85,4 +75,18 @@ bool Tree::_contains(int data, Node* current) const{
         return true;
 
     return (current->data > data)? _contains(data, current->left): _contains(data, current->right);    
+}
+
+
+
+void Tree::free(){
+
+    delete root;
+    root = nullptr;
+
+}
+
+void Tree::copyFrom(const Tree& other){
+    (*root) = (*other.root);
+
 }

@@ -32,14 +32,13 @@ int* merge(int* arr1, int* arr2, size_t partSize){
 int* recursMerge(int* arr, size_t left, size_t right){
     if(right - left <= 1){
         int* arr2 = new int[1];
-        arr2[0] = arr[left - 1];
-        std::cout<<arr2[0];
+        arr2[0] = arr[left];
         return arr2;
     }
         
     int mid = (left + right)/2;
     int* firstHalf = recursMerge(arr, left, mid);
-    int* secondHalf = recursMerge(arr, mid + 1, right); 
+    int* secondHalf = recursMerge(arr, mid, right); 
 
     return  merge(firstHalf, secondHalf, right - left);
 

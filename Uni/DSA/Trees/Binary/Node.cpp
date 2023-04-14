@@ -20,8 +20,7 @@ Node::~Node(){
 }
 
 void Node::free(){
-    (*left).free();
-    (*right).free();
+
     delete left;
     delete right;
     left = right = nullptr;
@@ -29,8 +28,12 @@ void Node::free(){
 }
 
 void Node::copyFrom(const Node& other){
-    (*left).copyFrom(*other.left);
-    (*right).copyFrom(*other.right);
+    if(other.left){
+        left = new Node(*other.left);
+    }
+    if(other.right){
+        right = new Node(*other.right);
+    }
     data = other.data;
 
 }

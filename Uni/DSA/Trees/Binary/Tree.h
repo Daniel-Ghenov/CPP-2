@@ -4,9 +4,11 @@
 class Tree{
 private:
     Node* root = nullptr;
+
 public:
     Tree() = default;
     Tree(const Tree& other);
+    Tree(int data);
     Tree& operator=(const Tree& other);
     ~Tree();
 
@@ -21,7 +23,7 @@ private:
     void copyFrom(const Tree& other);
 
     Node* _add(int data, Node* current);
-    void _remove(int data, Node* current);
+    Node* _remove(int data, Node* current);
     bool _contains(int data, Node* current) const;
     void _print(Node* current) const;
 };
