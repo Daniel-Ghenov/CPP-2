@@ -33,7 +33,6 @@ int* recursMerge(int* arr, size_t left, size_t right){
     if(right - left <= 1){
         int* arr2 = new int[1];
         arr2[0] = arr[left - 1];
-        std::cout<<arr2[0];
         return arr2;
     }
         
