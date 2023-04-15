@@ -51,15 +51,15 @@ size_t String::capacity() const{
     if(isShort()){
         return sizeof(String);
     }
-    return (_capacity >> 2) | capacityMask();//bitshifting _capacity and OR it with our mask to get the actual capacity
+    return (_capacity << 1 )| capacityMask();   //bitshifting _capacity and OR it with our mask to get the actual capacity
 }
 
 size_t String::size() const {
     if(isShort()){
         return shortSize();
     }
-    return _size >> 1 | sizeMask();     //we get the bites from the size without the last and we OR it 
-                                        //with the second bit from the _cap Shifted to be the most significant byte 
+    return _size >> 1 | sizeMask(); //the most significant byte of _size is actually the most significant byte of _capacity
+    //so we bitshift once and Or with sizeMask
 }
 
 
@@ -71,6 +71,7 @@ const char* String::data() const{
         return (char*)this;
     return _data;
 }
+
 char* String::data(){
     if(isShort())
         return (char*)this;
@@ -331,62 +332,56 @@ void String::shortCopy(const char* string, size_t size = sizeof(String)){
 
 
 size_t String::sizeMask() const{
-    return ((_capacity & (1 << 1)) ^ 1 << 1) << (sizeof(_size) - 2);  
-    //Taking the second Bit from _cap and shifting it back once so we get 1 if it is 1 and 0 if it is 0
-    //We binaary NOT it so that we can store a '\0' as the last byte of our class;
-    //then we bitshift that sizeof(_size) - 2 times so that it becomes the most significant bit in our new number;
+    return ((_capacity ^ mostSigBit) & mostSigBit);  
+    //The most significant bit in _capacity is actually the most significant bit of our size but reversed so we XOR it
 }
 size_t String::capacityMask() const{
-    return( ((_size & 1) << (sizeof(_capacity) - 2)) & (_capacity & 1) <<( sizeof(_capacity) - 1));
-        //the least significant byte of _size is our second most significant byte so we bitshift it sizeof(_cap) - 2 times
-        //and the least significant byte of _capacity is our the most significant byte of capacity()
+    return _size & 1;
+        //the least significant byte of _size is the least significant bit of capacity
 
 }
 
 void String::setSize(size_t size){
     
     _size = ( size << 1) | (_size & 1);
-    //saving the last bit of the _size, which is the second most significant bit of capacity()
+    //bitshifting the new size and adding the old sizes last bit which is the _capacity bit
 
 
-    _capacity = ((_capacity >> 2) << 2) | (((~size) >> (sizeof(size) - 1)) << 1) | (_capacity & 1);
-    //bitshift capacity >> 2 and << 2 to set the last two bits as 0 then OR it with NOT size shifted 
-    //so its most significant bit is the inverted of the original size's most significant bit
-    //and or it with the least significant bit of _capacity to set that
-
-
+    _capacity = ((_capacity << 1) >> 1) | ((size ^ mostSigBit) & mostSigBit);
+    //bitshift capacity so the most significant bit is 0 and then we OR with the most significant bit of _size
+    //we also XOR the most significant bit of size so it is reversed
+    //That way when the two most significant bits of _capacity are "00" => size > capacity => we are in a short string
+    
 }
 
 void String::setCapacity(size_t capacity){
 
-    _size = ((_size >> 1) << 1) | ((capacity << 1) >> (sizeof(capacity) - 2));
-    //setting the least significant bit of _size to be the second most significant bit of capacity
+    _size = ((_size >> 1) << 1) | (capacity & 1);
+    //setting the least significant bit of _size to be the least significant bit of capacity
 
-    _capacity = (capacity << 2) | (_capacity & (1 << 1)) | (capacity >> (sizeof(capacity) - 1));
-    //shifting capacity twice then setting the last two bits as the old _capacity second bit
-    //and the new most significant bit of our new capacity
+    _capacity = capacity >> 1 | (_capacity & mostSigBit);
+    //shifting capacity so we keep the bit of _size
 
 }
 
 bool String::isShort() const{
-    return (!(_capacity & 3));  //_capacity & 3 gets us the last two bits of capacity
-                                    //if they are equal to "00" then size > capacity so the string must be short
-                                    //because we store the inverted of size's most significant byte in _capacity
+    return ((_capacity >> ((sizeof(_capacity) * 8) - 2)) == 0) ;   //checking if the two most significant bits of _capacity are "00"
 }
 
 void String::setShortSize(size_t size){
-    assert(size < sizeof(String));
+    
+    assert(size < sizeof(String));  //when we are in a short string the size will be stored in the last byte of String
+    //which is the most significant byte in _capacity because we are in little endian
 
-    setCapacity((sizeof(String) - size - 1) << 2);
-    //shifting the size twice so we store the small size in the next to last bits
-    //storing the size as sizeof(String) - size so that if size == sizeof(String) - 1 the last byte is a '\0'
+    _capacity = ((_capacity << 8) >> 8) | ((sizeof(String) - size - 1) << ((sizeof(_capacity) * 8) - 8));  //flushing the last 8 bits of _capacity and setting them to the bits of size
+    //since short sized strings are at max 23 characters long the 6 bits of the most significant byte of _capacity can hold them all
+    //we have sizeof(String - size - 1) so that when the size is 24 the last character is actually /0
+
 }
 size_t String::shortSize()const{
-    assert(isShort());
 
-    return sizeof(String) - (_capacity >> 2) - 1;
+    return sizeof(String) - (_capacity >> ((sizeof(_capacity) * 8) - 8)) - 1;
     //the size is stored as sizeof(String) - size - 1;
-
 }
 
 

@@ -84,6 +84,8 @@ private:
     void setShortSize(size_t size);
     size_t shortSize()const;
 
+    static const size_t mostSigBit = (static_cast<size_t>(1) << (sizeof(_capacity) * 8) - 1);
+
 };
 
 std::ostream& operator<<(std::ostream& os, const String& str);
