@@ -46,14 +46,28 @@ void strconcat(char* Destination, const char* Source){
     unsigned nullIdx = 0;
     while(Destination[nullIdx++] != '\0');
     nullIdx--;
-
-    for(size_t i {0} ;; i++){
-        if(Destination[i + nullIdx] == '\0')
-            return;
+    
+    for(size_t i {0} ;; i++){        
         Destination[i + nullIdx] = Source[i];
         if(Source[i] == '\0')
             return;
     }
+
+}
+void strconcat_s(char* Destination, size_t destSize ,const char* Source){
+    if(!Destination || !Source)
+        throw std::logic_error("Cannot process nullptr");
+
+    unsigned nullIdx = 0;
+    while(Destination[nullIdx++] != '\0');
+    nullIdx--;
+    
+    for(size_t i {0} ; i + nullIdx < destSize; i++){
+        Destination[i + nullIdx] = Source[i];
+        if(Source[i] == '\0')
+            return;
+    }
+    Destination[destSize] = '\0';
 
 }
 unsigned strleng(const char* str){
@@ -82,5 +96,31 @@ size_t find(const char* findIn, const char* toFind){
         }
     }
     return -1;
+}
+size_t length(int a){
+    size_t len = 1;
+    while(a /= 10){
+        len++;
+    }
+    return len;
+}
+char* intToStr(int a){
+
+    size_t counter = (a < 0)? length(a) + 1 : length(a);
+    
+    char* newStr = new char[counter + 1];
+    newStr[counter] = '\0';
+ 
+    while(counter--){
+        if(a == 0){
+            newStr[0] = '-';
+            break;
+        }
+         
+        newStr[counter] = '0' + a % 10;
+        a /= 10;
+    }
+    return newStr;
+    
 }
 
