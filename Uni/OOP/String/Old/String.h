@@ -1,25 +1,27 @@
 #pragma once
-#include <cassert>
+
 #include "Const.h"
-#include "StringAlg.h"
+#include "Helper.h"
 
 class String{
 private:
-    char* _data = nullptr;
+    char* _data;
     size_t _size = 0;
-    size_t _capacity = 0;
+    size_t _capacity = DEFAULT_CAP;
 
+    void copyFrom(const String& other);
+    void free();
 
 public:
 
     static const size_t nopos = -1;  //return-value for "no instance found"
 
 
-    String() = default;   //Big 4 and Constructors
+    String();   //Big 4 and Constructors
     String(const char* content);
-    explicit String(size_t capacity);
     ~String();
     String(const String& other);
+    String(const char c);
     String& operator=(const String& other);
     String& operator=(const char* other);
 
@@ -33,7 +35,7 @@ public:
     char& back();
     char& front();
     const char* data() const;
-    const char* c_str() const;
+    char* data();
 
     size_t size() const;    //Capacity
     size_t length() const;
@@ -48,10 +50,18 @@ public:
     String& append(const String& other);
     String& push_back(char c);
     String& assign(const String& string);
+    String& insert(const String& string, size_t pos);
+    String& erase(size_t pos);
+    String& erase(size_t pos, size_t len);
+    String& replace(size_t pos, size_t len, const String& str);
     void swap(String& other);
     void pop_back();
 
     String substr(size_t startpos, size_t endpos);  //String Operations
+    size_t copy(char* destination, size_t pos, size_t len);
+    size_t find(const String& string, size_t pos);
+    size_t rfind(const String& string, size_t pos);
+
 
     bool operator==(const String& other) const; //Boolean Operations
     bool operator!=(const String& other) const;
@@ -65,32 +75,8 @@ public:
 
 
     friend std::ostream& operator<<(std::ostream& os, const String& str);   //Stream Operations
-    friend std::istream& operator>>(std::istream& is, String& str);
+    friend std::istream& operator>>(std::istream& is, const String& str);
     friend std::istream& getline(std::istream& is, String& str, char delim);
-    friend String operator+ (const String& lhs, const String& rhs);
-
-
-private: 
-
-    void shortCopy(const char* string, size_t size);
-    void shortCopy(const String& other);
-    void copyFrom(const char* string);
-    void copyFrom(const String& other);
-    void free();
-
-
-    bool isShort() const;
-    size_t sizeMask() const;
-    size_t capacityMask() const;
-    void setSize(size_t size);
-    void setCapacity(size_t capacity);
-    void setShortSize(size_t size);
-    size_t shortSize()const;
-    char* data();
-
-
-    static const size_t mostSigBit = (static_cast<size_t>(1) << (sizeof(_capacity) * 8) - 1);   //bitsize mask for the most significant bit for ease of use
-
 };
 
 std::ostream& operator<<(std::ostream& os, const String& str);
