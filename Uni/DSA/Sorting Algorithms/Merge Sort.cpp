@@ -1,7 +1,7 @@
 #include <iostream>
 
 
-int* merge(int* arr1, int* arr2, size_t partSize){
+int* merge(int* arr1, int* arr2, size_t partSize){      //Needs a fix!!!!
 
     int* mergeInto = new int[partSize * 2];
 

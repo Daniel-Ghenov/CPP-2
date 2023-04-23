@@ -28,7 +28,7 @@ void heapify(int* array, int size){
 
 }
 
-void binarySort(int* arr, size_t size){
+void HeapSort(int* arr, size_t size){
 
     if(size <= 1)
         return;
