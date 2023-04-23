@@ -1,4 +1,4 @@
-#include "String.h"
+#include "SSO.h"
 
 String::String(const char* content){
     if(!content)

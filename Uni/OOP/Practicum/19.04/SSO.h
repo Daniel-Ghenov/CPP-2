@@ -1,7 +1,7 @@
 #pragma once
 #include <cassert>
 #include "Const.h"
-#include "StringAlg.h"
+#include "Helper.h"
 
 class String{
 private:

@@ -64,7 +64,7 @@ unsigned strleng(const char* str){
     while(str[length++] != '\0');
     return length - 1;
 }
-size_t linearFind(const char* findIn, const char* toFind){
+size_t find(const char* findIn, const char* toFind){
     if(!toFind || !findIn)
         throw std::logic_error("Cannot process nullptr");
 
