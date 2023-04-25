@@ -1,6 +1,6 @@
 #include "RollingHash.h"
 
-RollingHash::RollingHash(const char* string, size_t strlen){
+RollingHash::RollingHash(const char* string, size_t strlen): primeFac(){
     if(!strlen){
         strlen = strleng(string);
     }
@@ -29,4 +29,8 @@ void RollingHash::pop_back(){
 
 bool RollingHash::operator==(const RollingHash& other){
     return hash == other.hash;
+}
+size_t RollingHash::getPrime(size_t number){
+
+    
 }
