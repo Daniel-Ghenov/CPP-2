@@ -23,7 +23,6 @@ double getTime(size_t repetitions, size_t arrsize){
     for(size_t i {0};i < arrsize; i++){
         arr[i] = i;
     }
-    mergeSort(arr, arrsize);
     print(arr, arrsize);
     auto start = std::chrono::high_resolution_clock::now();
     // for(size_t i {0}; i < repetitions; i++){
