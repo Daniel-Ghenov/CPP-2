@@ -1,17 +1,18 @@
 #pragma once
 #include "Vector.hpp"
 
-class Piece{
+class Board;
+
+struct Piece{
 protected:
     char col;
     uint8_t row;
+    Board* board;
+};
 
-    const static char** moveList;
-
-    bool canMove(char col, uint8_t row);
+class Pawn: protected Piece{
 public:
-
-    void move(char col, uint8_t row);
+    bool canMove(char row, uint8_t col);
 
 
 };
