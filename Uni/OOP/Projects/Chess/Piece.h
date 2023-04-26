@@ -7,7 +7,7 @@ struct Piece{
 protected:
     char col;
     uint8_t row;
-    Board* board;
+    bool color; //White 0, Black 1
 };
 
 class Pawn: protected Piece{

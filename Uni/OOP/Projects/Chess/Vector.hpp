@@ -16,8 +16,8 @@ public:
     ~Vector();
     Vector<T>& operator=(const Vector<T>& other);
     Vector(const Vector<T>& other);
-    Vector(Vector<T>&& other);
-    Vector<T>& operator=(Vector<T>&& other);
+    Vector(Vector<T>&& other) noexcept;
+    Vector<T>& operator=(Vector<T>&& other) noexcept;
 
 
     T& operator[](size_t number);   //Data access
@@ -98,7 +98,7 @@ Vector<T>::Vector(size_t size, const T& fill){
 
 }
 template <typename T>
-Vector<T>::~Vector<T>(){
+Vector<T>::~Vector(){
     clear();
 }
 
@@ -116,12 +116,12 @@ Vector<T>::Vector(const Vector<T>& other){
 }
 
 template <typename T>
-Vector<T>::Vector(Vector<T>&& other){
+Vector<T>::Vector(Vector<T>&& other) noexcept{
     move(other);
 
 }
 template <typename T>
-Vector<T>& Vector<T>::operator=(Vector<T>&& other){
+Vector<T>& Vector<T>::operator=(Vector<T>&& other) noexcept{
     if(this != &other){
         free();
         move(other);
