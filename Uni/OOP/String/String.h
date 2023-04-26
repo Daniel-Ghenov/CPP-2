@@ -22,6 +22,9 @@ public:
     String(const String& other);
     String& operator=(const String& other);
     String& operator=(const char* other);
+    String& operator=(String&& other);
+    String(String&& other);
+
 
 
     char& operator[](size_t size);  //Access Data
@@ -76,6 +79,7 @@ private:
     void shortCopy(const String& other);
     void copyFrom(const char* string);
     void copyFrom(const String& other);
+    void move(String&& other);
     void free();
 
 

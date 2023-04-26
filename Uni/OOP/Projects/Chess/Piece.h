@@ -5,8 +5,6 @@ class Board;
 
 struct Piece{
 protected:
-    char col;
-    uint8_t row;
     bool color; //White 0, Black 1
 };
 

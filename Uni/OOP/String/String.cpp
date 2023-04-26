@@ -48,6 +48,21 @@ String& String::operator=(const char* other){   //operator overload so that conv
     copyFrom(other);
     return *this;
 }
+
+String& String::operator=(String&& other){
+    if(this != &other){
+        this->free();
+        this->move(std::move(other));
+    }
+    return *this;
+}
+
+String::String(String&& other){    
+    move(std::move(other));
+}
+
+
+
 void String::reserve(size_t size){
 
     if(size > this->size()){
@@ -348,6 +363,20 @@ void String::copyFrom(const char* string){  //overload so we do not go trough co
     strcopy_s(_data, strsize, string);
     setSize(strsize);
 
+}
+void String::move(String&& other){
+
+    if(other.isShort()){
+        shortCopy(other);
+        other.free();
+    }
+    else{
+        this->_data = other._data;
+        this->_size = other._size;
+        this->_capacity = other._capacity;
+        other._data = nullptr;
+        other.free();
+    }
 }
 
 void String::shortCopy(const String& other){//copy function for shortStrings;

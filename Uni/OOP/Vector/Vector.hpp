@@ -11,6 +11,10 @@ private:
     size_t _capacity;
 
 public:
+
+    static const size_t nopos = -1;  //return-value for "no instance found"
+
+
     Vector();   //Big 6 and constructors
     Vector(size_t size, const T& fill);
     Vector(size_t size);
@@ -21,6 +25,8 @@ public:
     Vector<T>& operator=(Vector<T>&& other);
 
 
+    bool contains(const T& data);
+    size_t find(const T& data);
     T& operator[](size_t number);   //Data access
     const T& operator[](size_t number) const;
     T* data();
@@ -118,20 +124,38 @@ Vector<T>::Vector(const Vector<T>& other){
 
 template <typename T>
 Vector<T>::Vector(Vector<T>&& other){
-    move(other);
+    move(std::move(other));
 
 }
 template <typename T>
 Vector<T>& Vector<T>::operator=(Vector<T>&& other){
     if(this != &other){
         free();
-        move(other);
+        move(std::move(other));
     }
     return *this;
 }
 
 //data Access
 
+template <typename T>
+size_t Vector<T>::find(const T& data){
+    for(size_t i {0}; i < this->size(); i++){
+        if(data == this->[i]){
+            return i;
+        }
+    }
+    return Vector<T>::nopos;
+}
+template <typename T>
+bool Vector<T>::contains(const T& data){
+    for(size_t i {0}; i < this->size(); i++){
+        if(data == this->[i]){
+            return true;
+        }
+    }
+    return false;
+}
 
 template <typename T>
 T& Vector<T>::operator[](size_t number){
