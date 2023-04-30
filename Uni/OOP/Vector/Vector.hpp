@@ -25,19 +25,19 @@ public:
     Vector<T>& operator=(Vector<T>&& other);
 
 
-    bool contains(const T& data);
-    size_t find(const T& data);
+    bool contains(const T& data) const;
+    size_t find(const T& data) const;
     T& operator[](size_t number);   //Data access
     const T& operator[](size_t number) const;
     T* data();
-    const T& front();
-    const T& back();
+    const T& front() const;
+    const T& back() const;
     operator bool() const;
 
     void resize(size_t size);   //Size Modifications
     void resize(size_t size, const T& fill);
-    size_t size();
-    size_t capacity();
+    size_t size() const;
+    size_t capacity() const;
     void reserve(size_t number);
 
     void push_back(const T& newData);   //Data modifications
@@ -139,7 +139,7 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& other){
 //data Access
 
 template <typename T>
-size_t Vector<T>::find(const T& data){
+size_t Vector<T>::find(const T& data) const{
     for(size_t i {0}; i < this->size(); i++){
         if(data == this->[i]){
             return i;
@@ -148,7 +148,7 @@ size_t Vector<T>::find(const T& data){
     return Vector<T>::nopos;
 }
 template <typename T>
-bool Vector<T>::contains(const T& data){
+bool Vector<T>::contains(const T& data) const{
     for(size_t i {0}; i < this->size(); i++){
         if(data == this->[i]){
             return true;
@@ -171,12 +171,12 @@ T* Vector<T>::data(){
 }
 
 template <typename T>
-const T& Vector<T>::front(){
+const T& Vector<T>::front() const{
     return _data[0];
 }
 
 template <typename T>
-const T& Vector<T>::back(){
+const T& Vector<T>::back() const{
     return _data[_size - 1];
 }
 
@@ -208,11 +208,11 @@ void Vector<T>::resize(size_t size, const T& fill){
     _data = temp;
 }
 template <typename T>
-size_t Vector<T>::size(){
+size_t Vector<T>::size() const{
     return _size;
 }
 template <typename T>
-size_t Vector<T>::capacity(){
+size_t Vector<T>::capacity() const{
     return _capacity;
 }
 template <typename T>

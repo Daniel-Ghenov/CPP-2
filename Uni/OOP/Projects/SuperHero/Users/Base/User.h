@@ -2,7 +2,7 @@
 #include "String.h"
 
 class User{
-protected:
+private:
     String _firstName;
     String _lastName;
     String _email;
@@ -34,18 +34,13 @@ public:
     void setUserName(const char* username);
     void setPassword(const char* password);
 
-    
-    String firstName()const;
-    String lastName()const;
-    String email()const;
-    String username()const;
-    String password()const;
+    const String& firstName() const;
+    const String& lastName() const;
+    const String& email() const;
+    const String& username() const;
+    const String& password() const;
 
-    String& firstName();
-    String& lastName();
-    String& email();
-    String& username();
-    String& password();
+    virtual void print() const;
 
 private:
     String hash(const String& str) const; //For Future password hashing capabilities
