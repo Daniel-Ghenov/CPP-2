@@ -1,5 +1,5 @@
 #pragma once
-#include "String.h"
+#include "MyString.h"
 
 class User{
 private:

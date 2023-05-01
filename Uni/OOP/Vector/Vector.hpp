@@ -12,9 +12,6 @@ private:
 
 public:
 
-    static const size_t nopos = -1;  //return-value for "no instance found"
-
-
     Vector();   //Big 6 and constructors
     Vector(size_t size, const T& fill);
     Vector(size_t size);

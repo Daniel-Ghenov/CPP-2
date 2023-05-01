@@ -1,4 +1,4 @@
-#include "String.h"
+#include "MyString.h"
 
 String::String(const char* content){
     if(!content)
@@ -269,7 +269,7 @@ String String::substr(size_t startpos, size_t len = nopos){
 }
 
 
-int String::compare(const String& other){   //comparison operators
+int String::compare(const String& other) const{   //comparison operators
     return strcomp(data(), other.data());    
 }
 

@@ -1,5 +1,7 @@
 #include "SuperHero.h"
 
+const int BUFF_SIZE = 10;
+
 SuperHero::SuperHero(const String& firstName, const String& lastName, const String& heroName, size_t power,
                 size_t cost, Element element, Stance stance): _firstName(firstName), _lastName(lastName),
                 _heroName(heroName), _power(power), _cost(cost), _element(element), _stance(stance){
@@ -57,4 +59,29 @@ std::ostream& operator<<(std::ostream& os, const Stance& stance){
         case Stance::deffend :
             return os<<"Deffence";
     }
+}
+
+std::istream& operator>>(std::istream& is, Element& element){
+    char buff[BUFF_SIZE];
+    is>>buff;
+    if(strcomp(buff, "Fire" ) == 0 || strcomp(buff, "fire" ) == 0){
+        element = Element::fire;
+    }
+    else if(strcomp(buff, "Water" ) == 0 || strcomp(buff, "water" ) == 0){
+        element = Element::water;
+    }
+    else
+        element = Element::earth;
+
+    return;
+}
+std::istream& operator>>(std::istream& is, Stance& stance){
+    char buff[BUFF_SIZE];
+    is>>buff;
+    if(strcomp(buff,"Attack" ) == 0){
+        stance = Stance::attack;
+    }
+    else
+        stance = Stance::deffend;
+    return;
 }

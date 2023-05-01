@@ -5,8 +5,10 @@
 
 class System{
 private:
-    Vector<Admin*> _admins;
-    Vector<Player*> _players;
+    Vector<Admin*> _admins; 
+    Vector<Player*> _players;   //Hash map??
+    Vector<SuperHero*> _shop;
+    
 public:
     System();
     System(const Admin& admin);
@@ -14,7 +16,14 @@ public:
 
     void addPlayer(const Player& player);
     void addAdmin(const Admin& admin);
-    void addPlayer(Player&& player);
-    void addAdmin(Admin&& admin);
+    void addHero(const SuperHero& hero);
+
+    void removePlayer(size_t index);
+    void removeAdmin(size_t index);
+    void removeHero(size_t index);
+
+    size_t findPlayer(const String& username) const;
+    size_t findAdmin(const String& username) const;
+    size_t findHero(const String& username) const;
 
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "String.h"
+#include "MyString.h"
 
 enum class Element{
     fire,
@@ -43,3 +43,6 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const Element& element);
 std::ostream& operator<<(std::ostream& os, const Stance& stance);
+
+std::istream& operator>>(std::istream& is, const Element& element);
+std::istream& operator>>(std::istream& is, const Stance& stance);

@@ -64,7 +64,7 @@ public:
     bool operator>(const String& other) const;
     bool empty() const;
     operator bool() const;
-    int compare(const String& other);
+    int compare(const String& other) const;
 
 
     friend std::ostream& operator<<(std::ostream& os, const String& str);   //Stream Operations
