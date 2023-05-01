@@ -32,6 +32,14 @@ void Player::print() const{
         _heroes[i].print();
     }
 }
+void Player::adminPrint() const{
+    std::cout<<"Username: "<< username()<<"Money: "<<_money<<std::endl;
+    std::cout<<"Heroes: "<<std::endl;
+
+    for(size_t i {0}; i < _heroes.size(); i++){
+        _heroes[i].adminPrint();
+    }
+}
 size_t Player::money() const{
     return _money;
 }

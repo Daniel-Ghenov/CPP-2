@@ -38,6 +38,7 @@ public:
 
 
     void print() const;
+    void adminPrint() const;
     
 };
 

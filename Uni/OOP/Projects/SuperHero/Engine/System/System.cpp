@@ -1,6 +1,6 @@
 #include "System.h"
 
-System::System(): System({"", "", "", "Admin", "password"}){
+System::System(): System({"", "", "", "admin", "Password1"}){
     
 }
 System::System(const Admin& admin): _admins(8, nullptr), _shop(8, nullptr), _players(8, nullptr){
@@ -55,6 +55,7 @@ void System::removeHero(size_t index){
 }
 
 size_t System::findPlayer(const String& username) const{
+
     for(size_t i {0}; i < this->_players.size() ;i++){
         if(this->_players[i]->username() == username){
             return i;
@@ -64,13 +65,15 @@ size_t System::findPlayer(const String& username) const{
 }
 
 size_t System::findAdmin(const String& username) const{
-        for(size_t i {0}; i < this->_admins.size() ;i++){
+
+    for(size_t i {0}; i < this->_admins.size() ;i++){
         if(this->_admins[i]->username() == username){
             return i;
         }
     }
     throw std::invalid_argument("User not Found");
 }
+
 size_t System::findHero(const String& heroName) const{
     for(size_t i {0}; i < this->_shop.size() ;i++){
         if(this->_shop[i]->heroName() == heroName){
@@ -78,4 +81,52 @@ size_t System::findHero(const String& heroName) const{
         }
     }
     throw std::invalid_argument("User not Found");
+}
+
+void System::printInfo(const String& username) const{
+    bool found = false;
+
+    try{
+        size_t index = findAdmin(username);
+        _admins[index]->printAdmin();
+        found = true;
+    }catch(const std::invalid_argument& except){}
+
+    
+    try{
+        size_t index = findPlayer(username);
+        _players[index]->printAdmin();
+        found = true;
+    }catch(const std::invalid_argument& except){}
+    
+    if(!found)
+        throw std::invalid_argument("User not Found");
+
+}
+
+void System::printScoreboard(){
+    this->sortPlayers();
+    for(size_t i {0}; i < _players.size(); i++){
+        _players[i]->print();
+        std::cout<<std::endl;
+    }
+}
+
+
+void System::sortPlayers(){
+
+    for(size_t i {0}; i < _players.size(); i++){
+        bool swapped = false;
+        for(size_t j = i ; i < _players.size() - i - 1; j++){
+            if(_players[j]->money() < _players[j + 1]->money()){
+                Player* temp = _players[j];
+                _players[j] = _players[j + 1];
+                _players[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        if(!swapped)
+            return;
+    }
+    
 }

@@ -12,9 +12,17 @@ void SuperHero::print() const{
     std::cout<<"\tFirst name: "<<_firstName<<std::endl;
     std::cout<<"\tLast name: "<<_lastName<<std::endl;
     std::cout<<"\tHero name: "<<_heroName<<std::endl;
+    std::cout<<"\tElement: "<<_element<<std::endl;
+    std::cout<<"\tStance: "<<_stance<<std::endl;
+}
+void SuperHero::adminPrint() const{
+    std::cout<<"\tFirst name: "<<_firstName<<std::endl;
+    std::cout<<"\tLast name: "<<_lastName<<std::endl;
+    std::cout<<"\tHero name: "<<_heroName<<std::endl;
     std::cout<<"\tPower: "<<_power<<std::endl;
     std::cout<<"\tElement: "<<_element<<std::endl;
     std::cout<<"\tStance: "<<_stance<<std::endl;
+    
 }
 
 const String& SuperHero::firstName() const{
@@ -38,6 +46,8 @@ Element SuperHero::element() const{
 Stance SuperHero::stance() const{
     return _stance;
 }
+
+
 
 std::ostream& operator<<(std::ostream& os, const Element& element){
     

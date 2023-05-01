@@ -18,4 +18,5 @@ public:
     size_t money() const;
 
     void print() const;
+    void adminPrint() const;
 };

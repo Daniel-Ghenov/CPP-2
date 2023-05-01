@@ -13,6 +13,8 @@ public:
     System();
     System(const Admin& admin);
     ~System();
+    System(const System& other) = delete;
+    System& operator=(const System& other) = delete;
 
     void addPlayer(const Player& player);
     void addAdmin(const Admin& admin);
@@ -26,4 +28,10 @@ public:
     size_t findAdmin(const String& username) const;
     size_t findHero(const String& username) const;
 
+    void printInfo(const String& username) const;
+    void printAdminInfo(const String& username) const;
+    void printScoreboard();
+
+private:
+    void sortPlayers();
 };

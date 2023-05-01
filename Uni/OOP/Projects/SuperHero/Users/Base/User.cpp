@@ -1,17 +1,16 @@
 #include "User.h"
 
-User::User(const String& firstName, const String& lastName, const String& email, const String& username, const String& password):
-            _firstName(firstName), _lastName(lastName), _email(email), _username(username), _password(password){
-    
+User::User(const String& firstName, const String& lastName, const String& email, const char* username, const String& password):
+            _firstName(firstName), _lastName(lastName), _email(email){
+    setUserName(username);
+    setPassword(password);
 }
-User::User(const String& username): _username(username){
-    
+User::User(const String& username){
+    setUserName(username.data());
 }
-
-User::User(String&& username): _username(std::move(username)){
-    
+User::User(const char* username){
+    setUserName(username);
 }
-
 
 
 
@@ -70,28 +69,25 @@ void User::setEmail(const char* email){
 }
 
 
-void User::setUserName(const String& username){
-    _username = username;
-}
-
-void User::setUserName(String&& username){
-    _username = std::move(username);
-}
 void User::setUserName(const char* username){
-    _username = username;
+    if(this->validUsername(username))
+        strcopy(_username ,username);
 }
 
 
 void User::setPassword(const String& password){
-    _password = password;
+    if(this->validPassword(password))
+        _password = password;
 }
 
 void User::setPassword(String&& password){
-    _password = std::move(password);
+    if(this->validPassword(password))
+        _password = std::move(password);
 }
 
 void User::setPassword(const char* password){
-    _password = password;
+    if(this->validPassword(password))
+        _password = password;
 }
 
 void User::print() const{
@@ -100,4 +96,40 @@ void User::print() const{
     std::cout<<"username: "<<_username<<std::endl;
     std::cout<<"email: "<<_email<<std::endl;
 
+}
+void User::printAdmin() const{
+    this->print();
+}
+
+
+bool User::validUsername(const char* username) const{
+
+    for(size_t i {0}; i < USERNAME_LEN; i++){
+        if(username[i] == '\0')
+            return true;
+        if(username[i] < 'a' || username[i] > 'z')
+            throw std::invalid_argument("Username must contain only lowercase letters");
+    }
+    throw std::invalid_argument("Username Too Long");
+}
+
+bool User::validPassword(const String& password) const{
+    bool hasLower = false, hasUpper = false, hasDigit = false;
+
+    for(size_t i {0}; i < password.size(); i++){
+        if(hasLower && hasUpper && hasDigit){
+            return true;
+        }
+        if(password[i] >= 'a' && password[i] <= 'z')
+            hasLower = true;
+        if(password[i] >= 'A' && password[i] <= 'Z')
+            hasUpper = true;
+        if(password[i] >= '0' && password[i] <= '9')
+            hasDigit = true;
+    }
+
+    if(!hasLower || !hasDigit || !hasUpper){
+        throw std::invalid_argument("Password must contain one uppercase letter, one lowercase letter and one digit");
+    }
+    return true;
 }
