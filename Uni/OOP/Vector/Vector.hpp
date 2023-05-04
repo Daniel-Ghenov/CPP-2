@@ -1,10 +1,73 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #include "Const.h"
 
 template <typename T>
 class Vector{
+public:
+    class Iterator{
+    private:
+        T* _ptr = nullptr;
+    public:
+        Iterator() = default;
+        Iterator(T* ptr);
+
+        Iterator& operator++();
+        Iterator& operator--();
+        Iterator operator++(int a);
+        Iterator operator--(int a);
+
+        Iterator& operator+=(int offset);
+        Iterator& operator-=(int offset);
+
+        Iterator operator+(int offset);
+        Iterator operator-(int offset);
+
+        bool operator>(const Vector<T>::Iterator& other);
+        bool operator>=(const Vector<T>::Iterator& other);
+        bool operator<=(const Vector<T>::Iterator& other);
+        bool operator<(const Vector<T>::Iterator& other);
+        bool operator==(const Vector<T>::Iterator& other);
+        bool operator!=(const Vector<T>::Iterator& other);
+
+        const T& operator*() const;
+        T& operator*();
+        T* operator->();
+        
+    };   
+    class CIterator{
+    private:
+        const T* _ptr = nullptr;
+    public:
+        CIterator() = default;
+        CIterator(T* ptr);
+
+
+        CIterator& operator++();
+        CIterator& operator--();
+        CIterator operator++(int a);
+        CIterator operator--(int a);
+
+        CIterator& operator+=(int offset);
+        CIterator& operator-=(int offset);
+
+        CIterator operator+(int offset);
+        CIterator operator-(int offset);
+
+        bool operator>(const Vector<T>::CIterator& other);
+        bool operator>=(const Vector<T>::CIterator& other);
+        bool operator<=(const Vector<T>::CIterator& other);
+        bool operator<(const Vector<T>::CIterator& other);
+        bool operator==(const Vector<T>::CIterator& other);
+        bool operator!=(const Vector<T>::CIterator& other);
+
+        const T& operator*() const;
+        T& operator*();
+        T* operator->();
+    };
+
 private:
     T* _data;
     size_t _size;
@@ -40,16 +103,22 @@ public:
     void push_back(const T& newData);   //Data modifications
     void pop_back();
     void insert(size_t index, const T& toInsert);
-    void erase(size_t index) noexcept;
+    void erase(size_t index);
     void swap(size_t index1, size_t index2);
-    void clear();
+    void clear() noexcept;
+
+    Iterator end();
+    CIterator end() const;
+    Iterator begin();
+    CIterator begin() const;
 
 private:
     void move(Vector<T>&& other);
     void copyFrom(const Vector<T>& other);
     void free()noexcept;
-};
 
+
+};
 
 
 template <typename T>
@@ -102,7 +171,7 @@ Vector<T>::Vector(size_t size, const T& fill){
 
 }
 template <typename T>
-Vector<T>::~Vector<T>(){
+Vector<T>::~Vector(){
     clear();
 }
 
@@ -138,7 +207,7 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& other)noexcept{
 template <typename T>
 size_t Vector<T>::find(const T& data) const{
     for(size_t i {0}; i < this->size(); i++){
-        if(data == this->[i]){
+        if(data == (*this)[i]){
             return i;
         }
     }
@@ -147,7 +216,7 @@ size_t Vector<T>::find(const T& data) const{
 template <typename T>
 bool Vector<T>::contains(const T& data) const{
     for(size_t i {0}; i < this->size(); i++){
-        if(data == this->[i]){
+        if(data == (*this)[i]){
             return true;
         }
     }
@@ -246,7 +315,7 @@ void Vector<T>::pop_back(){
 }
 
 template <typename T>
-void Vector<T>::clear(){
+void Vector<T>::clear() noexcept{
     free();
 }
 
@@ -289,3 +358,219 @@ Vector<T>::operator bool() const{
     return(_data == nullptr || _size == 0);
 }
 
+template<typename T>
+Vector<T>::Iterator Vector<T>::end(){
+    return Vector<T>::Iterator(_data + size());
+}
+template<typename T>
+Vector<T>::CIterator Vector<T>::end() const{
+    return Vector<T>::Cterator(_data + size());
+    
+}
+template<typename T>
+Vector<T>::Iterator Vector<T>::begin(){
+    return Vector<T>::Iterator(_data);
+    
+}
+template<typename T>
+Vector<T>::CIterator Vector<T>::begin() const{
+    return Vector<T>::Cterator(_data);
+   
+}
+
+//Iterators
+
+template <typename T>
+Vector<T>::Iterator::Iterator(T* ptr): _ptr(ptr){
+}
+
+template <typename T>
+Vector<T>::Iterator& Vector<T>::Iterator::operator++(){
+    _ptr++;
+    return *this;
+}
+
+template <typename T>
+Vector<T>::Iterator& Vector<T>::Iterator::operator--(){
+    _ptr--;
+    return *this;
+}
+template <typename T>
+Vector<T>::Iterator Vector<T>::Iterator::operator++(int a){
+    _ptr++;
+    return (Vector<T>::Iterator(--_ptr));
+}
+template <typename T>
+Vector<T>::Iterator Vector<T>::Iterator::operator--(int a){
+    _ptr--;
+    return (Vector<T>::Iterator(++_ptr));
+}
+
+template <typename T>
+Vector<T>::Iterator& Vector<T>::Iterator::operator+=(int offset){
+
+    _ptr += offset;
+    return *this;
+}
+template <typename T>
+Vector<T>::Iterator& Vector<T>::Iterator::operator-=(int offset){
+    _ptr -= offset;
+    return *this;
+}
+template <typename T>
+Vector<T>::Iterator Vector<T>::Iterator::operator+(int offset){
+    return Vector<T>::Iterator(_ptr + offset);
+
+}
+
+template <typename T>
+Vector<T>::Iterator Vector<T>::Iterator::operator-(int offset){  
+    return Vector<T>::Iterator(_ptr - offset);
+
+}
+
+
+template <typename T>
+bool Vector<T>::Iterator::operator>(const Vector<T>::Iterator& other){
+    return _ptr > other._ptr;
+}
+
+template <typename T>
+bool Vector<T>::Iterator::operator>=(const Vector<T>::Iterator& other){
+
+    return _ptr >= other._ptr;
+}
+
+template <typename T>
+bool Vector<T>::Iterator::operator<=(const Vector<T>::Iterator& other){
+
+    return _ptr <= other._ptr;
+}
+
+template <typename T>
+bool Vector<T>::Iterator::operator<(const Vector<T>::Iterator& other){
+
+    return _ptr < other._ptr;
+}
+template <typename T>
+bool Vector<T>::Iterator::operator==(const Vector<T>::Iterator& other){
+    return _ptr == other._ptr;
+}
+template <typename T>
+bool Vector<T>::Iterator::operator!=(const Vector<T>::Iterator& other){
+    return _ptr != other._ptr;
+}
+
+template <typename T>
+const T& Vector<T>::Iterator::operator*() const{
+    return *_ptr;
+}
+template <typename T>
+T& Vector<T>::Iterator::operator*(){
+    return *_ptr;
+}
+template <typename T>
+T* Vector<T>::Iterator::operator->(){
+    return _ptr;
+}
+
+//Constant Iterator
+template <typename T>
+Vector<T>::CIterator::CIterator(T* ptr): _ptr(ptr){
+
+}
+
+template <typename T>
+Vector<T>::CIterator& Vector<T>::CIterator::operator++(){
+    _ptr++;
+    return *this;
+}
+
+template <typename T>
+Vector<T>::CIterator& Vector<T>::CIterator::operator--(){
+    _ptr--;
+    return *this;  
+}
+
+template <typename T>
+Vector<T>::CIterator Vector<T>::CIterator::operator++(int a){
+    _ptr++;
+    return Vector<T>::CIterator(--_ptr);
+}
+template <typename T>
+Vector<T>::CIterator Vector<T>::CIterator::operator--(int a){
+    _ptr--;
+    return Vector<T>::CIterator(++_ptr);
+}
+
+template <typename T>
+Vector<T>::CIterator& Vector<T>::CIterator::operator+=(int offset){
+    _ptr += offset;
+    return *this;
+}
+template <typename T>
+Vector<T>::CIterator& Vector<T>::CIterator::operator-=(int offset){
+    _ptr -= offset;
+    return *this;
+}
+
+template <typename T>
+Vector<T>::CIterator Vector<T>::CIterator::operator+(int offset){
+    return Vector<T>::CIterator(_ptr + offset);
+}
+template <typename T>
+Vector<T>::CIterator Vector<T>::CIterator::operator-(int offset){
+    return Vector<T>::CIterator(_ptr - offset);
+
+}
+
+
+template <typename T>
+bool Vector<T>::CIterator::operator>(const Vector<T>::CIterator& other){
+    
+    return _ptr > other._ptr;
+}
+
+
+template <typename T>
+bool Vector<T>::CIterator::operator>=(const Vector<T>::CIterator& other){
+    
+    return _ptr >= other._ptr;
+}
+
+
+template <typename T>
+bool Vector<T>::CIterator::operator<=(const Vector<T>::CIterator& other){
+    
+    return _ptr <= other._ptr;
+}
+
+
+template <typename T>
+bool Vector<T>::CIterator::operator<(const Vector<T>::CIterator& other){
+    return _ptr < other._ptr;
+    
+}
+template <typename T>
+bool Vector<T>::CIterator::operator==(const Vector<T>::CIterator& other){
+    return _ptr == other._ptr;
+
+}
+template <typename T>
+bool Vector<T>::CIterator::operator!=(const Vector<T>::CIterator& other){
+    return _ptr != other._ptr;
+
+}
+
+template <typename T>
+const T& Vector<T>::CIterator::operator*() const{
+    return *_ptr;
+}
+template <typename T>
+T& Vector<T>::CIterator::operator*(){
+    return *_ptr;
+}
+template <typename T>
+T* Vector<T>::CIterator::operator->(){
+    return _ptr;
+}
