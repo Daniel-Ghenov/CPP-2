@@ -40,7 +40,7 @@ public:
     void push_back(const T& newData);   //Data modifications
     void pop_back();
     void insert(size_t index, const T& toInsert);
-    void erase(size_t index);
+    void erase(size_t index) noexcept;
     void swap(size_t index1, size_t index2);
     void clear();
 
@@ -72,7 +72,7 @@ void Vector<T>::move(Vector<T>&& other){
 
 }
 template <typename T>
-void Vector<T>::free()noexcept{
+void Vector<T>::free() noexcept{
     delete[] _data;
     _data = nullptr;
     _size = _capacity = 0;
@@ -224,10 +224,12 @@ void Vector<T>::reserve(size_t number){
 
 template <typename T>
 void Vector<T>::push_back(const T& new_data){
+
     if(_data == nullptr){
         _capacity = DEFAULT_SIZE;
-        _size++;
+        _data = new T[DEFAULT_SIZE];
     }
+
     if(_size == _capacity){
         _capacity *= 2;
         resize(_capacity);
