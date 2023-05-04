@@ -2,6 +2,9 @@
 #include "MyString.h"
 
 const int USERNAME_LEN = 17;
+const int NAME_LEN = 21;
+const int EMAIL_LEN = 41;
+const int PASS_LEN = 25;
 
 class User{
 private:

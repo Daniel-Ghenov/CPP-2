@@ -49,7 +49,7 @@ String& String::operator=(const char* other){   //operator overload so that conv
     return *this;
 }
 
-String& String::operator=(String&& other){
+String& String::operator=(String&& other) noexcept {
     if(this != &other){
         this->free();
         this->move(std::move(other));
@@ -57,7 +57,7 @@ String& String::operator=(String&& other){
     return *this;
 }
 
-String::String(String&& other){    
+String::String(String&& other) noexcept{    
     move(std::move(other));
 }
 
@@ -334,7 +334,7 @@ String operator+ (const String& lhs, const String& rhs){
 
 
 
-void String::free(){
+void String::free() noexcept {
     if(!isShort())
         delete[] _data;
     _data = nullptr;

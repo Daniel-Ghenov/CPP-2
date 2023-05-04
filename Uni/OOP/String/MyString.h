@@ -22,8 +22,8 @@ public:
     String(const String& other);
     String& operator=(const String& other);
     String& operator=(const char* other);
-    String& operator=(String&& other);
-    String(String&& other);
+    String& operator=(String&& other) noexcept;
+    String(String&& other) noexcept;
 
 
 
@@ -80,7 +80,7 @@ private:
     void copyFrom(const char* string);
     void copyFrom(const String& other);
     void move(String&& other);
-    void free();
+    void free() noexcept;
 
 
     bool isShort() const;

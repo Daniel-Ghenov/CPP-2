@@ -18,8 +18,8 @@ public:
     ~Vector();
     Vector<T>& operator=(const Vector<T>& other);
     Vector(const Vector<T>& other);
-    Vector(Vector<T>&& other);
-    Vector<T>& operator=(Vector<T>&& other);
+    Vector(Vector<T>&& other) noexcept;
+    Vector<T>& operator=(Vector<T>&& other) noexcept;
 
 
     bool contains(const T& data) const;
@@ -47,7 +47,7 @@ public:
 private:
     void move(Vector<T>&& other);
     void copyFrom(const Vector<T>& other);
-    void free();
+    void free()noexcept;
 };
 
 
@@ -72,7 +72,7 @@ void Vector<T>::move(Vector<T>&& other){
 
 }
 template <typename T>
-void Vector<T>::free(){
+void Vector<T>::free()noexcept{
     delete[] _data;
     _data = nullptr;
     _size = _capacity = 0;
@@ -120,12 +120,12 @@ Vector<T>::Vector(const Vector<T>& other){
 }
 
 template <typename T>
-Vector<T>::Vector(Vector<T>&& other){
+Vector<T>::Vector(Vector<T>&& other)noexcept{
     move(std::move(other));
 
 }
 template <typename T>
-Vector<T>& Vector<T>::operator=(Vector<T>&& other){
+Vector<T>& Vector<T>::operator=(Vector<T>&& other)noexcept{
     if(this != &other){
         free();
         move(std::move(other));
