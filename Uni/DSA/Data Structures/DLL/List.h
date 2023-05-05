@@ -1,7 +1,38 @@
-#include "List.h"
+#pragma once
+#include <iostream>
+#include "DLL\Node\Node.hpp"
 
-void List::free(){
-    Node* iter = head;
+template <typename T>
+class List{
+private:
+    Node<T>* head = nullptr;
+
+public:
+    List() = default;
+    List(const T& data);
+    ~List();
+    List& operator=(const List<T>& other);
+    List(const List<T>& other);
+
+    void push_back(const T& data);
+    void push_front(const T& data);
+    void pop_back();
+    void pop_front();
+    void insert(size_t index, const T& data);
+    void remove(size_t index);
+    bool contains(const T& data) const;
+
+    void print();
+
+private:
+
+    void free();
+    void copyFrom(const List<T>& other);
+};
+
+template <typename T>
+void List<T>::free(){
+    Node<T>* iter = head;
     while(iter->next != nullptr){
         iter = iter->next;
         delete iter->prev;
@@ -11,12 +42,14 @@ void List::free(){
     head = nullptr;
     
 }
-void List::copyFrom(const List& other){
-    head = new Node(*(other.head));
-    Node* otherIter = other.head;
-    Node* thisIter = head;
+
+template <typename T>
+void List<T>::copyFrom(const List<T>& other){
+    head = new Node<T>(*(other.head));
+    Node<T>* otherIter = other.head;
+    Node<T>* thisIter = head;
     while(otherIter->next != nullptr){
-        thisIter->next = new Node(*(otherIter->next));
+        thisIter->next = new Node<T>(*(otherIter->next));
         thisIter->next->prev = thisIter;
         thisIter = thisIter->next;
         otherIter = otherIter->next;
@@ -24,18 +57,17 @@ void List::copyFrom(const List& other){
     
 }
 
-List::List(){
-    head = nullptr;
-
-}
-List::List(int data){
-    head = new Node(data);
+template <typename T>
+List<T>::List<T>(const T& data){
+    head = new Node<T>(data);
     head->next = head->prev = nullptr;
 }
-List::~List(){
+template <typename T>
+List<T>::~List<T>(){
     free();
 }
-List& List::operator=(const List& other){
+template <typename T>
+List<T>& List<T>::operator=(const List<T>& other){
     if(this != &other){
         free();
         copyFrom(other);
@@ -43,37 +75,42 @@ List& List::operator=(const List& other){
     return *this;
 
 }
-List::List(const List& other){
+
+template <typename T>
+List<T>::List<T>(const List<T>& other){
     copyFrom(other);
 
 }
 
-void  List::push_back(int data){
+template <typename T>
+void  List<T>::push_back(const T& data){
     if(head == nullptr){
         push_front(data);
     }
-    Node* iter = head;
+    Node<T>* iter = head;
     while(iter->next != nullptr){
         iter = iter->next;
     }
-    iter->next = new Node(data);
+    iter->next = new Node<T>(data);
     iter->next->prev = iter;
 
 }
 
-void  List::push_front(int data){
-    Node* newHead = new Node(data);
+template <typename T>
+void  List<T>::push_front(const T& data){
+    Node<T>* newHead = new Node<T>(data);
     newHead->next = head;
     head = newHead;
 
 }
 
-void  List::pop_back(){
+template <typename T>
+void  List<T>::pop_back(){
     if(head == nullptr){
         throw std::out_of_range("No elements");
     }
 
-    Node* iter = head;
+    Node<T>* iter = head;
     while(iter->next != nullptr){
         iter = iter->next;
     }
@@ -83,7 +120,8 @@ void  List::pop_back(){
 
 }
 
-void  List::pop_front(){
+template <typename T>
+void  List<T>::pop_front(){
     if(head == nullptr)
         throw std::out_of_range("No elements");
 
@@ -92,27 +130,28 @@ void  List::pop_front(){
         head = nullptr;
         return;
     }
-    Node* newHead = head->next;
+    Node<T>* newHead = head->next;
     newHead->prev = nullptr;
     delete head;
     head = newHead;
 }
 
-void  List::insert(size_t index, int data){
+template <typename T>
+void  List<T>::insert(size_t index, const T& data){
     if(index == 0){
         push_front(data);
         return;
     }
-    Node* iter = head;
+    Node<T>* iter = head;
 
     while(iter != nullptr){
         if(index == 1){
-            Node* newNode = new Node(data);
+            Node<T>* newNode<T> = new Node<T>(data);
             if(iter ->next != nullptr)
-                iter->next->prev = newNode;
-            newNode->next = iter->next;
-            newNode->prev = iter;
-            iter->next = newNode;
+                iter->next->prev = newNode<T>;
+            newNode<T>->next = iter->next;
+            newNode<T>->prev = iter;
+            iter->next = newNode<T>;
             return;
         }
         index--;
@@ -123,12 +162,13 @@ void  List::insert(size_t index, int data){
         throw std::out_of_range("Out of range");
 }
 
-void  List::remove(size_t index){
+template <typename T>
+void  List<T>::remove(size_t index){
     if(index == 0){
         pop_front();
     }
     
-    Node* iter = head;
+    Node<T>* iter = head;
 
     while(iter != nullptr){
         if(index == 0){
@@ -151,8 +191,9 @@ void  List::remove(size_t index){
 
 }
 
-bool List::contains(int data){
-    Node* iter = head;
+template <typename T>
+bool List<T>::contains(const T& data) const{
+    Node<T>* iter = head;
     while(iter != nullptr){
         if(iter->data == data)
             return true;
@@ -161,8 +202,9 @@ bool List::contains(int data){
     return false;
 
 }
-void List::print(){
-    Node* iter = head;
+template <typename T>
+void List<T>::print(){
+    Node<T>* iter = head;
     while(iter != nullptr){
         std::cout<<iter->data<<' ';
         iter = iter->next;

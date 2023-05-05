@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Node.h"
+#include "SLL\Node\Node.hpp"
 
 template <typename T>
 class List{
