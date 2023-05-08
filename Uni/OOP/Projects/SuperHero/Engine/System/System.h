@@ -6,8 +6,9 @@
 class System{
 private:
     Vector<Admin*> _admins; 
-    Vector<Player*> _players;   //Hash map??
+    Vector<Player*> _players;
     Vector<SuperHero*> _shop;
+    Player* _cycleStart = nullptr;
     
 public:
     System();
@@ -24,14 +25,26 @@ public:
     void removeAdmin(size_t index);
     void removeHero(size_t index);
 
-    size_t findPlayer(const String& username) const;
-    size_t findAdmin(const String& username) const;
-    size_t findHero(const String& username) const;
+    size_t findPlayer(const char* username) const;
+    size_t findAdmin(const char* username) const;
+    size_t findHero(const String& heroName) const;
 
-    void printInfo(const String& username) const;
-    void printAdminInfo(const String& username) const;
+    void printInfo(const char* username) const;
+    void printAdminInfo(const char* username) const;
     void printScoreboard();
+
+    bool emptyShop() const;
+
+    Player* logInPlayer(const char* username, const String& password);
+    Admin* logInAdmin(const char* username, const String& password);
+
+    
+    void saveToBinary(std::ofstream& ofs) const;
+    void loadFromBinary(std::ifstream& ifs);
+
+    void endCycle();
 
 private:
     void sortPlayers();
+    void free();
 };

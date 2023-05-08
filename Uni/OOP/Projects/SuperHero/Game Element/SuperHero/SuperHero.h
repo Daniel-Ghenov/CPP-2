@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include "MyString.h"
+#include "System\Const.h"
 
 enum class Element{
     fire,
@@ -30,11 +32,14 @@ public:
     const String& firstName() const;
     const String& lastName() const;
     const String& heroName() const;
+
     size_t power() const;
     size_t cost() const;
     Element element() const;
     Stance stance() const;
 
+    void saveToBinary(std::ofstream& ofs) const;
+    void loadFromBinary(std::ifstream& ifs);
 
 
     void print() const;
@@ -47,3 +52,5 @@ std::ostream& operator<<(std::ostream& os, const Stance& stance);
 
 std::istream& operator>>(std::istream& is, const Element& element);
 std::istream& operator>>(std::istream& is, const Stance& stance);
+
+bool dominates(const Element& element1, const Element& element2);

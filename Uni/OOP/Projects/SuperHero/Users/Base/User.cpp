@@ -26,9 +26,9 @@ const String& User::email() const{
     return _email;
     
 }
-const String& User::username() const{
+const char* User::username() const{
     return _username;
-    
+
 }
 const String& User::password() const{
     return _password;
@@ -70,23 +70,23 @@ void User::setEmail(const char* email){
 
 
 void User::setUserName(const char* username){
-    if(this->validUsername(username))
+    if(validUsername(username))
         strcopy(_username ,username);
 }
 
 
 void User::setPassword(const String& password){
-    if(this->validPassword(password))
+    if(validPassword(password))
         _password = password;
 }
 
 void User::setPassword(String&& password){
-    if(this->validPassword(password))
+    if(validPassword(password))
         _password = std::move(password);
 }
 
 void User::setPassword(const char* password){
-    if(this->validPassword(password))
+    if(validPassword(password))
         _password = password;
 }
 
@@ -98,7 +98,7 @@ void User::print() const{
 
 }
 void User::printAdmin() const{
-    this->print();
+    print();
 }
 
 
@@ -132,4 +132,59 @@ bool User::validPassword(const String& password) const{
         throw std::invalid_argument("Password must contain one uppercase letter, one lowercase letter and one digit");
     }
     return true;
+}
+
+
+void User::saveToBinary(std::ofstream& ofs) const{
+    if(!ofs.is_open()){
+        throw std::runtime_error("File not open");
+    }
+
+    ofs.write((const char *) _firstName.size(), sizeof(_firstName.size()));
+    ofs.write(_firstName.data(), _firstName.size());
+
+    ofs.write((const char *) _lastName.size(), sizeof(_lastName.size()));
+    ofs.write(_lastName.data(), _lastName.size());
+    
+    ofs.write((const char *) _email.size(), sizeof(_email.size()));
+    ofs.write(_email.data(), _email.size());
+
+    ofs.write((const char *) _password.size(), sizeof(_password.size()));
+    ofs.write(_password.data(), _password.size());
+
+    ofs.write(_username, USERNAME_LEN);
+}
+void User::loadFromBinary(std::ifstream& ifs){
+    if(!ifs.is_open()){
+        throw std::runtime_error("File not open");
+    }
+
+    size_t size;
+    char* data;
+
+    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    data = new char[size];
+    ifs.read(data, size);
+    _firstName = data;
+    delete[] data;
+
+    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    data = new char[size];
+    ifs.read(data, size);
+    _lastName = data;
+    delete[] data;
+
+    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    data = new char[size];
+    ifs.read(data, size);
+    _email = data;
+    delete[] data;
+
+    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    data = new char[size];
+    ifs.read(data, size);
+    _password = data;
+    delete[] data;
+
+    ifs.read(_username, USERNAME_LEN);
 }

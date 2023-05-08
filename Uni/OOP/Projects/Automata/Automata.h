@@ -1,10 +1,10 @@
 #pragma once
-#include "State/State.h"
+#include "State\State.h"
 
 class Automata{
 private:
-    Vector<State*> begin;
-    Vector<State*> ending;
+    Vector<State*> _begin;
+    Vector<State*> _ending;
     bool _determinate = true;
 
 public:
@@ -21,5 +21,7 @@ private:
     void free();
     void copyFrom(const Automata& other);
     void move(Automata&& other);
+
+    size_t hasVisited(State* state, Vector<Vector<State*>>& visited) const;
 
 };

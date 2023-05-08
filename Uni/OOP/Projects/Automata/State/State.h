@@ -21,6 +21,8 @@ public:
     void addChild(char letter);
 
     Vector<State*> goTo(char c);
+
+    void copy(const State& other, Vector<Vector<State*>>& visited);
     
 private:
 

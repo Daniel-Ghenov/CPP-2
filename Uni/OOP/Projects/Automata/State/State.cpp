@@ -1,4 +1,4 @@
-#include"State.h"
+#include "State\State.h"
 
 void State::addLink(char letter, State* state){
     if(contains({letter, state}))
@@ -19,6 +19,7 @@ State::State(const State& other){
 State::State(State&& other){
     move(std::move(other));
 }
+
 State& State::operator=(State&& other){
     if(this != &other){
         free();
@@ -26,6 +27,11 @@ State& State::operator=(State&& other){
     }
     return *this;
 }
+
+State& State::operator=(const State& other){
+
+}
+
 
 State::~State(){
     free();
@@ -54,6 +60,14 @@ bool State::contains(const Link& link){
     return false;
 }
 
+void State::copy(const State& other, Vector<Vector<State*>>& visited){
+    if(this != &other){
+        free();
+        copyFrom(other, visited);
+    }
+}
+
+
 
 void State::free(){
     for(size_t i {0}; i < _links.size(); i++){
@@ -67,7 +81,8 @@ void State::free(){
 }
 
 void State::copyFrom(const State& other){
-    copyFrom(other, Vector<Vector<State*>>());//starting the recurrsion
+    Vector<Vector<State*>> visited;
+    copyFrom(other, visited);//starting the recurrsion
 }
 
 State::State(const State& other, Vector<Vector<State*>>& visited){
@@ -81,6 +96,7 @@ void State::copyFrom(const State& other, Vector<Vector<State*>>& visited){  //ho
         size_t index = hasVisited(other._links[i]._ptr, visited);   //we check if we have already seen this state
         if(index != (size_t)-1){    
             _links.push_back({other._links[i]._letter, visited[index][1]}); //if we have we just redirect our new link to the State we have created
+            visited[index][1]->_refs++;
         }
         else{
             size_t currentLink = visited.size();    //the new Link we are going to create will be inside on the position of the current size
