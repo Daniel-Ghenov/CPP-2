@@ -1,5 +1,7 @@
 #pragma once
+#include <fstream>
 #include "MyString.h"
+
 
 const int USERNAME_LEN = 17;
 const int NAME_LEN = 21;
@@ -40,8 +42,11 @@ public:
     const String& firstName() const;
     const String& lastName() const;
     const String& email() const;
-    const String& username() const;
+    const char* username() const;
     const String& password() const;
+
+    void saveToBinary(std::ofstream& ofs) const;
+    void loadFromBinary(std::ifstream& ifs);
 
     virtual void print() const;
     virtual void printAdmin() const;

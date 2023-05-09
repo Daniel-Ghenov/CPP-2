@@ -1,5 +1,5 @@
 #pragma once
-
+#include <initializer_list>
 #include <iostream>
 #include "RAReverseIter.hpp"
 #include "Const.h"
@@ -32,6 +32,8 @@ public:
     Vector(Vector<T>&& other) noexcept;
     Vector<T>& operator=(Vector<T>&& other) noexcept;
 
+    Vector(const std::initializer_list<T>& initList);
+
 
     bool contains(const T& data) const;
     size_t find(const T& data) const;
@@ -41,6 +43,7 @@ public:
     const T& front() const;
     const T& back() const;
     operator bool() const;
+    bool empty() const;
 
     void resize(size_t size);   //Size Modifications
     void resize(size_t size, const T& fill);
@@ -75,31 +78,6 @@ private:
 };
 
 
-template <typename T>
-void Vector<T>::copyFrom(const Vector<T>& other){
-    _data = new T[other.capacity];
-    for(size_t i {0}; i < other._size; i++){
-        _data[i] = other._data[i];
-    }
-    _size = other._size;
-    _capacity = other.capacity;
-}
-
-template <typename T>
-void Vector<T>::move(Vector<T>&& other){
-    this->_data = other._data;
-    this->_size = other.size;
-    this->_capacity = other._capacity;
-    other._data = nullptr;
-    other._capacity = other._size = 0;
-
-}
-template <typename T>
-void Vector<T>::free() noexcept{
-    delete[] _data;
-    _data = nullptr;
-    _size = _capacity = 0;
-}
 
 //Big 4 and Constructors
 
@@ -156,6 +134,16 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& other)noexcept{
     return *this;
 }
 
+template <typename T>
+Vector<T>::Vector(const std::initializer_list<T>& initList){
+    _size = initList.size();
+    _capacity = _size * UPSIZE_BY;
+    _data = new T[_capacity];
+    for(size_t i {0}; i < _size; i++){
+        _data[i] = initList[i];
+    }
+}
+
 //data Access
 
 template <typename T>
@@ -199,6 +187,12 @@ template <typename T>
 const T& Vector<T>::back() const{
     return _data[_size - 1];
 }
+
+template <typename T>
+bool Vector<T>::empty() const{
+    return _size == 0;
+}
+
 
 //_size Modifications
 
@@ -351,4 +345,28 @@ Vector<T>::ConstRIterator Vector<T>::crbegin() const{
 
 
 
-//Reverse Const Iterator
+template <typename T>
+void Vector<T>::copyFrom(const Vector<T>& other){
+    _data = new T[other.capacity];
+    for(size_t i {0}; i < other._size; i++){
+        _data[i] = other._data[i];
+    }
+    _size = other._size;
+    _capacity = other.capacity;
+}
+
+template <typename T>
+void Vector<T>::move(Vector<T>&& other){
+    this->_data = other._data;
+    this->_size = other.size;
+    this->_capacity = other._capacity;
+    other._data = nullptr;
+    other._capacity = other._size = 0;
+
+}
+template <typename T>
+void Vector<T>::free() noexcept{
+    delete[] _data;
+    _data = nullptr;
+    _size = _capacity = 0;
+}
