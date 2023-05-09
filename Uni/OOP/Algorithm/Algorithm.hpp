@@ -1,5 +1,4 @@
 #pragma once
-#include "Iterator\ReverseIter.hpp"
 
 template<class Iterator, class T>
 Iterator find(Iterator first, Iterator last, const T& find){    //returns iterator to first instance of find
