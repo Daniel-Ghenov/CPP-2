@@ -6,4 +6,4 @@ const int ATTACK_LOSS = 300;
 const int CYCLE_MONEY = 200;
 const int DOMINATE_MULT = 2;
 
-const char FILE_NAME[15] = "Save\\save.dat";
+const char SAVEFILE_NAME[15] = "Save\\save.dat";

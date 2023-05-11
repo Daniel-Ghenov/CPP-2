@@ -11,6 +11,10 @@ public:
     BaseIF(BaseIF&& other);
     BaseIF& operator=(const BaseIF& other) = delete;
     BaseIF& operator=(BaseIF&& other) = delete;
+    virtual ~BaseIF() = default;
+
+    virtual void printInfo(const char* username) = 0;
+
 
     System* sys();
 };
