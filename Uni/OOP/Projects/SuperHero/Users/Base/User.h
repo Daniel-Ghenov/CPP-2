@@ -52,7 +52,6 @@ public:
     virtual void printAdmin() const;
 
 private:
-    String hash(const String& str) const; //For Future password hashing capabilities
     bool validUsername(const char* username) const;
     bool validPassword(const String& password) const;
 

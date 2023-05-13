@@ -1,5 +1,6 @@
 #pragma once
 #include "Base\BaseIF.h"
+#include "System\Const.h"
 
 class AdminIF: BaseIF{
 private:
@@ -20,4 +21,5 @@ public:
     
     void addHero(const String& firstName, const String& lastName, const String& heroName, size_t power,
                 size_t cost, Element element, Stance stance);
+    void returnHero(size_t index);
 };
