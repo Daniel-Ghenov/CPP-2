@@ -100,6 +100,6 @@ private:
 std::ostream& operator<<(std::ostream& os, const String& str);
 std::istream& operator>>(std::istream& is, const String& str);
 
-std::istream& getline(std::istream& is, String& str, char delim);
+std::istream& getline(std::istream& is, String& str, char delim = '\n');
 
 String operator+ (const String& lhs, const String& rhs);

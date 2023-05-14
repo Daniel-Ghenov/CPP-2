@@ -46,6 +46,13 @@ Element SuperHero::element() const{
 Stance SuperHero::stance() const{
     return _stance;
 }
+void SuperHero::changeStance(){
+    
+    if(_stance == Stance::attack)
+        _stance = Stance::deffend;
+    else
+        _stance = Stance::attack;
+}
 
 void SuperHero::saveToBinary(std::ofstream& ofs) const{
     if(!ofs.is_open()){

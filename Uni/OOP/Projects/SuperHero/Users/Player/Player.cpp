@@ -64,10 +64,6 @@ void Player::removeHero(const SuperHero* hero){
 
 }
 
-void Player::attack(const SuperHero* first, const SuperHero* second, Player* other){
-
-
-}
 void Player::print() const{
     std::cout<<"Username: "<< username()<<"Money: "<<_money<<std::endl;
     std::cout<<"Heroes: "<<std::endl;
@@ -84,8 +80,19 @@ void Player::adminPrint() const{
         _heroes[i]->adminPrint();
     }
 }
+
+void Player::changeStance(const String& heroName){
+    _heroes[findHero(heroName)]->changeStance();
+}
+
 size_t Player::money() const{
     return _money;
+}
+size_t Player::setMoney(size_t money){
+    _money = money;
+}
+const Vector<SuperHero*>& Player::heroes() const{
+    return _heroes;
 }
 
 

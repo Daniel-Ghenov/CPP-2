@@ -22,9 +22,11 @@ public:
     void addHero(SuperHero* other);
     size_t findHero(const String& heroName);
     void removeHero(const SuperHero* hero);
+    void changeStance(const String& heroName);
 
-    void attack(const SuperHero* first, const SuperHero* second, Player* other);
     size_t money() const;
+    size_t setMoney(size_t money);
+    const Vector<SuperHero*>& heroes() const;
 
     void print() const;
     void adminPrint() const;
@@ -32,9 +34,11 @@ public:
     void saveToBinary(std::ofstream& ofs) const;
     void loadFromBinary(std::ifstream& ifs);
 
-    friend class System;
 private:
     void copyFrom(const Player& other);
     void move(Player&& other);
     void free();
+
+
+
 };

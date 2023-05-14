@@ -1,35 +1,15 @@
 #include "System.h"
 
-size_t System::_copies = 0;
+System* System::instance = nullptr;
 
+System::System(): _admins(8, nullptr), _shop(8, nullptr), _players(8, nullptr), _graveyard(8, nullptr){
+    _admins[0] = new Admin({"", "", "", "admin", "Password1"});
+    srand(time(NULL));
 
-System::System(): System({"", "", "", "admin", "Password1"}){
-    if(_copies == 1){
-        throw std::logic_error("Only one System can exist at once");
-    }
-    _copies = 1;
-    srand(time(NULL));
-}
-System::System(const Admin& admin): _admins(8, nullptr), _shop(8, nullptr), _players(8, nullptr), _graveyard(8, nullptr){
-    if(_copies == 1){
-        throw std::logic_error("Only one System can exist at once");
-    }
-    _copies = 1;
-    _admins[0] = new Admin(admin);
-    srand(time(NULL));
+    std::ifstream ifs(SAVEFILE_NAME, std::ios::in | std::ios::binary);
+    loadFromBinary(ifs);
     
 }
-System::System(std::ifstream& ifs){
-
-    if(_copies == 1){
-        throw std::logic_error("Only one System can exist at once");
-    }
-    _copies = 1;
-    srand(time(NULL));
-    loadFromBinary(ifs);
-}
-
-
 System::~System(){
     free();
 
@@ -205,7 +185,7 @@ Admin* System::logInAdmin(const char* username, const String& password){
 
 void System::endCycle(){
     for(size_t i {0}; i < _players.size(); i++){
-        _players[i]->_money += CYCLE_MONEY;
+        _players[i]->setMoney(_players[i]->money() + CYCLE_MONEY);
     }
 }
 
@@ -283,9 +263,18 @@ void System::loadFromBinary(std::ifstream& ifs){
     
 }
 
-void System::attack(Player* attacker,SuperHero* attackHero, Player* deffender, SuperHero* deffendHero = nullptr){
-    if(deffendHero == nullptr){
-        deffendHero = deffender->_heroes[rand() % deffender->_heroes.size()];  //setting the deffending hero to a random one
+void System::attack(const char* attackerUsername, const String& attackerHeroName , const char* deffenderUsername, const String& deffendHeroName){
+
+    Player* attacker = _players[findPlayer(attackerUsername)];
+    SuperHero* deffendHero;
+    SuperHero* attackHero = attacker->heroes()[attacker->findHero(attackerHeroName)];
+    
+    Player* deffender = _players[findPlayer(deffenderUsername)];
+
+    if(deffendHeroName == ""){
+        deffendHero = deffender->heroes()[rand() % deffender->heroes().size()];  //setting the deffending hero to a random one
+    }else{
+        deffendHero = deffender->heroes()[deffender->findHero(deffendHeroName)];
     }
 
     size_t attackHeroAttack = (dominates(attackHero->element(), deffendHero->element()))? attackHero->power() * DOMINATE_MULT : attackHero->power();    //setting attack with multipliers
@@ -299,29 +288,30 @@ void System::attack(Player* attacker,SuperHero* attackHero, Player* deffender, S
     }
     else{
         if(attackHeroAttack > deffendHeroAttack){
-            if( deffender->_money < attackHeroAttack - deffendHeroAttack){
-                attacker->_money += deffender->_money;
-                deffender->_money = 0;
+            if( deffender->money() < attackHeroAttack - deffendHeroAttack){
+                attacker->setMoney(attacker->money() + deffender->money());
+                deffender->setMoney(0);
             }
             else{
-                attacker->_money += attackHeroAttack - deffendHeroAttack;
-                deffender->_money -= attackHeroAttack - deffendHeroAttack;
+                attacker->setMoney(attacker->money() + (attackHeroAttack - deffendHeroAttack));
+                deffender->setMoney(deffender->money() - (attackHeroAttack - deffendHeroAttack));
             }            
             _graveyard.push_back(deffendHero);
             deffender->removeHero(deffendHero);
         }
         else if(attackHeroAttack == deffendHeroAttack){
-            attacker->_money = (attacker->_money < EQUALL_LOSS)? 0 : attacker->_money - EQUALL_LOSS;
+            attacker->setMoney((attacker->money() < EQUALL_LOSS)? 0 : attacker->money() - EQUALL_LOSS);
         }
         else{
-            deffender->_money += ATTACK_LOSS;
-            attacker->_money = (attacker->_money < (deffendHeroAttack - attackHeroAttack) * 2)? 0 : attacker->_money - (deffendHeroAttack - attackHeroAttack) * 2;
+            deffender->setMoney(deffender->money() + ATTACK_LOSS);
+            attacker->setMoney((attacker->money() < (deffendHeroAttack - attackHeroAttack) * 2)? 0 : attacker->money() - (deffendHeroAttack - attackHeroAttack) * 2);
         }
     }
 }
-void System::buy(Player* buyer, const String& heroName){
+void System::buy(const char* buyerUsername, const String& heroName){
+    
     size_t index = findHero(heroName);
-    buyer->addHero(_shop[index]);
+    _players[findPlayer(buyerUsername)]->addHero(_shop[index]);
     std::swap(_shop[index], _shop[_shop.size() - 1]);
     _shop.pop_back();
 }
@@ -334,7 +324,7 @@ void System::printScoreboard(){
         std::cout<<std::endl;
     }
 }
-void System::printGraveyard() const{
+void System::printGraveyard() const noexcept{
 
     for(size_t i {0}; i < _graveyard.size(); i++){
         std::cout<<i<<": ";
@@ -342,7 +332,18 @@ void System::printGraveyard() const{
         std::cout<<std::endl;
     }
 }
+void System::printShop() const noexcept{
 
+    for(size_t i {0}; i < _shop.size(); i++){
+        std::cout<<i<<": ";
+        _shop[i]->print();
+        std::cout<<std::endl;
+    }
+}
+
+void System::changeStance(const char* playerUsername,const String& heroName){
+    _players[findPlayer(playerUsername)]->changeStance(heroName);
+}
 
 void System::sortPlayers(){
 
@@ -382,3 +383,9 @@ void System::free(){
     }  
 }
 
+System* System::getSystem(){
+    if(instance == nullptr)
+        instance = new System();
+
+    return instance;
+}

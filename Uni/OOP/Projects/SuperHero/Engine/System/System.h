@@ -12,18 +12,17 @@ private:
     Vector<SuperHero*> _graveyard;
     Player* _cycleStart = nullptr;
 
-    static size_t _copies;  //Singleton class (no more than one is able to exist)
-    
-public:
-    System();
-    System(const Admin& admin);
+    System(); //Singleton class (no more than one is able to exist)
     ~System();
-private:
-    System(std::ifstream& ifs);
     System(const System& other) = delete;
     System(System&& other) = delete;
     System& operator=(const System& other) = delete;
     System& operator=(System&& other) = delete;
+
+    static System* instance;
+
+public:
+
 
     void addPlayer(const Player& player);
     void addAdmin(const Admin& admin);
@@ -42,16 +41,22 @@ private:
     void printInfo(const char* username) const;
     void printAdminInfo(const char* username) const;
     void printScoreboard();
-    void printGraveyard() const;
+    void printGraveyard() const noexcept;
+    void printShop() const noexcept;
 
     Player* logInPlayer(const char* username, const String& password);
     Admin* logInAdmin(const char* username, const String& password);
 
     
 
-    void attack(Player* attacker,SuperHero* attackHero, Player* deffender, SuperHero* deffendHero = nullptr);
-    void buy(Player* buyer, const String& heroName);
-    
+    void attack(const char* attackerUN, const String& attackerHeroName , const char* deffenderUsername, const String& deffendHeroName);
+    void buy(const char* buyerUN, const String& heroName);
+    void changeStance(const char* playerUN,const String& heroName);
+
+    static System* getSystem();
+
+private:
+
     void saveToBinary(std::ofstream& ofs) const;
     void loadFromBinary(std::ifstream& ifs);
     void endCycle();
@@ -59,7 +64,4 @@ private:
     void removeHero(size_t index);
     void sortPlayers();
     void free();
-
-    friend class BaseIF;
-    friend class AdminIF;
 };

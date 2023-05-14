@@ -40,6 +40,7 @@ public:
 
     void saveToBinary(std::ofstream& ofs) const;
     void loadFromBinary(std::ifstream& ifs);
+    void changeStance();
 
 
     void print() const;
