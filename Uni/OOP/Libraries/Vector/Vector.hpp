@@ -2,7 +2,11 @@
 #include <initializer_list>
 #include <iostream>
 #include "RAReverseIter.hpp"
-#include "Const.h"
+
+const int UPSIZE_BY = 2;
+const int DOWNSIZE_BY = 4;
+const int DEFAULT_SIZE = 8;
+
 
 template <typename T>
 class Vector{

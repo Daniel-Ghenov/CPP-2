@@ -1,7 +1,13 @@
 #pragma once
 #include <cassert>
-#include "Const.h"
-#include "StringAlg.h"
+#include "RollingHash\StringAlg.h"
+
+const int UPSIZE_BY = 2;
+const int DEFAULT_CAP = 4;
+const int DOWNSIZE_BY = 4;
+const int CIN_BUFF_SIZE = 1024;
+
+const int CHAR_SIZE = 256;
 
 class String{
 private:
@@ -56,12 +62,8 @@ public:
 
     String substr(size_t startpos, size_t endpos);  //String Operations
 
-    bool operator==(const String& other) const; //Boolean Operations
-    bool operator!=(const String& other) const;
-    bool operator<=(const String& other) const;
-    bool operator>=(const String& other) const;
-    bool operator<(const String& other) const;
-    bool operator>(const String& other) const;
+    int operator<=>(const String& other) const; //Boolean operator
+
     bool empty() const;
     operator bool() const;
     int compare(const String& other) const;

@@ -273,24 +273,10 @@ int String::compare(const String& other) const{   //comparison operators
     return strcomp(data(), other.data());    
 }
 
-bool String::operator==(const String& other) const{
-    return(strcomp(data(), other.data()) == 0);
+int String::operator<=>(const String& other) const{
+    return strcomp(data(), other.data());
 }
-bool String::operator!=(const String& other) const{
-    return(strcomp(data(), other.data()) != 0);
-}
-bool String::operator<=(const String& other) const{
-    return(strcomp(data(), other.data()) <= 0);
-}
-bool String::operator>=(const String& other) const{
-    return(strcomp(data(), other.data()) >= 0); 
-}
-bool String::operator<(const String& other) const{
-    return(strcomp(data(), other.data()) <= 0);
-}
-bool String::operator>(const String& other) const{
-    return(strcomp(data(), other.data()) >= 0); 
-}
+
 bool String::empty() const{
     return size() == 0;
 }
@@ -312,7 +298,7 @@ std::istream& operator>>(std::istream& is, String& str){
     return is;
 }
 
-std::istream& getline(std::istream& is, String& str, char delim = '\n'){
+std::istream& getline(std::istream& is, String& str, char delim){
     
     char buffer[CIN_BUFF_SIZE];
 

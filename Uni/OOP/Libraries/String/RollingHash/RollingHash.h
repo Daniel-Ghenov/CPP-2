@@ -1,6 +1,5 @@
 #pragma once
-#include "Const.h"
-#include "Helper.h"
+#include "..\Helper.h"
 #include <cmath>
 
 class RollingHash{

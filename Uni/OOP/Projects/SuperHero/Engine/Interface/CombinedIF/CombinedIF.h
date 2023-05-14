@@ -1,6 +1,6 @@
 #pragma once
-#include"AdminIF\AdminIF.h"
-#include"PlayerIF\PlayerIF.h"
+#include "AdminIF\AdminIF.h"
+#include "PlayerIF\PlayerIF.h"
 
 
 class CombinedIF: BaseIF{

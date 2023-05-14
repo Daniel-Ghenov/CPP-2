@@ -1,8 +1,8 @@
 #pragma once
 #include <random>
-#include "Vector.hpp"
-#include "Admin.h"
-#include "Player.h"
+#include "Vector\Vector.hpp"
+#include "Admin\Admin.h"
+#include "Player\Player.h"
 
 class System{
 private:
