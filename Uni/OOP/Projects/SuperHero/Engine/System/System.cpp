@@ -19,6 +19,17 @@ System::System(const Admin& admin): _admins(8, nullptr), _shop(8, nullptr), _pla
     srand(time(NULL));
     
 }
+System::System(std::ifstream& ifs){
+
+    if(_copies == 1){
+        throw std::logic_error("Only one System can exist at once");
+    }
+    _copies = 1;
+    srand(time(NULL));
+    loadFromBinary(ifs);
+}
+
+
 System::~System(){
     free();
 

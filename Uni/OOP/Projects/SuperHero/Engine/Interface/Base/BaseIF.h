@@ -14,7 +14,6 @@ public:
     virtual ~BaseIF() = default;
 
     virtual void printInfo(const char* username) = 0;
-
-
     System* sys();
+
 };

@@ -18,6 +18,8 @@ public:
     System();
     System(const Admin& admin);
     ~System();
+private:
+    System(std::ifstream& ifs);
     System(const System& other) = delete;
     System(System&& other) = delete;
     System& operator=(const System& other) = delete;
@@ -42,8 +44,6 @@ public:
     void printScoreboard();
     void printGraveyard() const;
 
-    bool emptyShop() const;
-
     Player* logInPlayer(const char* username, const String& password);
     Admin* logInAdmin(const char* username, const String& password);
 
@@ -56,8 +56,10 @@ public:
     void loadFromBinary(std::ifstream& ifs);
     void endCycle();
 
-private:
     void removeHero(size_t index);
     void sortPlayers();
     void free();
+
+    friend class BaseIF;
+    friend class AdminIF;
 };
