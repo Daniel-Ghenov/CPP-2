@@ -115,6 +115,7 @@ std::ostream& operator<<(std::ostream& os, const Element& element){
         case Element::earth :
             return os<<"Earth";
     }
+    return os;
 }
 std::ostream& operator<<(std::ostream& os, const Stance& stance){
 
@@ -125,6 +126,7 @@ std::ostream& operator<<(std::ostream& os, const Stance& stance){
         case Stance::deffend :
             return os<<"Deffence";
     }
+    return os;
 }
 
 std::istream& operator>>(std::istream& is, Element& element){
@@ -139,7 +141,7 @@ std::istream& operator>>(std::istream& is, Element& element){
     else
         element = Element::earth;
 
-    return;
+    return is;
 }
 std::istream& operator>>(std::istream& is, Stance& stance){
     char buff[BUFF_SIZE];
@@ -149,7 +151,7 @@ std::istream& operator>>(std::istream& is, Stance& stance){
     }
     else
         stance = Stance::deffend;
-    return;
+    return is;
 }
 
 

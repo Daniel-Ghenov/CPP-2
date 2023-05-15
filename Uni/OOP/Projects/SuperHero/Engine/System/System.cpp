@@ -256,7 +256,7 @@ void System::loadFromBinary(std::ifstream& ifs){
     char tempUsr[USERNAME_LEN];
     ifs.read(tempUsr, USERNAME_LEN);
 
-    if(tempUsr == '\0')
+    if(tempUsr[0] == '\0')
         _cycleStart = nullptr;
     else
         _cycleStart = _players[findPlayer(tempUsr)];

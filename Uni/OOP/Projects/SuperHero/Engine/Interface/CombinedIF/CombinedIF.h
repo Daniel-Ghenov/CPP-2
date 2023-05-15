@@ -20,9 +20,5 @@ public:
 
 private:
 
-    virtual bool logIn() {return true;}
-    virtual void printInfo() const {}
-    virtual void help() const {}
-
     void free();
 };

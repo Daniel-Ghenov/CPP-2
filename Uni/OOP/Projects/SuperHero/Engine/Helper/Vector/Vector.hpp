@@ -351,12 +351,12 @@ Vector<T>::ConstRIterator Vector<T>::crbegin() const{
 
 template <typename T>
 void Vector<T>::copyFrom(const Vector<T>& other){
-    _data = new T[other.capacity];
+    _data = new T[other.capacity()];
     for(size_t i {0}; i < other._size; i++){
         _data[i] = other._data[i];
     }
     _size = other._size;
-    _capacity = other.capacity;
+    _capacity = other.capacity();
 }
 
 template <typename T>

@@ -26,7 +26,7 @@ public:
     void changeStance(const String& heroName);
 
     size_t money() const;
-    size_t setMoney(size_t money);
+    void setMoney(size_t money);
     const Vector<SuperHero*>& heroes() const;
 
     void print() const;

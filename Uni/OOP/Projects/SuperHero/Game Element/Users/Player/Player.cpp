@@ -88,7 +88,7 @@ void Player::changeStance(const String& heroName){
 size_t Player::money() const{
     return _money;
 }
-size_t Player::setMoney(size_t money){
+void Player::setMoney(size_t money){
     _money = money;
 }
 const Vector<SuperHero*>& Player::heroes() const{

@@ -16,14 +16,14 @@ public:
 private:
 
     void deleteAcc();
-    void printInfo() const override;
+    void printInfo() const;
     void printScoreboard();
     void attack();
     void shop();
     void buy();
     void changeStance();
-    bool logIn() override;
+    bool logIn();
 
-    void help() const override;
+    void help() const;
 
 };

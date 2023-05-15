@@ -18,12 +18,12 @@ private:
     void addPlayer();
     void addAdmin();
     void removePlayer();
-    void printInfo() const override;
+    void printInfo() const;
     void addHero();
     void returnHero();
-    bool logIn() override;
+    bool logIn();
 
-    void help() const override;
+    void help() const;
     void printGraveyard() const;
 
 };
