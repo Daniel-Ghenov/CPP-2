@@ -1,6 +1,5 @@
 #pragma once
-#include "BaseIF\BaseIF.h"
-#include "System\Const.h"
+#include "../BaseIF\BaseIF.h"
 
 class PlayerIF: BaseIF{
 private:

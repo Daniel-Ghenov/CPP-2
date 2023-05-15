@@ -1,6 +1,6 @@
 #pragma once
 #include <fstream>
-#include "MyString.h"
+#include "../../../Engine\Helper\String\MyString.h"
 
 const int USERNAME_LEN = 17;
 

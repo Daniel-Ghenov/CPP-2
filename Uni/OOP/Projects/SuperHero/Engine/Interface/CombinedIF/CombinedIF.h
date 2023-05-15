@@ -1,6 +1,6 @@
 #pragma once
-#include "AdminIF\AdminIF.h"
-#include "PlayerIF\PlayerIF.h"
+#include "../AdminIF\AdminIF.h"
+#include "../PlayerIF\PlayerIF.h"
 
 
 class CombinedIF: BaseIF{
@@ -20,7 +20,7 @@ public:
 
 private:
 
-    virtual bool logIn() {}
+    virtual bool logIn() {return true;}
     virtual void printInfo() const {}
     virtual void help() const {}
 

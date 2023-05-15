@@ -1,8 +1,9 @@
 #pragma once
 #include "..\Base\User.h"
-#include "SuperHero.h"
-#include "System\Const.h"
-#include "Vector.hpp"
+#include "../../SuperHero\SuperHero.h"
+#include "../../../Engine\Helper\Vector\Vector.hpp"
+
+const int START_MONEY = 1000;
 
 class Player : public User{
 private:

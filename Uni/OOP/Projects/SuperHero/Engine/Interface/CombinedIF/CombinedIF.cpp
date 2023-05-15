@@ -1,4 +1,4 @@
-#include "CombinedIF\CombinedIF.h"
+#include "CombinedIF.h"
 
 CombinedIF::~CombinedIF(){
     free();

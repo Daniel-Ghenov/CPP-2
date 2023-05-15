@@ -1,8 +1,9 @@
 #pragma once
 #include <random>
-#include "Vector\Vector.hpp"
-#include "Admin\Admin.h"
-#include "Player\Player.h"
+#include "../Helper\Vector\Vector.hpp"
+#include "../../Game Element\Users\Admin\Admin.h"
+#include "../../Game Element\Users\Player\Player.h"
+#include "Const.h"
 
 class System{
 private:

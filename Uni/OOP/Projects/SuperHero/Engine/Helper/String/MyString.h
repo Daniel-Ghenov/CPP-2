@@ -15,7 +15,6 @@ private:
     size_t _size = 0;
     size_t _capacity = 0;
 
-
 public:
 
     static const size_t nopos = -1;  //return-value for "no instance found"
@@ -69,12 +68,6 @@ public:
     bool operator<(const String& other) const;
     bool operator>(const String& other) const;
 
-    bool operator==(const char* other) const; //Boolean Operations
-    bool operator!=(const char* other) const;
-    bool operator<=(const char* other) const;
-    bool operator>=(const char* other) const;
-    bool operator<(const char* other) const;
-    bool operator>(const char* other) const;
 
     bool empty() const;
     operator bool() const;

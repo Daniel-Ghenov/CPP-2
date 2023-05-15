@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include "MyString.h"
-#include "System\Const.h"
+#include "../../Engine\Helper\String\MyString.h"
 
 enum class Element{
     fire,

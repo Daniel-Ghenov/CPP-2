@@ -292,25 +292,6 @@ bool String::operator>(const String& other) const{
     return(strcomp(data(), other.data()) >= 0); 
 }
 
-bool String::operator==(const char* other) const{
-    return(strcomp(data(), other) == 0);
-}
-bool String::operator!=(const char* other) const{
-    return(strcomp(data(), other) != 0);
-}
-bool String::operator<=(const char* other) const{
-    return(strcomp(data(), other) <= 0);
-}
-bool String::operator>=(const char* other) const{
-    return(strcomp(data(), other) >= 0); 
-}
-bool String::operator<(const char* other) const{
-    return(strcomp(data(), other) <= 0);
-}
-bool String::operator>(const char* other) const{
-    return(strcomp(data(), other) >= 0); 
-}
-
 bool String::empty() const{
     return size() == 0;
 }
