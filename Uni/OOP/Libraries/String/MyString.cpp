@@ -364,6 +364,7 @@ void String::free() noexcept {
 void String::copyFrom(const String& other){
     if(other.isShort()){
         shortCopy(other);
+        return;
     }
 
     setCapacity(other.capacity());
@@ -375,8 +376,10 @@ void String::copyFrom(const String& other){
 void String::copyFrom(const char* string){  //overload so we do not go trough converting constructor
 
     size_t strsize = strleng(string);
-    if(strsize < sizeof(String))
-        shortCopy(string);
+    if(strsize < sizeof(String)){
+        shortCopy(string, strsize);
+        return;
+    }
 
     setCapacity(strsize * STRING_UPSIZE_BY);
     _data = new char[capacity()];

@@ -21,7 +21,7 @@ bool PlayerIF::logIn(){
 }
 
 void PlayerIF::start(){
-    while(logIn());
+    while(!logIn());
 
     while(1){
         String command;
@@ -48,6 +48,15 @@ void PlayerIF::start(){
         }
         else if(command == "changeStance"){
             changeStance();
+        }        
+        else if(command == "help"){
+            help();
+        }
+        else if(command == "logOut"){
+            break;
+        }
+        else{
+            std::cout<<"Command not recognised please try again:"<<std::endl;
         }
     }
 }

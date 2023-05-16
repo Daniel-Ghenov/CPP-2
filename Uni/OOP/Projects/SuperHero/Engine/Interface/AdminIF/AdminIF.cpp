@@ -22,7 +22,7 @@ bool AdminIF::logIn(){
 void AdminIF::start(){
 
     
-    while(logIn());
+    while(!logIn());
 
     while(1){
         String command;
@@ -54,7 +54,7 @@ void AdminIF::start(){
             break;
         }
         else{
-            std::cout<<"Command not recognised please try again";
+            std::cout<<"Command not recognised please try again:"<<std::endl;
         }
     }
 
@@ -65,7 +65,7 @@ void AdminIF::addPlayer(){
 
     String firstName, lastName, email, password;
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter a first name , last name , email , username and password";
+    std::cout<<std::endl<<"Please enter a first name , last name , email , username and password:"<<std::endl;
     std::cin>>firstName>>lastName>>email>>username>>password;
     
 
@@ -81,7 +81,7 @@ void AdminIF::addAdmin(){
 
     String firstName, lastName, email, password;
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter a first name , last name , email , username and password";
+    std::cout<<std::endl<<"Please enter a first name , last name , email , username and password:"<<std::endl;
     std::cin>>firstName>>lastName>>email>>username>>password;
 
     try{
@@ -95,7 +95,7 @@ void AdminIF::addAdmin(){
 void AdminIF::removePlayer(){
 
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter the username of the player to remove";
+    std::cout<<std::endl<<"Please enter the username of the player to remove:"<<std::endl;
     std::cin>>username;
 
     try{
@@ -108,7 +108,7 @@ void AdminIF::removePlayer(){
 void AdminIF::printInfo() const{
 
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter the username of the user to print Info for";
+    std::cout<<std::endl<<"Please enter the username of the user to print Info for:"<<std::endl;
     std::cin>>username;
 
     try{
@@ -125,7 +125,7 @@ void AdminIF::addHero(){
     Element element;
     Stance stance;
 
-    std::cout<<std::endl<<"Please enter a first name, last name, hero name, power, cost , element and stance";
+    std::cout<<std::endl<<"Please enter a first name, last name, hero name, power, cost , element and stance:"<<std::endl;
     std::cin>>firstName>>lastName>>heroName>>power>>cost>>element>>stance;
 
     try{
@@ -139,7 +139,7 @@ void AdminIF::addHero(){
 void AdminIF::returnHero(){
 
     size_t index;
-    std::cout<<std::endl<<"Please select the index of the hero to return";
+    std::cout<<std::endl<<"Please select the index of the hero to return:"<<std::endl;
     printGraveyard();
     std::cin>>index;
 

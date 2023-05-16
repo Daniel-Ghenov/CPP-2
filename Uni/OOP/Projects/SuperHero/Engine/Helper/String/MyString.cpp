@@ -255,7 +255,7 @@ String String::substr(size_t startpos, size_t len = nopos){
         
     String str;
     if(len < sizeof(String)){   //if our new string can be represented as short we should do so
-        str.shortCopy(data() + startpos, len);
+        str.shortCopy(data() + startpos);
         return str;
     }
 
@@ -272,6 +272,7 @@ String String::substr(size_t startpos, size_t len = nopos){
 int String::compare(const String& other) const{   //comparison operators
     return strcomp(data(), other.data());    
 }
+
 
 bool String::operator==(const String& other) const{
     return(strcomp(data(), other.data()) == 0);
@@ -291,6 +292,26 @@ bool String::operator<(const String& other) const{
 bool String::operator>(const String& other) const{
     return(strcomp(data(), other.data()) >= 0); 
 }
+
+bool String::operator==(const char* other) const{
+    return(strcomp(data(), other) == 0);
+}
+bool String::operator!=(const char* other) const{
+    return(strcomp(data(), other) != 0);
+}
+bool String::operator<=(const char* other) const{
+    return(strcomp(data(), other) <= 0);
+}
+bool String::operator>=(const char* other) const{
+    return(strcomp(data(), other) >= 0); 
+}
+bool String::operator<(const char* other) const{
+    return(strcomp(data(), other) <= 0);
+}
+bool String::operator>(const char* other) const{
+    return(strcomp(data(), other) >= 0); 
+}
+
 
 bool String::empty() const{
     return size() == 0;
@@ -345,6 +366,7 @@ void String::free() noexcept {
 void String::copyFrom(const String& other){
     if(other.isShort()){
         shortCopy(other);
+        return;
     }
 
     setCapacity(other.capacity());
@@ -356,8 +378,10 @@ void String::copyFrom(const String& other){
 void String::copyFrom(const char* string){  //overload so we do not go trough converting constructor
 
     size_t strsize = strleng(string);
-    if(strsize < sizeof(String))
+    if(strsize < sizeof(String)){
         shortCopy(string);
+        return;
+    }
 
     setCapacity(strsize * STRING_UPSIZE_BY);
     _data = new char[capacity()];
@@ -388,14 +412,12 @@ void String::shortCopy(const String& other){//copy function for shortStrings;
 
 }
 
-void String::shortCopy(const char* string, size_t size = sizeof(String)){   //parameters used so we can be ensured that data will not overflow when using short strings
-    assert(size <= sizeof(String));
-
+void String::shortCopy(const char* string){
     if(!isShort()){
         delete[] _data;
     }
-    setShortSize(size);
-    strcopy_s((char*)this, size, string);   //if we are in a short string we directly copy onto the memory of the string
+    setShortSize(strleng(string));
+    strcopy_s((char*)this,  sizeof(String) , string);   //if we are in a short string we directly copy onto the memory of the string
 }
 
 
@@ -441,7 +463,7 @@ void String::setShortSize(size_t size){
     assert(size < sizeof(String));  //when we are in a short string the size will be stored in the last byte of String
     //which is the most significant byte in _capacity because we are in little endian
 
-    _capacity = ((_capacity << 8) >> 8) | ((sizeof(String) - size - 1) << ((sizeof(_capacity) * 8) - 8));  //flushing the last 8 bits of _capacity and setting them to the bits of size
+    _capacity = ((_capacity << 8) >> 8) | ((size_t)(sizeof(String) - size - 1) << ((sizeof(_capacity) * 8) - 8));  //flushing the last 8 bits of _capacity and setting them to the bits of size
     //since short sized strings are at max 23 characters long the 6 bits of the most significant byte of _capacity can hold them all
     //we have sizeof(String - size - 1) so that when the size is 24 the last character is actually /0
 

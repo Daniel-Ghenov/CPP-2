@@ -3,9 +3,9 @@
 #include <iostream>
 #include "../Iterator\RandomAccess\RAReverseIter.hpp"
 
-const int VECTOR_UPSIZE_BY = 2;
-const int VECTOR_DOWNSIZE_BY = 4;
-const int VECTORDEFAULT_SIZE = 8;
+static const int VECTOR_UPSIZE_BY = 2;
+static const int VECTOR_DOWNSIZE_BY = 4;
+static const int VECTOR_DEFAULT_SIZE = 8;
 
 
 template <typename T>
@@ -90,7 +90,7 @@ template <typename T>
 Vector<T>::Vector(){
     _data = nullptr;
     _size = 0;
-    _capacity = VECTORDEFAULT_SIZE;
+    _capacity = VECTOR_DEFAULT_SIZE;
 }
 
 template <typename T>
@@ -247,8 +247,8 @@ template <typename T>
 void Vector<T>::push_back(const T& new_data){
 
     if(_data == nullptr){
-        _capacity = VECTORDEFAULT_SIZE;
-        _data = new T[VECTORDEFAULT_SIZE];
+        _capacity = VECTOR_DEFAULT_SIZE;
+        _data = new T[VECTOR_DEFAULT_SIZE];
     }
 
     if(_size == _capacity){

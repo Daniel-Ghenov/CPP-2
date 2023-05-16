@@ -68,6 +68,13 @@ public:
     bool operator<(const String& other) const;
     bool operator>(const String& other) const;
 
+    bool operator==(const char* other) const; //Boolean Operations
+    bool operator!=(const char* other) const;
+    bool operator<=(const char* other) const;
+    bool operator>=(const char* other) const;
+    bool operator<(const char* other) const;
+    bool operator>(const char* other) const;
+
 
     bool empty() const;
     operator bool() const;
@@ -82,7 +89,7 @@ public:
 
 private: 
 
-    void shortCopy(const char* string, size_t size);
+    void shortCopy(const char* string);
     void shortCopy(const String& other);
     void copyFrom(const char* string);
     void copyFrom(const String& other);

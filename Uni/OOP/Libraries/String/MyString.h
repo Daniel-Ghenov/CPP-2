@@ -89,7 +89,7 @@ public:
 
 private: 
 
-    void shortCopy(const char* string, size_t size);
+    void shortCopy(const char* string, size_t size = sizeof(String));
     void shortCopy(const String& other);
     void copyFrom(const char* string);
     void copyFrom(const String& other);

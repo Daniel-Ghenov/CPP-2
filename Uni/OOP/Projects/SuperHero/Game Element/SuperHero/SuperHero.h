@@ -50,7 +50,7 @@ public:
 std::ostream& operator<<(std::ostream& os, const Element& element);
 std::ostream& operator<<(std::ostream& os, const Stance& stance);
 
-std::istream& operator>>(std::istream& is, const Element& element);
-std::istream& operator>>(std::istream& is, const Stance& stance);
+std::istream& operator>>(std::istream& is, Element& element);
+std::istream& operator>>(std::istream& is, Stance& stance);
 
 bool dominates(const Element& element1, const Element& element2);

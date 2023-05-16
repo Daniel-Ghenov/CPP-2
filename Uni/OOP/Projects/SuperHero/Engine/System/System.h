@@ -56,6 +56,9 @@ public:
 
     static System* getSystem();
 
+    void free();
+
+
 private:
 
     void saveToBinary(std::ofstream& ofs) const;
@@ -64,5 +67,4 @@ private:
 
     void removeHero(size_t index);
     void sortPlayers();
-    void free();
 };

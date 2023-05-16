@@ -2,12 +2,15 @@
 
 System* System::instance = nullptr;
 
-System::System(): _admins(8, nullptr), _shop(8, nullptr), _players(8, nullptr), _graveyard(8, nullptr){
-    _admins[0] = new Admin({"", "", "", "admin", "Password1"});
+System::System(){
+    _admins.push_back(new Admin({"", "", "", "admin", "Password1"}));
     srand(time(NULL));
 
     std::ifstream ifs(SAVEFILE_NAME, std::ios::in | std::ios::binary);
-    loadFromBinary(ifs);
+    if(ifs.is_open()){
+        loadFromBinary(ifs);
+        std::cout<<"loaded from file"<<std::endl;
+    }
     
 }
 System::~System(){
@@ -134,23 +137,21 @@ void System::printInfo(const char* username) const{
 
 
 void System::printAdminInfo(const char* username) const{
-    bool found = false;
 
     try{
         size_t index = findAdmin(username);
         _admins[index]->printAdmin();
-        found = true;
+        return;
     }catch(const std::invalid_argument& except){}
 
     
     try{
         size_t index = findPlayer(username);
         _players[index]->printAdmin();
-        found = true;
+        return;
     }catch(const std::invalid_argument& except){}
     
-    if(!found)
-        throw std::invalid_argument("User not Found");
+    throw std::invalid_argument("User not Found");
 
 }
 
@@ -366,6 +367,9 @@ void System::sortPlayers(){
 void System::free(){
 
     std::ofstream ofs(SAVEFILE_NAME, std::ios::out | std::ios::binary);
+    if(!ofs.is_open()){
+        throw std::runtime_error("Cannot Save System");
+    }
     saveToBinary(ofs);
     ofs.close();
 

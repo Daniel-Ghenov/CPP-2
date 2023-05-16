@@ -1,4 +1,4 @@
-#include "Engine\Interface\CombinedIF\CombinedIF.cpp"
+#include "Engine\Interface\CombinedIF\CombinedIF.h"
 
 int main(){
     CombinedIF interf;

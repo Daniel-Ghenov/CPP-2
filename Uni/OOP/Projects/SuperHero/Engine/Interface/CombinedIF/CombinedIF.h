@@ -15,7 +15,7 @@ public:
     CombinedIF(CombinedIF&&) = delete;
     CombinedIF& operator=(const CombinedIF& other) = delete;
     CombinedIF& operator=(CombinedIF&& other) = delete;
-    ~CombinedIF();
+    ~CombinedIF() override;
     void start() override;
 
 private:

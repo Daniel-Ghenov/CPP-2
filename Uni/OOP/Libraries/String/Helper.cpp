@@ -37,7 +37,7 @@ void strcopy_s(char* Destination ,size_t size, const char* Source){
         if(Source[i] == '\0')
             return;
     }
-    Destination[size - 1] = '\0';
+    Destination[size] = '\0';
 }
 void strconcat(char* Destination, const char* Source){
     if(!Destination || !Source)
