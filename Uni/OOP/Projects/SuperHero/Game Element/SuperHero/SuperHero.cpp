@@ -59,19 +59,23 @@ void SuperHero::saveToBinary(std::ofstream& ofs) const{
         throw std::runtime_error("File not open");
     }
 
-    ofs.write((const char *) _firstName.size(), sizeof(_firstName.size()));
+    size_t size = _firstName.size();
+
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_firstName.data(), _firstName.size());
 
-    ofs.write((const char *) _lastName.size(), sizeof(_lastName.size()));
+    size = _lastName.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_lastName.data(), _lastName.size());
     
-    ofs.write((const char *) _heroName.size(), sizeof(_heroName.size()));
+    size = _heroName.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_heroName.data(), _heroName.size());
 
-    ofs.write((const char*)_power, sizeof(_power));
-    ofs.write((const char*)_cost, sizeof(_cost));
-    ofs.write((const char*)_element, sizeof(_element));
-    ofs.write((const char*)_stance, sizeof(_stance));
+    ofs.write((const char*)&_power, sizeof(_power));
+    ofs.write((const char*)&_cost, sizeof(_cost));
+    ofs.write((const char*)&_element, sizeof(_element));
+    ofs.write((const char*)&_stance, sizeof(_stance));
 
 }
 void SuperHero::loadFromBinary(std::ifstream& ifs){
@@ -81,28 +85,28 @@ void SuperHero::loadFromBinary(std::ifstream& ifs){
     size_t size;
     char* data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _firstName = data;
     delete[] data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _lastName = data;
     delete[] data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _heroName = data;
     delete[] data;
 
-    ifs.read((char*)_power, sizeof(_power));
-    ifs.read((char*)_cost, sizeof(_cost));
-    ifs.read((char*)_element, sizeof(_element));
-    ifs.read((char*)_stance, sizeof(_stance));
+    ifs.read((char*)&_power, sizeof(_power));
+    ifs.read((char*)&_cost, sizeof(_cost));
+    ifs.read((char*)&_element, sizeof(_element));
+    ifs.read((char*)&_stance, sizeof(_stance));
 }
 
 std::ostream& operator<<(std::ostream& os, const Element& element){

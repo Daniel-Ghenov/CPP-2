@@ -140,14 +140,14 @@ void System::printAdminInfo(const char* username) const{
 
     try{
         size_t index = findAdmin(username);
-        _admins[index]->printAdmin();
+        _admins[index]->adminPrint();
         return;
     }catch(const std::invalid_argument& except){}
 
     
     try{
         size_t index = findPlayer(username);
-        _players[index]->printAdmin();
+        _players[index]->adminPrint();
         return;
     }catch(const std::invalid_argument& except){}
     
@@ -155,6 +155,12 @@ void System::printAdminInfo(const char* username) const{
 
 }
 
+bool System::shopEmpty() const{
+    return _shop.empty();
+}
+bool System::graveyardEmpty() const{
+    return _graveyard.empty();
+}
 
 
 
@@ -196,21 +202,26 @@ void System::saveToBinary(std::ofstream& ofs) const{
         throw std::runtime_error("File not open");
     }
 
-    ofs.write((const char*)_admins.size(), sizeof(_admins.size()));
+    size_t size = _admins.size();
+    ofs.write((const char*)&size, sizeof(size));
     for(size_t i {0}; i < _admins.size(); i++){
         _admins[i]->saveToBinary(ofs);
     }
 
-    ofs.write((const char*)_players.size(), sizeof(_players.size()));
+    size = _players.size();
+    ofs.write((const char*)&size, sizeof(size));
     for(size_t i {0}; i < _players.size(); i++){
         _players[i]->saveToBinary(ofs);
     }
 
-    ofs.write((const char*)_shop.size(), sizeof(_shop.size()));
+    size = _shop.size();
+    ofs.write((const char*)&size, sizeof(size));
     for(size_t i {0}; i < _shop.size(); i++){
         _shop[i]->saveToBinary(ofs);
     }
-    ofs.write((const char*)_graveyard.size(), sizeof(_graveyard.size()));
+
+    size = _shop.size();
+    ofs.write((const char*)&size, sizeof(size));
     for(size_t i {0}; i < _graveyard.size(); i++){
         _graveyard[i]->saveToBinary(ofs);
     }
@@ -226,28 +237,28 @@ void System::loadFromBinary(std::ifstream& ifs){
     }
 
     size_t size;
-    ifs.read((char*) size, sizeof(size));
+    ifs.read((char*)&size, sizeof(size));
     _admins.reserve(size * 2);
     for(size_t i {0}; i < size; i++){
         _admins[i] = new Admin();
         _admins[i]->loadFromBinary(ifs);
     }
 
-    ifs.read((char*) size, sizeof(size));
+    ifs.read((char*)&size, sizeof(size));
     _players.reserve(size * 2);
     for(size_t i {0}; i < size; i++){
         _players[i] = new Player();
         _players[i]->loadFromBinary(ifs);
     }
 
-    ifs.read((char*) size, sizeof(size));
+    ifs.read((char*)&size, sizeof(size));
     _shop.reserve(size * 2);
     for(size_t i {0}; i < size; i++){
         _shop[i] = new SuperHero();
         _shop[i]->loadFromBinary(ifs);
     }
 
-    ifs.read((char*) size, sizeof(size));
+    ifs.read((char*)&size, sizeof(size));
     _graveyard.reserve(size * 2);
     for(size_t i {0}; i < size; i++){
         _graveyard[i] = new SuperHero();

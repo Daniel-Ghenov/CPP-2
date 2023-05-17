@@ -1,6 +1,8 @@
 #pragma once
 #include "../BaseIF\BaseIF.h"
 
+static const int STARTUP_HERO_ADD = 3;
+
 class AdminIF: BaseIF{
 private:
     Admin* _admin = nullptr;
@@ -14,12 +16,12 @@ public:
     void start() override;
 
 private:
-    void addPlayer();
-    void addAdmin();
-    void removePlayer();
-    void printInfo() const;
-    void addHero();
-    void returnHero();
+    bool addPlayer();
+    bool addAdmin();
+    bool removePlayer();
+    bool printInfo() const;
+    bool addHero();
+    bool returnHero();
     bool logIn();
 
     void help() const;

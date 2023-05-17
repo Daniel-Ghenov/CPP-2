@@ -29,11 +29,11 @@ public:
     void setMoney(size_t money);
     const Vector<SuperHero*>& heroes() const;
 
-    void print() const;
-    void adminPrint() const;
+    void print() const override;
+    void adminPrint() const override;
 
-    void saveToBinary(std::ofstream& ofs) const;
-    void loadFromBinary(std::ifstream& ifs);
+    void saveToBinary(std::ofstream& ofs) const override;
+    void loadFromBinary(std::ifstream& ifs) override;
 
 private:
     void copyFrom(const Player& other);

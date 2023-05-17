@@ -48,7 +48,8 @@ public:
     Player* logInPlayer(const char* username, const String& password);
     Admin* logInAdmin(const char* username, const String& password);
 
-    
+    bool shopEmpty() const;
+    bool graveyardEmpty() const;
 
     void attack(const char* attackerUN, const String& attackerHeroName , const char* deffenderUsername, const String& deffendHeroName);
     void buy(const char* buyerUN, const String& heroName);

@@ -130,17 +130,20 @@ void User::saveToBinary(std::ofstream& ofs) const{
     if(!ofs.is_open()){
         throw std::runtime_error("File not open");
     }
-
-    ofs.write((const char *) _firstName.size(), sizeof(_firstName.size()));
+    size_t size = _firstName.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_firstName.data(), _firstName.size());
 
-    ofs.write((const char *) _lastName.size(), sizeof(_lastName.size()));
+    size = _lastName.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_lastName.data(), _lastName.size());
     
-    ofs.write((const char *) _email.size(), sizeof(_email.size()));
+    size = _email.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_email.data(), _email.size());
 
-    ofs.write((const char *) _password.size(), sizeof(_password.size()));
+    size = _password.size();
+    ofs.write((const char *)&size, sizeof(size));
     ofs.write(_password.data(), _password.size());
 
     ofs.write(_username, USERNAME_LEN);
@@ -153,25 +156,25 @@ void User::loadFromBinary(std::ifstream& ifs){
     size_t size;
     char* data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _firstName = data;
     delete[] data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _lastName = data;
     delete[] data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _email = data;
     delete[] data;
 
-    ifs.read((char*) size, sizeof(size));   //reading size then setting a buffer and copying to a string
+    ifs.read((char*)&size, sizeof(size));   //reading size then setting a buffer and copying to a string
     data = new char[size];
     ifs.read(data, size);
     _password = data;

@@ -3,9 +3,9 @@
 #include <iostream>
 #include "../Iterator\RandomAccess\RAReverseIter.hpp"
 
-const int VECTOR_UPSIZE_BY = 2;
-const int VECTOR_DOWNSIZE_BY = 4;
-const int VECTOR_DEFAULT_SIZE = 8;
+static const int VECTOR_UPSIZE_BY = 2;
+static const int VECTOR_DOWNSIZE_BY = 4;
+static const int VECTOR_DEFAULT_SIZE = 8;
 
 
 template <typename T>
@@ -104,7 +104,7 @@ Vector<T>::Vector(size_t size, const T& fill){
     for(size_t i {0}; i < size;i++){
         _data[i] = fill;
     }
-
+    
 }
 template <typename T>
 Vector<T>::~Vector(){
@@ -210,9 +210,10 @@ template <typename T>
 void Vector<T>::resize(size_t size, const T& fill){
 
 
+    _capacity = size * VECTOR_UPSIZE_BY;
 
     T* temp = new T [_capacity];
-    for(size_t i {0}; i < (_size > size)? size : _size; i++){
+    for(size_t i {0}; i <((_size > size)? size : _size); i++){
         if(i > _size){
             temp[i] = fill;
         }
@@ -220,10 +221,10 @@ void Vector<T>::resize(size_t size, const T& fill){
             temp[i] = _data[i];
     }
 
+    _size = (_size > size)? size : _size;
     delete[] _data;
-    _size = size;
-    _capacity = _size * VECTOR_UPSIZE_BY;
     _data = temp;
+
 }
 template <typename T>
 size_t Vector<T>::size() const{
@@ -351,12 +352,12 @@ Vector<T>::ConstRIterator Vector<T>::crbegin() const{
 
 template <typename T>
 void Vector<T>::copyFrom(const Vector<T>& other){
-    _data = new T[other.capacity];
+    _data = new T[other.capacity()];
     for(size_t i {0}; i < other._size; i++){
         _data[i] = other._data[i];
     }
     _size = other._size;
-    _capacity = other.capacity;
+    _capacity = other.capacity();
 }
 
 template <typename T>

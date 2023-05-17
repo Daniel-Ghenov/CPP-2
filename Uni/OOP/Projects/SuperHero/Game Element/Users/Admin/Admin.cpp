@@ -12,6 +12,7 @@ void Admin::print() const{
     std::cout<<"email: "<<email()<<std::endl;
 
 }
-void Admin::printAdmin() const{
+void Admin::adminPrint() const{
     print();
 }
+

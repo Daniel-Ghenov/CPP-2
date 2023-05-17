@@ -41,11 +41,11 @@ public:
     const char* username() const;
     const String& password() const;
 
-    void saveToBinary(std::ofstream& ofs) const;
-    void loadFromBinary(std::ifstream& ifs);
+    virtual void saveToBinary(std::ofstream& ofs) const;
+    virtual void loadFromBinary(std::ifstream& ifs);
 
     virtual void print() const = 0;
-    virtual void printAdmin() const = 0;
+    virtual void adminPrint() const = 0;
 
 private:
     bool validUsername(const char* username) const;

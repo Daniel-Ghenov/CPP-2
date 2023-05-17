@@ -102,9 +102,10 @@ void Player::saveToBinary(std::ofstream& ofs) const{
     }
 
     User::saveToBinary(ofs);
-    ofs.write((const char*)_money, sizeof(_money));
-    ofs.write((const char*) _heroes.size(), sizeof(_heroes.size()));
-    for(size_t i {0}; i < _heroes.size(); i++){
+    ofs.write((const char*)&_money, sizeof(_money));
+    size_t size = _heroes.size();
+    ofs.write((const char*)&size, sizeof(size));
+    for(size_t i {0}; i < size; i++){
         _heroes[i]->saveToBinary(ofs);
     }
 
@@ -116,9 +117,9 @@ void Player::loadFromBinary(std::ifstream& ifs){
     }
     User::loadFromBinary(ifs);
 
-    ifs.read((char*)_money, sizeof(_money));
+    ifs.read((char*)&_money, sizeof(_money));
     size_t size;
-    ifs.read((char*) size, sizeof(size));
+    ifs.read((char*)&size, sizeof(size));
     _heroes.reserve(size * 2);
     for(size_t i {0}; i < size; i++){
         _heroes[i]->loadFromBinary(ifs);

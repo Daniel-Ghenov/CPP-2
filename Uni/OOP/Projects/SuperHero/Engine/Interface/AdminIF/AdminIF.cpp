@@ -9,13 +9,13 @@ bool AdminIF::logIn(){
     std::cout<<"Please enter a username and password:"<<std::endl;
     std::cin>>username>>password;
 
-    try{
+    // try{
         _admin = System::getSystem()->logInAdmin(username, password);
-    }catch(std::exception& exc){
-        std::cout<<exc.what()<<std::endl;
-        std::cout<<"Please try again"<<std::endl;
-        return false;
-    }
+    // }catch(std::exception& exc){
+    //     std::cout<<exc.what()<<std::endl;
+    //     std::cout<<"Please try again"<<std::endl;
+    //     return false;
+    // }
     return true;
 }
 
@@ -23,6 +23,31 @@ void AdminIF::start(){
 
     
     while(!logIn());
+
+    if(System::getSystem()->shopEmpty()){
+        std::cout<<"You have to add 3 heroes as the shop is empty."<<std::endl;
+        
+        for(size_t i {0}; i < STARTUP_HERO_ADD;){
+            std::cout<<"Would you like to add or return a Hero?"<<std::endl;
+            String choice;
+            std::cin>>choice;
+            if(choice == "add"){
+                if(addHero())
+                    i++;
+
+            }else if(choice == "return"){
+                if(System::getSystem()->graveyardEmpty()){
+                    std::cout<<"Graveyard is empty please add a hero"<<std::endl;
+                    continue;
+                }
+                if(returnHero())
+                    i++;
+            }
+            else{
+                std::cout<<"please select whether to add or return a Hero"<<std::endl;
+            }
+        }
+    }
 
     while(1){
         String command;
@@ -61,7 +86,7 @@ void AdminIF::start(){
 }
 
 
-void AdminIF::addPlayer(){
+bool AdminIF::addPlayer(){
 
     String firstName, lastName, email, password;
     char username[USERNAME_LEN];
@@ -74,10 +99,12 @@ void AdminIF::addPlayer(){
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }
+    return true;
 }
 
-void AdminIF::addAdmin(){
+bool AdminIF::addAdmin(){
 
     String firstName, lastName, email, password;
     char username[USERNAME_LEN];
@@ -89,10 +116,12 @@ void AdminIF::addAdmin(){
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }
+    return true;
 }
 
-void AdminIF::removePlayer(){
+bool AdminIF::removePlayer(){
 
     char username[USERNAME_LEN];
     std::cout<<std::endl<<"Please enter the username of the player to remove:"<<std::endl;
@@ -103,9 +132,11 @@ void AdminIF::removePlayer(){
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }
+    return true;
 }
-void AdminIF::printInfo() const{
+bool AdminIF::printInfo() const{
 
     char username[USERNAME_LEN];
     std::cout<<std::endl<<"Please enter the username of the user to print Info for:"<<std::endl;
@@ -116,9 +147,11 @@ void AdminIF::printInfo() const{
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }
+    return true;
 }
-void AdminIF::addHero(){
+bool AdminIF::addHero(){
 
     String firstName, lastName, heroName;
     size_t power, cost;
@@ -133,10 +166,12 @@ void AdminIF::addHero(){
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }         
+    return true;
 }
 
-void AdminIF::returnHero(){
+bool AdminIF::returnHero(){
 
     size_t index;
     std::cout<<std::endl<<"Please select the index of the hero to return:"<<std::endl;
@@ -148,7 +183,9 @@ void AdminIF::returnHero(){
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
+        return false;
     }         
+    return true;
 
 }
 void AdminIF::printGraveyard() const{
