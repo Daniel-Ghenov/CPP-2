@@ -104,7 +104,6 @@ Vector<T>::Vector(size_t size, const T& fill){
     for(size_t i {0}; i < size;i++){
         _data[i] = fill;
     }
-
 }
 template <typename T>
 Vector<T>::~Vector(){

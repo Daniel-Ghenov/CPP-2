@@ -90,16 +90,7 @@ void User::setPassword(const char* password){
         _password = password;
 }
 
-void User::print() const{
-    std::cout<<"First name: "<<_firstName<<std::endl;
-    std::cout<<"Last name: "<<_lastName<<std::endl;
-    std::cout<<"username: "<<_username<<std::endl;
-    std::cout<<"email: "<<_email<<std::endl;
 
-}
-void User::printAdmin() const{
-    print();
-}
 
 
 bool User::validUsername(const char* username) const{

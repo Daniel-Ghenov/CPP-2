@@ -44,8 +44,8 @@ public:
     void saveToBinary(std::ofstream& ofs) const;
     void loadFromBinary(std::ifstream& ifs);
 
-    virtual void print() const;
-    virtual void printAdmin() const;
+    virtual void print() const = 0;
+    virtual void printAdmin() const = 0;
 
 private:
     bool validUsername(const char* username) const;
