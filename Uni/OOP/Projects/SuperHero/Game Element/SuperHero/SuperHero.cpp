@@ -59,18 +59,18 @@ void SuperHero::saveToBinary(std::ofstream& ofs) const{
         throw std::runtime_error("File not open");
     }
 
-    size_t size = _firstName.size();
+    size_t size = _firstName.size() + 1;
 
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_firstName.data(), _firstName.size());
+    ofs.write(_firstName.data(), size);
 
-    size = _lastName.size();
+    size = _lastName.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_lastName.data(), _lastName.size());
+    ofs.write(_lastName.data(), size);
     
-    size = _heroName.size();
+    size = _heroName.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_heroName.data(), _heroName.size());
+    ofs.write(_heroName.data(), size);
 
     ofs.write((const char*)&_power, sizeof(_power));
     ofs.write((const char*)&_cost, sizeof(_cost));
@@ -123,7 +123,6 @@ std::ostream& operator<<(std::ostream& os, const Element& element){
 }
 std::ostream& operator<<(std::ostream& os, const Stance& stance){
 
-    os<<"o";
     switch(stance){
         case Stance::attack :
             return os<<"Attack";
@@ -150,7 +149,7 @@ std::istream& operator>>(std::istream& is, Element& element){
 std::istream& operator>>(std::istream& is, Stance& stance){
     char buff[BUFF_SIZE];
     is>>buff;
-    if(strcomp(buff,"Attack" ) == 0){
+    if(strcomp(buff,"Attack" ) == 0 || strcomp(buff, "attack" ) == 0){
         stance = Stance::attack;
     }
     else

@@ -1,8 +1,5 @@
 #include "CombinedIF.h"
 
-CombinedIF::~CombinedIF(){
-    free();
-}
 
 
 void CombinedIF::start(){
@@ -22,7 +19,6 @@ void CombinedIF::start(){
         else{
             std::cout<<"please select either \"admin\" or \"player\" "<<std::endl;
         }
-        free();
         std::cout<<"Would You like to log in as a different user? (y/n): "<<std::endl;
         std::cin>>choice;
         if(choice != "y"){
@@ -31,11 +27,4 @@ void CombinedIF::start(){
         }
     }
 
-}
-
-void CombinedIF::free(){
-    delete _playerIF;
-    delete _adminIF;
-    _playerIF = nullptr;
-    _adminIF = nullptr;
 }

@@ -84,7 +84,7 @@ void PlayerIF::deleteAcc(){
 void PlayerIF::printInfo() const{
 
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter the username of the player print Info for";
+    std::cout<<std::endl<<"Please enter the username of the player print Info for:"<<std::endl;
     std::cin>>username;
 
     try{
@@ -97,12 +97,8 @@ void PlayerIF::printInfo() const{
 
 void PlayerIF::printScoreboard(){
     
-    char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter the username of the player to print Info for";
-    std::cin>>username;
-    
     try{
-        System::getSystem()->printInfo(username);
+        System::getSystem()->printScoreboard();
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
@@ -111,7 +107,7 @@ void PlayerIF::printScoreboard(){
 
 void PlayerIF::attack(){
     char username[USERNAME_LEN];
-    std::cout<<std::endl<<"Please enter the username of the player you wish to attack";
+    std::cout<<std::endl<<"Please enter the username of the player you wish to attack:"<<std::endl;
     std::cin>>username;
 
     try{
@@ -123,11 +119,11 @@ void PlayerIF::attack(){
 
     String heroName;
     std::cout<<"Enter the hero name of the hero you wish to attack or press enter to chose a random one"<<std::endl;
+    std::cin.ignore();
     getline(std::cin, heroName);
 
     String attackerName;
     std::cout<<"Enter the hero name of the hero you wish to attack with"<<std::endl;
-
     getline(std::cin, attackerName);
     
     try{
@@ -148,6 +144,7 @@ void PlayerIF::buy(){
 
     String heroName;
     std::cout<<"Enter the hero name of the hero you wish to buy"<<std::endl;
+    std::cin.ignore();
     getline(std::cin, heroName);
 
     try{
@@ -163,6 +160,7 @@ void PlayerIF::changeStance(){
 
     String heroName;
     std::cout<<"Enter the hero name of the hero you wish to change stances for"<<std::endl;
+    std::cin.ignore();
     getline(std::cin, heroName);
 
     try{

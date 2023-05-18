@@ -1,35 +1,11 @@
 #include "Player.h"
 
 
-Player::Player(const String& firstName, const String& lastName, const String& email, const char* username, const String& password, size_t money, Vector<SuperHero*> heroes):
+Player::Player(const String& firstName, const String& lastName, const String& email, const char* username, const String& password, size_t money, Vector<SharedPtr<SuperHero>> heroes):
                 User(firstName, lastName, email, username, password), _money(money), _heroes(heroes){
 
 }
-Player::~Player(){
-    free();
-}
-Player::Player(const Player& other){
-    copyFrom(other);
-}
-Player::Player(Player&& other){
-    move(std::move(other));
-}
-Player& Player::operator=(const Player& other){
-    if(this != &other){
-        free();
-        copyFrom(other);
-    }
-    return *this;
-}
-Player& Player::operator=(Player&& other){
-    if(this != &other){
-        free();
-        move(std::move(other));
-    }
-    return *this;
-}
-
-void Player::addHero(SuperHero* hero){
+void Player::addHero(SharedPtr<SuperHero>& hero){
     if(_money < hero->cost()){
         throw std::runtime_error("Not enough Money");
     }
@@ -48,11 +24,11 @@ size_t Player::findHero(const String& heroName){
     throw std::invalid_argument("Hero not Found");
 }
 
-void Player::removeHero(const SuperHero* hero){
+void Player::removeHero(const SharedPtr<SuperHero>& hero){
 
     for(size_t i {0}; i < _heroes.size(); i++){
-        if(hero == _heroes[i]){
-            SuperHero* temp = _heroes[i];
+        if(_heroes[i] == hero){
+            SharedPtr<SuperHero> temp = _heroes[i];
             _heroes[i] = _heroes[_heroes.size() - 1];
             _heroes[_heroes.size() - 1] = temp;
             _heroes.pop_back();
@@ -65,7 +41,8 @@ void Player::removeHero(const SuperHero* hero){
 }
 
 void Player::print() const{
-    std::cout<<"Username: "<< username()<<"Money: "<<_money<<std::endl;
+    std::cout<<"Username: "<< username()<<std::endl;
+    std::cout<<"Money: "<<_money<<std::endl;
     std::cout<<"Heroes: "<<std::endl;
 
     for(size_t i {0}; i < _heroes.size(); i++){
@@ -91,7 +68,7 @@ size_t Player::money() const{
 void Player::setMoney(size_t money){
     _money = money;
 }
-const Vector<SuperHero*>& Player::heroes() const{
+const Vector<SharedPtr<SuperHero>>& Player::heroes() const{
     return _heroes;
 }
 
@@ -102,6 +79,7 @@ void Player::saveToBinary(std::ofstream& ofs) const{
     }
 
     User::saveToBinary(ofs);
+    
     ofs.write((const char*)&_money, sizeof(_money));
     size_t size = _heroes.size();
     ofs.write((const char*)&size, sizeof(size));
@@ -120,30 +98,9 @@ void Player::loadFromBinary(std::ifstream& ifs){
     ifs.read((char*)&_money, sizeof(_money));
     size_t size;
     ifs.read((char*)&size, sizeof(size));
-    _heroes.reserve(size * 2);
+    _heroes.clear();
     for(size_t i {0}; i < size; i++){
+        _heroes.push_back(new SuperHero());
         _heroes[i]->loadFromBinary(ifs);
-    }
-}
-
-void Player::copyFrom(const Player& other){
-    _heroes.reserve(other._heroes.size());
-
-    for(size_t i {0}; i < other._heroes.size(); i++){
-        _heroes[i] = new SuperHero(*other._heroes[i]);
-    }
-}
-void Player::move(Player&& other){
-
-    _heroes.reserve(other._heroes.size());
-    for(size_t i {0}; i < other._heroes.size(); i++){
-        _heroes[i] = other._heroes[i];
-        other._heroes.clear();
-    }
-}
-
-void Player::free(){
-    for(size_t i {0}; i < _heroes.size(); i++){
-        delete[] _heroes[i];
     }
 }

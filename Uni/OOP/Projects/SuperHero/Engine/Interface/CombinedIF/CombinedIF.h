@@ -5,8 +5,8 @@
 
 class CombinedIF: BaseIF{
 private:
-    PlayerIF* _playerIF = nullptr;
-    AdminIF* _adminIF = nullptr;
+    SharedPtr<PlayerIF> _playerIF = nullptr;
+    SharedPtr<AdminIF> _adminIF = nullptr;
 
 public:
 
@@ -15,10 +15,8 @@ public:
     CombinedIF(CombinedIF&&) = delete;
     CombinedIF& operator=(const CombinedIF& other) = delete;
     CombinedIF& operator=(CombinedIF&& other) = delete;
-    ~CombinedIF() override;
     void start() override;
 
 private:
 
-    void free();
 };

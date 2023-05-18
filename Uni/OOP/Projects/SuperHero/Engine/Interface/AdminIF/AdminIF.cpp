@@ -9,13 +9,13 @@ bool AdminIF::logIn(){
     std::cout<<"Please enter a username and password:"<<std::endl;
     std::cin>>username>>password;
 
-    // try{
+    try{
         _admin = System::getSystem()->logInAdmin(username, password);
-    // }catch(std::exception& exc){
-    //     std::cout<<exc.what()<<std::endl;
-    //     std::cout<<"Please try again"<<std::endl;
-    //     return false;
-    // }
+    }catch(std::exception& exc){
+        std::cout<<exc.what()<<std::endl;
+        std::cout<<"Please try again"<<std::endl;
+        return false;
+    }
     return true;
 }
 
@@ -95,7 +95,7 @@ bool AdminIF::addPlayer(){
     
 
     try{
-        System::getSystem()->addPlayer({firstName, lastName, email, username, password, START_MONEY, Vector<SuperHero*>()});
+        System::getSystem()->addPlayer({firstName, lastName, email, username, password, START_MONEY, Vector<SharedPtr<SuperHero>>()});
     }catch(std::exception& exc){
         std::cout<<exc.what()<<std::endl;
         std::cout<<"Please try again"<<std::endl;
@@ -159,7 +159,10 @@ bool AdminIF::addHero(){
     Stance stance;
 
     std::cout<<std::endl<<"Please enter a first name, last name, hero name, power, cost , element and stance:"<<std::endl;
-    std::cin>>firstName>>lastName>>heroName>>power>>cost>>element>>stance;
+    std::cin>>firstName>>lastName;
+    std::cin.ignore();
+    getline(std::cin, heroName);
+    std::cin>>power>>cost>>element>>stance;
 
     try{
         System::getSystem()->addHero({firstName, lastName, heroName, power, cost, element, stance});

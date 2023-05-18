@@ -3,7 +3,7 @@
 
 class PlayerIF: BaseIF{
 private:
-    Player* _player = nullptr;
+    SharedPtr<Player> _player = nullptr;
 public:
     PlayerIF() = default;
     PlayerIF(const PlayerIF& other) = delete;

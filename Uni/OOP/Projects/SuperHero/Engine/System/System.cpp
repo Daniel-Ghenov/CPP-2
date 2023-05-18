@@ -3,14 +3,14 @@
 System* System::instance = nullptr;
 
 System::System(){
-    _admins.push_back(new Admin({"", "", "", "admin", "Password1"}));
     srand(time(NULL));
 
     std::ifstream ifs(SAVEFILE_NAME, std::ios::in | std::ios::binary);
     if(ifs.is_open()){
         loadFromBinary(ifs);
-        std::cout<<"loaded from file"<<std::endl;
-    }
+    }else
+        _admins.push_back(new Admin({"", "", "", "admin", "Password1"}));
+
     
 }
 System::~System(){
@@ -59,12 +59,16 @@ void System::addAdmin(const Admin& admin){
     
 }
 void System::addHero(const SuperHero& hero){
-    _shop.push_back(new SuperHero(hero));
+    try{
+        findHero(hero.heroName());
+        throw std::logic_error("Hero exists");
+
+    }catch(std::invalid_argument& err){
+        _shop.push_back(new SuperHero(hero));
+    }
 
 }
-void System::addHero(SuperHero&& hero){
-    _shop.push_back(new SuperHero(std::move(hero)));
-}
+
 
 void System::returnHero(size_t index){
     _shop.push_back(_graveyard[index]);
@@ -74,7 +78,7 @@ void System::returnHero(size_t index){
 
 void System::removePlayer(const char* username){
     size_t index = findAdmin(username);
-    Player* temp = _players[index];
+    SharedPtr<Player> temp = _players[index];
     _players[index] = _players[_players.size() - 1];
     _players[_players.size() - 1] = temp;
     _players.pop_back();
@@ -82,14 +86,14 @@ void System::removePlayer(const char* username){
 
 void System::removeAdmin(const char* username){
     size_t index = findPlayer(username);
-    Admin* temp = _admins[index];
+    SharedPtr<Admin> temp = _admins[index];
     _admins[index] = _admins[_admins.size() - 1];
     _admins[_admins.size() - 1] = temp;
     _admins.pop_back();
 }
 
 void System::removeHero(size_t index){
-    SuperHero* temp = _shop[index];
+    SharedPtr<SuperHero> temp = _shop[index];
     _shop[index] = _shop[_shop.size() - 1];
     _shop[_shop.size() - 1] = temp;
     _shop.pop_back();
@@ -164,7 +168,7 @@ bool System::graveyardEmpty() const{
 
 
 
-Player* System::logInPlayer(const char* username, const String& password){
+SharedPtr<Player> System::logInPlayer(const char* username, const String& password){
     for(size_t i {0}; i < _players.size(); i++){
         if(password == _players[i]->password() && (strcomp(username, _players[i]->username()) == 0)){
             if(_cycleStart == _players[i]){
@@ -177,13 +181,10 @@ Player* System::logInPlayer(const char* username, const String& password){
     }
     throw std::invalid_argument("Incorrect username and/or password");
 }
-Admin* System::logInAdmin(const char* username, const String& password){
+SharedPtr<Admin> System::logInAdmin(const char* username, const String& password){
 
     for(size_t i {0}; i < _admins.size(); i++){
         if(password == _admins[i]->password() && (strcomp(username, _admins[i]->username()) == 0)){
-            if(_shop.empty()){
-                //Has to give 3 more heroes;
-            }
             return _admins[i];
         }
     }
@@ -220,7 +221,7 @@ void System::saveToBinary(std::ofstream& ofs) const{
         _shop[i]->saveToBinary(ofs);
     }
 
-    size = _shop.size();
+    size = _graveyard.size();
     ofs.write((const char*)&size, sizeof(size));
     for(size_t i {0}; i < _graveyard.size(); i++){
         _graveyard[i]->saveToBinary(ofs);
@@ -231,6 +232,7 @@ void System::saveToBinary(std::ofstream& ofs) const{
     else
         ofs.write("\0", 1);
 }
+
 void System::loadFromBinary(std::ifstream& ifs){
     if(!ifs.is_open()){
         throw std::runtime_error("File not open");
@@ -238,30 +240,32 @@ void System::loadFromBinary(std::ifstream& ifs){
 
     size_t size;
     ifs.read((char*)&size, sizeof(size));
-    _admins.reserve(size * 2);
+    _admins.clear();
     for(size_t i {0}; i < size; i++){
-        _admins[i] = new Admin();
+        _admins.push_back(new Admin());
         _admins[i]->loadFromBinary(ifs);
     }
 
     ifs.read((char*)&size, sizeof(size));
-    _players.reserve(size * 2);
+    _players.clear();
+
     for(size_t i {0}; i < size; i++){
-        _players[i] = new Player();
+        _players.push_back(new Player());
         _players[i]->loadFromBinary(ifs);
     }
 
     ifs.read((char*)&size, sizeof(size));
-    _shop.reserve(size * 2);
+    _shop.clear();
+
     for(size_t i {0}; i < size; i++){
-        _shop[i] = new SuperHero();
+        _shop.push_back(new SuperHero());
         _shop[i]->loadFromBinary(ifs);
     }
 
     ifs.read((char*)&size, sizeof(size));
-    _graveyard.reserve(size * 2);
+    _graveyard.clear();
     for(size_t i {0}; i < size; i++){
-        _graveyard[i] = new SuperHero();
+        _graveyard.push_back(new SuperHero());
         _graveyard[i]->loadFromBinary(ifs);
     }
 
@@ -277,11 +281,11 @@ void System::loadFromBinary(std::ifstream& ifs){
 
 void System::attack(const char* attackerUsername, const String& attackerHeroName , const char* deffenderUsername, const String& deffendHeroName){
 
-    Player* attacker = _players[findPlayer(attackerUsername)];
-    SuperHero* deffendHero;
-    SuperHero* attackHero = attacker->heroes()[attacker->findHero(attackerHeroName)];
+    SharedPtr<Player> attacker = _players[findPlayer(attackerUsername)];
+    SharedPtr<SuperHero> deffendHero;
+    SharedPtr<SuperHero> attackHero = attacker->heroes()[attacker->findHero(attackerHeroName)];
     
-    Player* deffender = _players[findPlayer(deffenderUsername)];
+    SharedPtr<Player> deffender = _players[findPlayer(deffenderUsername)];
 
     if(deffendHeroName == ""){
         deffendHero = deffender->heroes()[rand() % deffender->heroes().size()];  //setting the deffending hero to a random one
@@ -332,7 +336,7 @@ void System::buy(const char* buyerUsername, const String& heroName){
 void System::printScoreboard(){
     sortPlayers();
     for(size_t i {0}; i < _players.size(); i++){
-        _players[i]->print();
+        std::cout<<i + 1<<": "<<std::cout<<_players[i]->username()<<", Money: "<<_players[i]->money();
         std::cout<<std::endl;
     }
 }
@@ -347,8 +351,8 @@ void System::printGraveyard() const noexcept{
 void System::printShop() const noexcept{
 
     for(size_t i {0}; i < _shop.size(); i++){
-        std::cout<<i<<": ";
-        _shop[i]->print();
+        std::cout<<i + 1<<": ";
+        _shop[i]->adminPrint();
         std::cout<<std::endl;
     }
 }
@@ -361,9 +365,9 @@ void System::sortPlayers(){
 
     for(size_t i {0}; i < _players.size(); i++){
         bool swapped = false;
-        for(size_t j = i ; i < _players.size() - i - 1; j++){
+        for(size_t j = i ; j < _players.size() - i - 1; j++){
             if(_players[j]->money() < _players[j + 1]->money()){
-                Player* temp = _players[j];
+                SharedPtr<Player> temp = _players[j];
                 _players[j] = _players[j + 1];
                 _players[j + 1] = temp;
                 swapped = true;
@@ -384,18 +388,6 @@ void System::free(){
     saveToBinary(ofs);
     ofs.close();
 
-    for(size_t i {0}; i < _admins.size(); i++){
-        delete _admins[i];
-    }
-    for(size_t i {0}; i < _players.size(); i++){
-        delete _players[i];
-    }    
-    for(size_t i {0}; i < _shop.size(); i++){
-        delete _shop[i];
-    }
-    for(size_t i {0}; i < _graveyard.size(); i++){
-        delete _graveyard[i];
-    }  
 }
 
 System* System::getSystem(){

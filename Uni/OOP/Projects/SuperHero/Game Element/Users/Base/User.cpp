@@ -130,21 +130,21 @@ void User::saveToBinary(std::ofstream& ofs) const{
     if(!ofs.is_open()){
         throw std::runtime_error("File not open");
     }
-    size_t size = _firstName.size();
+    size_t size = _firstName.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_firstName.data(), _firstName.size());
+    ofs.write(_firstName.data(), size);
 
-    size = _lastName.size();
+    size = _lastName.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_lastName.data(), _lastName.size());
+    ofs.write(_lastName.data(), size);
     
-    size = _email.size();
+    size = _email.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_email.data(), _email.size());
+    ofs.write(_email.data(), size);
 
-    size = _password.size();
+    size = _password.size() + 1;
     ofs.write((const char *)&size, sizeof(size));
-    ofs.write(_password.data(), _password.size());
+    ofs.write(_password.data(), size);
 
     ofs.write(_username, USERNAME_LEN);
 }

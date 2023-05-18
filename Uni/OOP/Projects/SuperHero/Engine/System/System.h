@@ -7,11 +7,11 @@
 
 class System{
 private:
-    Vector<Admin*> _admins;     
-    Vector<Player*> _players;
-    Vector<SuperHero*> _shop;
-    Vector<SuperHero*> _graveyard;
-    Player* _cycleStart = nullptr;
+    Vector<SharedPtr<Admin>> _admins;     
+    Vector<SharedPtr<Player>> _players;
+    Vector<SharedPtr<SuperHero>> _shop;
+    Vector<SharedPtr<SuperHero>> _graveyard;
+    SharedPtr<Player> _cycleStart = nullptr;
 
     System(); //Singleton class (no more than one is able to exist)
     ~System();
@@ -28,7 +28,6 @@ public:
     void addPlayer(const Player& player);
     void addAdmin(const Admin& admin);
     void addHero(const SuperHero& hero);
-    void addHero(SuperHero&& hero);
     void returnHero(size_t index);  //return from graveyard
 
     void removePlayer(const char* username);
@@ -45,8 +44,8 @@ public:
     void printGraveyard() const noexcept;
     void printShop() const noexcept;
 
-    Player* logInPlayer(const char* username, const String& password);
-    Admin* logInAdmin(const char* username, const String& password);
+    SharedPtr<Player> logInPlayer(const char* username, const String& password);
+    SharedPtr<Admin> logInAdmin(const char* username, const String& password);
 
     bool shopEmpty() const;
     bool graveyardEmpty() const;

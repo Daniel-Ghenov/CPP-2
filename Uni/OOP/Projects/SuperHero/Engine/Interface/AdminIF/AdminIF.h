@@ -5,7 +5,7 @@ static const int STARTUP_HERO_ADD = 3;
 
 class AdminIF: BaseIF{
 private:
-    Admin* _admin = nullptr;
+    SharedPtr<Admin> _admin = nullptr;
 public:
     AdminIF() = default;
     AdminIF(const AdminIF& other) = delete;

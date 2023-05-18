@@ -337,7 +337,6 @@ std::istream& operator>>(std::istream& is, String& str){
 std::istream& getline(std::istream& is, String& str, char delim){
     
     char buffer[STRING_CIN_BUFF_SIZE];
-
     is.getline(buffer, STRING_CIN_BUFF_SIZE, delim);
     str = buffer;
     return is;
