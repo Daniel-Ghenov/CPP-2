@@ -172,6 +172,7 @@ SharedPtr<Player> System::logInPlayer(const char* username, const String& passwo
     for(size_t i {0}; i < _players.size(); i++){
         if(password == _players[i]->password() && (strcomp(username, _players[i]->username()) == 0)){
             if(_cycleStart == _players[i]){
+                endCycle();
                 _cycleStart = nullptr;
             }else if(_cycleStart == nullptr){
                 _cycleStart = _players[i];
@@ -336,7 +337,7 @@ void System::buy(const char* buyerUsername, const String& heroName){
 void System::printScoreboard(){
     sortPlayers();
     for(size_t i {0}; i < _players.size(); i++){
-        std::cout<<i + 1<<": "<<std::cout<<_players[i]->username()<<", Money: "<<_players[i]->money();
+        std::cout<<i + 1<<": "<<_players[i]->username()<<", Money: "<<_players[i]->money();
         std::cout<<std::endl;
     }
 }

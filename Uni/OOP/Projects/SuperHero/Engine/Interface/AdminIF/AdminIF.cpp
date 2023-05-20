@@ -62,6 +62,9 @@ void AdminIF::start(){
         }
         else if(command == "removePlayer"){
             removePlayer();
+        }        
+        else if(command == "shop"){
+            shop();
         }
         else if(command == "printInfo"){
             printInfo();
@@ -119,6 +122,10 @@ bool AdminIF::addAdmin(){
         return false;
     }
     return true;
+}
+
+void AdminIF::shop(){
+    System::getSystem()->printShop();
 }
 
 bool AdminIF::removePlayer(){
@@ -202,6 +209,7 @@ void AdminIF::help() const{
     std::cout<<"printInfo - select the username of an admin or player to print info about him"<<std::endl;
     std::cout<<"addHero - add a new hero to the shop"<<std::endl;
     std::cout<<"returnHero - select a hero that has been destroyed to bring him back to the shop"<<std::endl;
+    std::cout<<"shop - to see the shop"<<std::endl;
     std::cout<<"logOut - to log out"<<std::endl;
 }
 

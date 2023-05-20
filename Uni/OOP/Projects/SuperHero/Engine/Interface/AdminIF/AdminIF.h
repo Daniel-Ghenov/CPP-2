@@ -23,6 +23,8 @@ private:
     bool addHero();
     bool returnHero();
     bool logIn();
+    void shop();
+
 
     void help() const;
     void printGraveyard() const;

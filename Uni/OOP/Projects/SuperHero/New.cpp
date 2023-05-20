@@ -3,7 +3,7 @@
 int main(){
 
 
-    CombinedIF interf;  //Print scoreboard Error maybe something Wrong with data???
+    CombinedIF interf;
     interf.start();
     
     return 0;

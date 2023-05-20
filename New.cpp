@@ -2,6 +2,8 @@
 
 int main(){
 
+    int a = 5;
+    std::cout<<[](int &n){ return n + 1;}(a);
 
     return 0;
 }
