@@ -22,7 +22,6 @@ bool Pawn::canTake(char row, uint8_t col) const{
         else
             return false;
     }else{
-
         if(row == _row - 1 && (col == _col - 1 || col == _col + 1))
             return true;
         else

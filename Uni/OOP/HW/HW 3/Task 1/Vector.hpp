@@ -306,7 +306,7 @@ void Vector<T>::copyFrom(const Vector<T>& other){
 template <typename T>
 void Vector<T>::move(Vector<T>&& other){
     this->_data = other._data;
-    this->_size = other.size;
+    this->_size = other.size();
     this->_capacity = other._capacity;
     other._data = nullptr;
     other._capacity = other._size = 0;

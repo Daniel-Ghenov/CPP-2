@@ -105,7 +105,6 @@ private:
     void setCapacity(size_t capacity);
     void setShortSize(size_t size);
     size_t shortSize()const;
-    char* data();
 
 
     static const size_t mostSigBit = (static_cast<size_t>(1) << (sizeof(_capacity) * 8) - 1);   //bitsize mask for the most significant bit for ease of use

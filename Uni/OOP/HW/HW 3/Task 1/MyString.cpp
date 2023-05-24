@@ -100,11 +100,6 @@ const char* String::data() const{   //the same as c_str
         return (char*)this;
     return _data;
 }
-char* String::data(){
-    if(isShort())
-        return (char*)this;
-    return _data;
-}
 
 const char* String::c_str() const{  //in std:: implementations c_str() == data()
     if(isShort())
