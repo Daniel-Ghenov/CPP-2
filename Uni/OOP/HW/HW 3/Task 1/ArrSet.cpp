@@ -8,19 +8,22 @@ ArrSet::ArrSet(uint32_t* arr, uint32_t size){
 }
 bool ArrSet::contains(uint32_t number) const{
 
-    int min = 0, max = _size;
-    while(min != max){
-        int mid = (min + max) / 2;
-        if(_arr[mid] == number)
+    for(size_t i {0}; i < _size; i++){
+        if(_arr[i] == number)
             return true;
-            
-        else if(_arr[mid] < number){
-            min = mid + 1;
-            
-        }else{
-            max = mid - 1;
-        }
     }
     return false;
 
+}
+
+uint32_t ArrSet::operator[](size_t idx) const{
+    if(idx > _size)
+        throw std::out_of_range("Idx out of range");
+    
+    return _arr[idx];
+}
+
+
+size_t ArrSet::size() const{
+    return _size;
 }

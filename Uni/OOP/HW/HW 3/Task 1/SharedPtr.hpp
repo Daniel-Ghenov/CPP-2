@@ -127,7 +127,7 @@ template <typename T>
 void SharedPtr<T>::copyFrom(const SharedPtr<T>& other){
     _data = other._data;
     _ptrCount = other._ptrCount;
-    if(!other._ptrCount)
+    if(other._ptrCount)
         (*_ptrCount)++;
 }
 
