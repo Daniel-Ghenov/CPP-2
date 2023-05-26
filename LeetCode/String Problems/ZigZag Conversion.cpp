@@ -18,7 +18,7 @@ public:
         int counter = 0;
         bool down = true;
         for(size_t i {0}; i < numRows; i++){
-            for(size_t j = i;j < str.size();){
+            for(size_t j = i; j < str.size();){
                 strCpy[counter++] = str[j];
                 if(down){
                     j += 2 *(numRows - i) - 3;
@@ -30,5 +30,6 @@ public:
                 }
             }
         }
+        return strCpy;
     }
 };

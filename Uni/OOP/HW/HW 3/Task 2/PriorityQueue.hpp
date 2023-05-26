@@ -1,17 +1,17 @@
 #pragma once
 #include <iostream>
 #include "Node.hpp"
+#include "Vector.hpp"
 
 template <typename T>
 class PriorityQueue{
 private:
-    Node<T>* head = nullptr;
+    SharedPtr<Node<T>> head = nullptr;
     size_t _maxPriority = 0;
-
+    Vector<SharedPtr<Node<T>>> insertPos;   //saving the positions of the last nodes with k-th priority for O(1) push
 
 public:
     PriorityQueue(size_t priority);
-    ~PriorityQueue();
     PriorityQueue(const PriorityQueue<T>& other);
     PriorityQueue(PriorityQueue<T>&& other);
     PriorityQueue<T>& operator=(const PriorityQueue<T>& other);
@@ -21,23 +21,18 @@ public:
     void push(T&& data, size_t priority);
     void pop();
     const T& peek() const;
+    bool isEmpty() const;
 
 private:
 
-    void free();
     void copyFrom(const PriorityQueue<T>& other);
     void move(PriorityQueue<T>&& other);
 };
 
 
 template <typename T>
-PriorityQueue<T>::~PriorityQueue(){
-    free();
-}
-
-template <typename T>
-PriorityQueue<T>::PriorityQueue(size_t priority){
-    _maxPriority = priority;
+PriorityQueue<T>::PriorityQueue(size_t priority): insertPos(priority, nullptr){
+    _maxPriority = priority - 1;
 }
 
 template <typename T>
@@ -54,7 +49,6 @@ PriorityQueue<T>::PriorityQueue(PriorityQueue<T>&& other){
 template <typename T>
 PriorityQueue<T>& PriorityQueue<T>::operator=(const PriorityQueue<T>& other){
     if(this != &other){
-        free();
         copyFrom(other);
     }
     return *this;
@@ -63,7 +57,6 @@ PriorityQueue<T>& PriorityQueue<T>::operator=(const PriorityQueue<T>& other){
 template <typename T>
 PriorityQueue<T>& PriorityQueue<T>::operator=(PriorityQueue<T>&& other){
     if(this != &other){
-        free();
         move(std::move(other));
     }
     return *this;
@@ -75,25 +68,26 @@ void PriorityQueue<T>::push(const T& data, size_t priority){
         throw std::invalid_argument("Priority too large!");
 
 
+    if(insertPos[priority] != nullptr){
+        if(insertPos[priority]->next == nullptr){
+            insertPos[priority]->next = new Node<T>(std::move(data), priority);
+        }else{
+            insertPos[priority]->next = new Node<T>(std::move(data), priority, insertPos[priority]->next);
+        }
+        for(size_t i = priority + 1; i < insertPos.size(); i++){
+            if(insertPos[i] == insertPos[priority])
+                insertPos[i] = insertPos[priority]->next;
+        }
+            insertPos[priority] = insertPos[priority]->next;
+    }
 
     if(!head){
-        head = new Node<T>(data, priority);
-        return;
-    }
-
-    if(head->priority < priority){
-        head = new Node<T>(data, priority, head);
-        return;
-    }
-
-    Node<T>* iter = head;
-    while(iter->next){
-        if(iter->next->priority < priority){
-            iter->next = new Node<T>(data, priority, iter->next);
-            return;
+        head = new Node<T>(std::move(data), priority);
+        for(size_t i = priority ; i < insertPos.size(); i++){
+            insertPos[priority] = head;
         }
+        return;
     }
-    iter->next = new Node<T>(data, priority);
 
 }
 
@@ -102,26 +96,30 @@ void PriorityQueue<T>::push(T&& data, size_t priority){
     if(priority > _maxPriority)
         throw std::invalid_argument("Priority too large!");
 
+    if(insertPos[priority] != nullptr){
+        if(insertPos[priority]->next == nullptr){
+            insertPos[priority]->next = new Node<T>(std::move(data), priority);
+        }else{
+            insertPos[priority]->next = new Node<T>(std::move(data), priority, insertPos[priority]->next);
 
-    if(!head){
-        head = new Node<T>(std::move(data), priority);
-        return;
-    }
-
-    if(head->priority < priority){
-        head = new Node<T>(std::move(data), priority, head);
-        return;
-    }
-
-    Node<T>* iter = head;
-    while(iter->next){
-        if(iter->next->priority < priority){
-            iter->next = new Node<T>(std::move(data), priority, iter->next);
-            return;
         }
-        iter = iter->next;
+        for(int i = priority - 1; i > 0; i--){
+
+            if(insertPos[i] == insertPos[priority])
+                insertPos[i] = insertPos[priority]->next;
+        }
+            insertPos[priority] = insertPos[priority]->next;
     }
-    iter->next = new Node<T>(std::move(data), priority);
+    else{
+
+        head = new Node<T>(std::move(data), priority, head);
+
+        for(int i = priority ; i >= 0; i--){
+
+            if(insertPos[i] == nullptr)
+                insertPos[i] = head;
+        }
+    }
 
 }
 template <typename T>
@@ -129,9 +127,14 @@ void PriorityQueue<T>::pop(){
     if(!head)
         throw std::out_of_range("Priority Queue is empty");
 
-    Node<T>* temp = head->next;
-    delete[] head;
-    head = temp;
+    SharedPtr<Node<T>> temp = head->next;
+
+    for(size_t i {0}; i < insertPos.size(); i++){
+        if(insertPos[i] == head)
+            insertPos[i] = nullptr;
+    }
+
+    head = std::move(temp);
 }
 template <typename T>
 const T& PriorityQueue<T>::peek() const{
@@ -140,24 +143,18 @@ const T& PriorityQueue<T>::peek() const{
     return head->data;
 }
 
+template <typename T>
+bool PriorityQueue<T>::isEmpty() const{
+    return head == nullptr;
+}
+
 
 template <typename T>
-void PriorityQueue<T>::free(){
-    if(!head)
-        return;
-    Node<T>* iter = head->next;
-    while(iter != nullptr){
-        delete[] head;
-        head = iter;
-        iter = iter->next;
-    }
-    head->data = 0;
-}
-template <typename T>
 void PriorityQueue<T>::copyFrom(const PriorityQueue<T>& other){
-    Node<T>* otherIter = other.head->next;
+
+    SharedPtr<Node<T>> otherIter = other.head->next;
     head = new Node(other.head->data);
-    Node<T>* thisIter = head;
+    SharedPtr<Node<T>> thisIter = head;
 
     while(otherIter != nullptr){
         thisIter->next = new Node<T>(otherIter->data);
@@ -167,6 +164,7 @@ void PriorityQueue<T>::copyFrom(const PriorityQueue<T>& other){
 }
 template <typename T>
 void PriorityQueue<T>::move(PriorityQueue<T>&& other){
-    head = other.head;
+    head = std::move(other.head);
     _maxPriority = other._maxPriority;
+    insertPos = std::move(other.insertPos);
 }

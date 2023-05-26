@@ -17,7 +17,7 @@ public:
     std::string longestPalindrome(std::string str){
         if(str.size() == 0 || str.size() == 1)
             return str;
-        std::string::iterator left = str.begin(), right = str.begin() + 1;
+        std::string::iterator left = str.begin(), right = str.begin();
         std::string::iterator largestLeft = left;
 
         while(right != str.end()){
@@ -30,6 +30,6 @@ public:
                 left++;
             right++;
         }
-        return std::string(left, right);
+        return std::string(largestLeft, largestLeft + (right - left));
     }
 };

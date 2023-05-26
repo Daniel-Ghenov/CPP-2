@@ -24,6 +24,7 @@ public:
     T* operator->();
 
     bool operator==(const SharedPtr<T>& other) const;
+    bool operator==(const T* ptr) const;
     operator bool() const;
     T* get();
 
@@ -101,6 +102,11 @@ bool SharedPtr<T>::operator==(const SharedPtr<T>& other) const{
 }
 
 template <typename T>
+bool SharedPtr<T>::operator==(const T* ptr) const{
+    return _data == ptr;
+}
+
+template <typename T>
 SharedPtr<T>::operator bool() const{
     return _data;
 }
@@ -127,7 +133,7 @@ template <typename T>
 void SharedPtr<T>::copyFrom(const SharedPtr<T>& other){
     _data = other._data;
     _ptrCount = other._ptrCount;
-    if(_ptrCount)
+    if(other._ptrCount)
         (*_ptrCount)++;
 }
 
