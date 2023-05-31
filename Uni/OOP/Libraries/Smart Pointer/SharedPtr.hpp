@@ -5,9 +5,19 @@ template <typename T>
 class SharedPtr{
 private:
     T* _data = nullptr;
-    size_t* _ptrCount = nullptr;
-
+    Counter* _counter = nullptr;
 public:
+
+    struct Counter{
+        size_t _sharedCount = 0;
+        size_t _weakCount = 0;
+
+        void addShared() const;
+        void removeShared() const;
+        void addWeak() const;
+        void removeWeak() const;
+
+    };
 
     SharedPtr() = default;
     SharedPtr(T* data);
@@ -36,12 +46,36 @@ private:
 
 };
 
+template <typename T>
+void SharedPtr<T>::Counter::addShared() const{
+    _sharedCount++;
+    if(_weakCount == 0)
+        _weakCount++;
+}
+template <typename T>
+void SharedPtr<T>::Counter::removeShared() const{
+    _sharedCount--;
+    if(_sharedCount == 0)
+        _weakCount--;
+}
+template <typename T>
+void SharedPtr<T>::Counter::addWeak() const{
+    _weakCount++;
+}
+template <typename T>
+void SharedPtr<T>::Counter::removeWeak() const{
+    _weakCount--;
+}
 
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* data){
     _data = data;
-    _ptrCount = new size_t(1);
+    if(_data){
+        _counter = new Counter;
+        _counter->addShared();
+    }
+        
 }
 
 template <typename T>
@@ -119,22 +153,25 @@ T* SharedPtr<T>::get(){
 
 template <typename T>
 void SharedPtr<T>::free(){
-    if(!_ptrCount)
-        return;
+    if(_counter){
+        _counter->removeShared();
+        if(_counter->_sharedCount == 0)
+            delete _data;
+        if(_counter->_weakCount == 0)
+            delete _counter;
+    }
 
-    if(*_ptrCount == 1){
-        delete _data;
-        delete _ptrCount;
-    }else
-        (*_ptrCount)--;
 }
 
 template <typename T>
 void SharedPtr<T>::copyFrom(const SharedPtr<T>& other){
     _data = other._data;
-    _ptrCount = other._ptrCount;
-    if(other._ptrCount)
-        (*_ptrCount)++;
+    _counter = other._counter;
+
+    if(_counter){
+        _counter->addShared;
+    }
+    
 }
 
 template <typename T>
@@ -142,7 +179,6 @@ void SharedPtr<T>::move(SharedPtr&& other){
     _data = other._data;
     other._data = nullptr;
 
-    _ptrCount = other._ptrCount;
-    other._ptrCount = nullptr;
-
+    _counter = other._counter;
+    other._counter = nullptr;
 }

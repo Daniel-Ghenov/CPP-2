@@ -7,6 +7,8 @@ private:
 
 public:
 
+
+
     UniquePtr() = default;
     UniquePtr(T* data);
     UniquePtr(const UniquePtr<T>& other) = delete;

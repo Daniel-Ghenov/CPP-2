@@ -1,7 +1,6 @@
 #pragma once
 #include <initializer_list>
 #include <iostream>
-#include "../Iterator\RandomAccess\RAReverseIter.hpp"
 
 static const int VECTOR_UPSIZE_BY = 2;
 static const int VECTOR_DOWNSIZE_BY = 4;
@@ -10,14 +9,6 @@ static const int VECTOR_DEFAULT_SIZE = 8;
 
 template <typename T>
 class Vector{
-public:
-    class Iterator: public RABaseIter<T>{ };
-
-    class ConstIterator: public RABaseCIter<T>{ };
-
-    class RIterator : public RABaseRIter<T>{ };
-
-    class ConstRIterator : public RABaseCRiter<T>{ };
 
 private:
 
@@ -62,16 +53,6 @@ public:
     void erase(size_t index);
     void swap(size_t index1, size_t index2);
     void clear() noexcept;
-
-    Iterator end();     //Iterators
-    ConstIterator cend() const;
-    Iterator begin();
-    ConstIterator cbegin() const;
-
-    RIterator rend();     //Reverse Iterators
-    ConstRIterator crend() const;
-    RIterator rbegin();
-    ConstRIterator crbegin() const;
 
 
 private:
@@ -219,7 +200,7 @@ void Vector<T>::resize(size_t size, const T& fill){
             temp[i] = fill;
         }
         else
-            temp[i] = _data[i];
+            temp[i] = std::move(_data[i]);
     }
 
     _size = (_size > size)? size : _size;
@@ -326,45 +307,6 @@ template<typename T>
 Vector<T>::operator bool() const{
     return(_data == nullptr || _size == 0);
 }
-
-template<typename T>
-Vector<T>::Iterator Vector<T>::end(){
-    return Vector<T>::Iterator(_data + size());
-}
-template<typename T>
-Vector<T>::ConstIterator Vector<T>::cend() const{
-    return Vector<T>::Constterator(_data + size());
-    
-}
-template<typename T>
-Vector<T>::Iterator Vector<T>::begin(){
-    return Vector<T>::Iterator(_data);
-    
-}
-template<typename T>
-Vector<T>::ConstIterator Vector<T>::cbegin() const{
-    return Vector<T>::Constterator(_data);
-   
-}
-
-template<typename T>
-Vector<T>::RIterator Vector<T>::rend(){
-    return Vector<T>::RIterator(_data - 1);
-}     
-template<typename T>
-Vector<T>::ConstRIterator Vector<T>::crend() const{
-    return Vector<T>::ConstRIterator(_data - 1);
-}
-template<typename T>
-Vector<T>::RIterator Vector<T>::rbegin(){
-    return Vector<T>::RIterator(_data + size() - 1);
-}
-template<typename T>
-Vector<T>::ConstRIterator Vector<T>::crbegin() const{
-    return Vector<T>::ConstRIterator(_data + size() - 1);
-}
-
-
 
 template <typename T>
 void Vector<T>::copyFrom(const Vector<T>& other){

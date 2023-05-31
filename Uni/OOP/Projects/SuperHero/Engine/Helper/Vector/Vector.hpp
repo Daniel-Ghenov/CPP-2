@@ -56,6 +56,7 @@ public:
     void reserve(size_t number);
 
     void push_back(const T& newData);   //Data modifications
+    void push_back(T&& newData);
     void pop_back();
     void insert(size_t index, const T& toInsert);
     void erase(size_t index);
@@ -257,6 +258,21 @@ void Vector<T>::push_back(const T& new_data){
         resize(_capacity);
     }
     _data[_size++] = new_data;
+}
+
+template <typename T>
+void Vector<T>::push_back(T&& new_data){
+
+    if(_data == nullptr){
+        _capacity = VECTOR_DEFAULT_SIZE;
+        _data = new T[VECTOR_DEFAULT_SIZE];
+    }
+
+    if(_size == _capacity){
+        _capacity *= 2;
+        resize(_capacity);
+    }
+    _data[_size++] = std::move(new_data);
 }
 
 template <typename T>
