@@ -20,7 +20,7 @@ void maxHepify(int* array, int size, int curr){
 
 }
 
-void BuildMaxHeap(int* array, int size){
+void buildMaxHeap(int* array, int size){
 
     for(int i = size / 2; i >= 0; i--){
         maxHepify(array, size, i);
@@ -28,18 +28,16 @@ void BuildMaxHeap(int* array, int size){
 
 }
 
-void HeapSort(int* arr, size_t size){
+void heapSort(int* arr, size_t size){
 
     if(size <= 1)
         return;
 
-    size--;
-
-    BuildMaxHeap(arr, size);
+    buildMaxHeap(arr, size);
     
     while(size > 1){
         maxHepify(arr, size, 0);
-        std::swap(arr[0], arr[size]);
+        std::swap(arr[0], arr[size - 1]);
         size--;
     }
 

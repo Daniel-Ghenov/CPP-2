@@ -11,6 +11,7 @@
 const int maxFileSize = 1024;
 
 SharedPtr<Set> setFactory(std::ifstream& ifs);
+size_t findStringSize(std::ifstream& ifs);
 void printContents(const SharedPtr<Set> &set, uint32_t low, uint32_t high);
 void printNext(const SharedPtr<Set> &set, uint32_t first);
 
