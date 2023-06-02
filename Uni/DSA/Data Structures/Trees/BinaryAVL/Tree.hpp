@@ -159,6 +159,7 @@ void Tree<T>::_leftRotate(Node<T>*& current){
     if(!originalRight){
         throw std::runtime_error("Empty right Branch");
     }
+    
     current->right = originalRight->right;
     originalRight->right = originalRight->left;
     originalRight->left = current->left;
