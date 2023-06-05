@@ -1,7 +1,9 @@
-#include "List.h"
+#include <iostream>
+#include "List.hpp"
 
 int main(){
-    List list1(5);
+
+    List<int> list1;
     list1.push_front(3);
     list1.insert(2, 4);
     list1.remove(2);

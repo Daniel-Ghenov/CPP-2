@@ -2,7 +2,7 @@
 #include "../Forward\ForwardIter.hpp"
 
 template <typename T>
-class BiDirectIter: public ForwardIter<T>{
+struct BiDirectIter: public ForwardIter<T>{
 public:
     BiDirectIter() = default;
     BiDirectIter(T* ptr);
@@ -12,7 +12,7 @@ public:
 };
 
 template <typename T>
-class CBiDirectIter: public CForwardIter<T>{
+struct CBiDirectIter: public CForwardIter<T>{
 public:
     CBiDirectIter() = default;
     CBiDirectIter(T* ptr);

@@ -1,7 +1,7 @@
 #pragma once
 #include "../BiDirectional\BiDirectIter.hpp"
 template <typename T>
-class RABaseIter: public BiDirectIter<T>{
+struct RABaseIter: public BiDirectIter<T>{
 public:
     RABaseIter() = default;
     RABaseIter(T* ptr);
@@ -15,7 +15,7 @@ public:
 };
 
 template <typename T>
-class RABaseCIter: public CBiDirectIter<T>{
+struct RABaseCIter: public CBiDirectIter<T>{
 public:
     RABaseCIter() = default;
     RABaseCIter(T* ptr);
