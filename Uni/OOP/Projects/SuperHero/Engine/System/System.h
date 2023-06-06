@@ -20,8 +20,6 @@ private:
     System& operator=(const System& other) = delete;
     System& operator=(System&& other) = delete;
 
-    static System* instance;
-
 public:
 
 
@@ -56,11 +54,11 @@ public:
 
     static System* getSystem();
 
-    void free();
 
 
 private:
 
+    void free();
     void saveToBinary(std::ofstream& ofs) const;
     void loadFromBinary(std::ifstream& ifs);
     void endCycle();

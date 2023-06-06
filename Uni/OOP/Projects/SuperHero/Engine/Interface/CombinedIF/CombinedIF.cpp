@@ -22,7 +22,6 @@ void CombinedIF::start(){
         std::cout<<"Would You like to log in as a different user? (y/n): "<<std::endl;
         std::cin>>choice;
         if(choice == "n"){
-            System::getSystem()->free();
             break;
         }
     }

@@ -1,6 +1,5 @@
 #include "System.h"
 
-System* System::instance = nullptr;
 
 System::System(){
     srand(time(NULL));
@@ -392,8 +391,7 @@ void System::free(){
 }
 
 System* System::getSystem(){
-    if(instance == nullptr)
-        instance = new System();
+    static System sys;
 
-    return instance;
+    return &sys;
 }
