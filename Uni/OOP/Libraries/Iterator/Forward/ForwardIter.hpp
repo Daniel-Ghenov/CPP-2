@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-class ForwardIter{
+struct ForwardIter{
 protected:
     T* _ptr = nullptr;
 public:
@@ -11,12 +11,8 @@ public:
     virtual ForwardIter& operator++();
     virtual ForwardIter operator++(int a);
 
-    virtual bool operator>(const ForwardIter& other);
-    virtual bool operator>=(const ForwardIter& other);
-    virtual bool operator<=(const ForwardIter& other);
+
     virtual bool operator<(const ForwardIter& other);
-    virtual bool operator==(const ForwardIter& other);
-    virtual bool operator!=(const ForwardIter& other);
 
     virtual const T& operator*() const;
     virtual T& operator*();
@@ -24,8 +20,8 @@ public:
 };
 
 template <typename T>
-class CForwardIter{
-private:
+struct CForwardIter{
+protected:
     const T* _ptr = nullptr;
 public:
     CForwardIter() = default;
@@ -34,12 +30,7 @@ public:
     virtual CForwardIter& operator++();
     virtual CForwardIter operator++(int a);
 
-    virtual bool operator>(const CForwardIter& other);
-    virtual bool operator>=(const CForwardIter& other);
-    virtual bool operator<=(const CForwardIter& other);
     virtual bool operator<(const CForwardIter& other);
-    virtual bool operator==(const CForwardIter& other);
-    virtual bool operator!=(const CForwardIter& other);
 
     virtual const T& operator*() const;
     virtual const T* operator->();
@@ -59,30 +50,10 @@ ForwardIter<T> ForwardIter<T>::operator++(int a){
     return ForwardIter(_ptr - 1);
 }
 
-template <typename T>
-bool ForwardIter<T>::operator>(const ForwardIter& other){
-    return _ptr > other._ptr;
-}
-template <typename T>
-bool ForwardIter<T>::operator>=(const ForwardIter& other){
-    return _ptr >= other._ptr;   
-}
-template <typename T>
-bool ForwardIter<T>::operator<=(const ForwardIter& other){
-    return _ptr <= other._ptr; 
-}
+
 template <typename T>
 bool ForwardIter<T>::operator<(const ForwardIter& other){
     return _ptr < other._ptr;
-}
-template <typename T>
-bool ForwardIter<T>::operator==(const ForwardIter& other){
-    return _ptr == other._ptr;
-    
-}
-template <typename T>
-bool ForwardIter<T>::operator!=(const ForwardIter& other){
-    return _ptr != other._ptr;
 }
 
 template <typename T>
@@ -116,29 +87,8 @@ CForwardIter<T> CForwardIter<T>::operator++(int a){
 }
 
 template <typename T>
-bool CForwardIter<T>::operator>(const CForwardIter& other){
-    return _ptr > other._ptr;
-}
-template <typename T>
-bool CForwardIter<T>::operator>=(const CForwardIter& other){
-    return _ptr >= other._ptr;   
-}
-template <typename T>
-bool CForwardIter<T>::operator<=(const CForwardIter& other){
-    return _ptr <= other._ptr; 
-}
-template <typename T>
 bool CForwardIter<T>::operator<(const CForwardIter& other){
     return _ptr < other._ptr;
-}
-template <typename T>
-bool CForwardIter<T>::operator==(const CForwardIter& other){
-    return _ptr == other._ptr;
-    
-}
-template <typename T>
-bool CForwardIter<T>::operator!=(const CForwardIter& other){
-    return _ptr != other._ptr;
 }
 
 template <typename T>

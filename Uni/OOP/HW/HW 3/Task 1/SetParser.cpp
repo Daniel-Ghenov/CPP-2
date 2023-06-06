@@ -1,5 +1,19 @@
 #include "SetParser.h"
 
+size_t findStringSize(std::ifstream& ifs){
+
+    size_t currPos = ifs.tellg();
+    while(ifs.peek() != '\0')
+        ifs.seekg(1, std::ios::cur);
+
+    size_t nullPos = ifs.tellg();
+    nullPos++;
+    ifs.seekg( currPos, std::ios::beg);
+    return nullPos - currPos;
+
+}
+
+
 SharedPtr<Set> setFactory(std::ifstream& ifs){
     uint16_t type;
     uint16_t number;
@@ -31,8 +45,7 @@ SharedPtr<Set> setFactory(std::ifstream& ifs){
             Vector<SharedPtr<Set>> temp;
 
             for(size_t i {0}; i < number; i++){
-                size_t size;
-                ifs.read((char*) &size, sizeof(size));
+                size_t size = findStringSize(ifs);
                 String fileName(size);
                 ifs.read(fileName.data(), size);
 
@@ -45,8 +58,7 @@ SharedPtr<Set> setFactory(std::ifstream& ifs){
             Vector<SharedPtr<Set>> temp;
 
             for(size_t i {0}; i < number; i++){
-                size_t size;
-                ifs.read((char*) &size, sizeof(size));
+                size_t size = findStringSize(ifs);
                 String fileName(size);
                 ifs.read(fileName.data(), size);
 

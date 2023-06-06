@@ -5,9 +5,8 @@ int main(){
     SharedPtr<Set> set = setFactory(ifs);
     uint32_t low, high;
 
-    std::cin>>low;
-    printNext(set, low);
-    
+    std::cin>>low>>high;
+    printContents(set, low, high);    
 
     return 0;
 }
