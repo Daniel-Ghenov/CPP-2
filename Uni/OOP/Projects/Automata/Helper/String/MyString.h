@@ -32,10 +32,10 @@ public:
 
 
 
-    char& operator[](size_t size);  //Access Data
-    const char& operator[](size_t size) const;
-    const char& at(size_t size) const;
-    char& at(size_t size);
+    char& operator[](size_t pos);  //Access Data
+    const char& operator[](size_t pos) const;
+    const char& at(size_t pos) const;
+    char& at(size_t pos);
     const char& back() const;
     const char& front() const;
     char& back();

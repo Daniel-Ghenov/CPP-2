@@ -2,31 +2,43 @@
 #include "../Helper\Pair\Pair.hpp"
 #include "../Helper\Tripple\Tripple.hpp"
 #include "../Helper\Vector\Vector.hpp"
+#include "../Helper\String\StringView.h"
 
 
 class Automata{
 private:
 
-    Vector<Tripple<int, char, int>> _links;
-    size_t _stateAmmount = 0;
-    bool _determinate = true;
-    Vector<int> _start;
-    Vector<int> _final;
+    unsigned stateAmmount = 0;
+    bool determinate_ = true;
+    Vector<Tripple<unsigned, char, unsigned>> links;
+    Vector<unsigned> startStates;
+    Vector<unsigned> finalStates;
 
 public:
     Automata() = default;
-    Automata(size_t states);
-    Automata(const Automata& other);
-    Automata(Automata&& other);
-    Automata& operator=(const Automata& other);
-    Automata& operator=(Automata&& other);
+    Automata(const StringView& str);
 
     void determinate();
     bool isDeterminate() const;
+    void uniteWith(const Automata& other);
+    void concatWith(const Automata& other);
+    void star();
+
+    bool isIn(const StringView& word) const;
+
 
 private:
 
-    void copyFrom(const Automata& other);
-    void moveFrom(Automata&& other);
+    Automata(char ch);
 
+    void addStartStates(const Automata& other);
+    void addFinalStates(const Automata& other);
+    void addLinks(const Automata& other);
+
+    bool isFinal(unsigned state) const;
+    bool isStarting(unsigned state) const;
+
+    bool belongsToAlphabet(char ch) const;
+
+    bool _isIn(unsigned state, const StringView& word) const;
 };

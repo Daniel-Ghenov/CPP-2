@@ -58,9 +58,9 @@ public:
     void push_back(const T& newData);   //Data modifications
     void push_back(T&& newData);
     void pop_back();
-    void insert(size_t index, const T& toInsert);
-    void erase(size_t index);
-    void swap(size_t index1, size_t index2);
+    void insert(size_t index, const T& toInsert);//iterator supp
+    void erase(size_t index);   //iterator supp
+    void swap(size_t index1, size_t index2);    //iterator supp
     void clear() noexcept;
 
     Iterator end();     //Iterators

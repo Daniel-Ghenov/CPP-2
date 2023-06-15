@@ -31,7 +31,6 @@ public:
     void swap(size_t idx1, size_t idx2);
 
 
-    Node* tail();
 };
 
 template <typename T>
