@@ -8,37 +8,54 @@
 class Automata{
 private:
 
-    unsigned stateAmmount = 0;
+    struct Link{
+        char ch = '\0';
+        unsigned state = -1;
+    
+        Link() = default;
+        Link(char ch, unsigned state);
+
+    };
+
+    unsigned startState = 0;
     bool determinate_ = true;
-    Vector<Tripple<unsigned, char, unsigned>> links;
-    Vector<unsigned> startStates;
+    Vector<Vector<Link>> links;
     Vector<unsigned> finalStates;
 
 public:
-    Automata() = default;
+    Automata() = default;   //empty language automata
     Automata(const StringView& str);
 
     void determinate();
     bool isDeterminate() const;
-    void uniteWith(const Automata& other);
-    void concatWith(const Automata& other);
-    void star();
+    void minimize();
+    void reverse();
 
     bool isIn(const StringView& word) const;
 
-
+    friend Automata Complement(const Automata& automata);
+    friend Automata KleeneStarOf(const Automata& automata);
+    friend Automata Union(const Automata& a1, const Automata& a2);
+    friend Automata Concatenation(const Automata& a1, const Automata& a2);
 private:
 
     Automata(char ch);
 
-    void addStartStates(const Automata& other);
-    void addFinalStates(const Automata& other);
-    void addLinks(const Automata& other);
-
     bool isFinal(unsigned state) const;
-    bool isStarting(unsigned state) const;
+    void makeFinalState(unsigned state);
+    bool getStart() const;
+
+    void makeStartState(unsigned state);
+    void addState();
 
     bool belongsToAlphabet(char ch) const;
+    void addLink(unsigned from, char ch, unsigned to);
+    void copyLinks(unsigned from, unsigned to);
 
     bool _isIn(unsigned state, const StringView& word) const;
 };
+
+Automata Complement(const Automata& automata);
+Automata KleeneStarOf(const Automata& automata);
+Automata Union(const Automata& a1, const Automata& a2);
+Automata Concatenation(const Automata& a1, const Automata& a2);

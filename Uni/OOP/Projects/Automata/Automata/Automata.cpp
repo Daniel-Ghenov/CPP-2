@@ -1,5 +1,7 @@
 #include "Automata.h"
 
+Automata::Link::Link(char ch, unsigned state): ch(ch), state(state) {}
+
 Automata::Automata(const StringView& str){
 
 }
@@ -7,123 +9,95 @@ Automata::Automata(char ch){    //automata that recognises the language: {ch}
     if(!belongsToAlphabet(ch))
         throw std::logic_error("letter doesn't belong to language");
 
-    stateAmmount = 2;
-    startStates.push_back(0);
-    finalStates.push_back(1);
-    links.push_back({0, ch, 1});
-    determinate_ = true;
 }
 
 void Automata::determinate(){
     
-    Vector<Pair<Vector<unsigned>, unsigned>> newStates({Pair<Vector<unsigned>, unsigned> (startStates, 0)});
-    Vector<unsigned> newstartStates = {0};
-
-    for(size_t i {0}; i < newStates; i++);//????
-
-
-
-
 }
 
 bool Automata::isDeterminate() const{
-    return determinate;
+    return determinate_;
 }
 
 
 
-void Automata::uniteWith(const Automata& other){
-
-    addStartStates(other);
-    addFinalStates(other);
-    addLinks(other);
-
-    for(size_t i {0}; i < other.links.size(); i++)
-        links.push_back({other.links[i].first + stateAmmount, other.links[i].second, other.links[i].third + stateAmmount});
-
-    determinate_ = false;
-
-    stateAmmount += other.stateAmmount;
-}
-
-void Automata::concatWith(const Automata& other){
-
-    if(isIn("")){   //check if epsilon is in the language
-        addStartStates(other);
-    }
-
-    finalStates.clear();
-    addFinalStates(other);
-    addLinks(other);
-    for(size_t i {0}; i < links.size(); i++){
-
-        if(isFinal(links[i].third)){
-            links[i].third = other.startStates[0] + stateAmmount;   //move into other function??
-
-            for(size_t j {1}; j < other.startStates.size(); j++){
-                links.push_back({links[i].first, links[i].second, other.startStates[j] + stateAmmount});
-            }
-        }
-        
-    }
-}
-
-void Automata::star(){
-    for(size_t i {0}; i < links.size(); i++){
-
-        if(isFinal(links[i].third)){
-            links[i].third = startStates[0];   //move into other function??
-
-            for(size_t j {1}; j < startStates.size(); j++){
-                links.push_back({links[i].first, links[i].second, startStates[j]});
-            }
-        }
-    }
-
-    finalStates.clear();
-    for(size_t i {0}; i < startStates.size(); i++){
-        if(!isFinal(startStates[i]))
-            finalStates.push_back(startStates[i]);
-    }
-
-}
 
 
 bool Automata::isIn(const StringView& word) const{
-    for(size_t i {0}; i < startStates.size(); i++){
-        if(_isIn(startStates[i], word))
-            return true;
+    
+}
+
+Automata Complement(const Automata& automata){
+    Automata result = automata;
+
+    Vector<unsigned> newFinal;
+    for(size_t i = 0; i < automata.links.size(); i++){
+        if(!automata.isFinal(i))
+            newFinal.push_back(i);
     }
-    return false;
-}
 
+    result.finalStates = std::move(newFinal);
 
-void Automata::addStartStates(const Automata& other){
-    for(size_t i {0}; i < other.startStates.size(); i++)
-        startStates.push_back(other.startStates[i] + stateAmmount);
+    return result;
 }
+Automata KleeneStarOf(const Automata& automata){
+    Automata result = automata;
 
-void Automata::addFinalStates(const Automata& other){
-    for(size_t i {0}; i < other.finalStates.size(); i++)
-        finalStates.push_back(other.finalStates[i] + stateAmmount);
+    result.makeFinalState(result.startState);
+
+    for(size_t i = 0; i < result.finalStates.size(); i++){
+        result.copyLinks(result.startState, result.finalStates[i]);
+    }
+
 }
-void Automata::addLinks(const Automata& other){
-    for(size_t i {0}; i < other.links.size(); i++)
-        links.push_back({other.links[i].first + stateAmmount, other.links[i].second, other.links[i].third + stateAmmount});
+Automata Union(const Automata& a1, const Automata& a2){
+    
+    Automata result = a1;
+    result.addState();
+    result.makeStartState(result.links.size() - 1);
+    result.copyLinks(a1.startState, result.startState);
+    
+
+}
+Automata Concatenation(const Automata& a1, const Automata& a2){
+
 }
  
 
+void Automata::makeFinalState(unsigned state){
+    if(finalStates.contains(state))
+        finalStates.push_back(state);
+}
 bool Automata::isFinal(unsigned state) const{
     if(finalStates.contains(state))
         return true;
     return false;
 
 }
-bool Automata::isStarting(unsigned state) const{
-    if(startStates.contains(state))
-        return true;
-    return false;
+
+
+void Automata::makeStartState(unsigned state){
+    startState = state;
 }
+bool Automata::getStart() const{
+    return startState;
+}
+
+void Automata::addState(){
+    links.push_back(Vector<Link>());
+}
+
+void Automata::addLink(unsigned from, char ch, unsigned to){
+    links[from].push_back({ch, to});
+}
+
+void Automata::copyLinks(unsigned from, unsigned to){
+
+    for(size_t i = 0; i < links[from].size(); i++){
+        links[to].push_back(links[from][i]);
+    }
+}
+
 
 bool Automata::belongsToAlphabet(char ch) const{
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '1');
@@ -136,8 +110,9 @@ bool Automata::_isIn(unsigned state, const StringView& word) const{
     if(word.size() == 0)
         return isFinal(state);
     
-    for(size_t i {0}; i < links.size(); i++){
-        if(links[i].first == state && word[0] == links[i].second && _isIn(links[i].third, word.substr(1, word.size())))
+    for(size_t i {0}; i < links[state].size(); i++){
+
+        if(word[0] == links[state][i].ch && _isIn(links[state][i].state , word.substr(1, word.size())))
             return true;
     }
     return false;
