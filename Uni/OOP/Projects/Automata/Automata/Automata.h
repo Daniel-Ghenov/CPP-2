@@ -10,10 +10,10 @@ private:
 
     struct Link{
         char ch = '\0';
-        unsigned state = -1;
+        unsigned dest = -1;
     
         Link() = default;
-        Link(char ch, unsigned state);
+        Link(char ch, unsigned dest);
 
     };
 
@@ -24,35 +24,41 @@ private:
 
 public:
     Automata() = default;   //empty language automata
-    Automata(const StringView& str);
+    Automata(const String& regex);
 
     void determinate();
     bool isDeterminate() const;
     void minimize();
     void reverse();
 
-    bool isIn(const StringView& word) const;
+    bool isIn(const String& word) const;
 
     friend Automata Complement(const Automata& automata);
     friend Automata KleeneStarOf(const Automata& automata);
     friend Automata Union(const Automata& a1, const Automata& a2);
     friend Automata Concatenation(const Automata& a1, const Automata& a2);
 private:
-
+    
     Automata(char ch);
+    explicit Automata(size_t size);
+    void absorb(const Automata& a);
 
-    bool isFinal(unsigned state) const;
     void makeFinalState(unsigned state);
-    bool getStart() const;
+    unsigned getStart() const;
+    size_t getStateCount() const;
 
     void makeStartState(unsigned state);
     void addState();
 
-    bool belongsToAlphabet(char ch) const;
     void addLink(unsigned from, char ch, unsigned to);
-    void copyLinks(unsigned from, unsigned to);
+    void copyLinks(unsigned to, unsigned from);
 
     bool _isIn(unsigned state, const StringView& word) const;
+
+
+    Automata reverseLinks();
+
+    bool belongsToAlphabet(char ch) const;
 };
 
 Automata Complement(const Automata& automata);
