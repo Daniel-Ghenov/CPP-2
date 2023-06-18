@@ -14,8 +14,11 @@ public:
     List() = default;
     List(const T& data);
     ~List();
-    List<T>& operator=(const List<T>& other);
     List(const List<T>& other);
+    List(List<T>&& other);
+    List<T>& operator=(const List<T>& other);
+    List<T>& operator=(List<T>&& other);
+
 
     void push_back(const T& data);
     void push_front(const T& data);
@@ -27,34 +30,20 @@ public:
 
     void print() const;
 
+    void reverse(); //recursive reversal
+
     const T& find(const T& data) const;
     void swap(size_t idx1, size_t idx2);
 
+private:
+
+    void free();
+    void copyFrom(const List<T>& other);
+    void move(const List<T>& other);
+
+    void reverse(Node<T>& current, Node<T>& previous);
 
 };
-
-template <typename T>
-void List<T>::free(){
-    Node* iter = head->next;
-    while(iter != nullptr){
-        delete[] head;
-        head = iter;
-        iter = iter->next;
-    }
-    head->data = 0;
-}
-template <typename T>
-void List<T>::copyFrom(const List<T>& other){
-    Node* otherIter = other.head->next;
-    head = new Node(other.head->data);
-    Node* thisIter = head;
-
-    while(otherIter != nullptr){
-        thisIter->next = new Node(otherIter->data);
-        thisIter = thisIter->next;
-        otherIter = otherIter->next;
-    }
-}
 
 
 
@@ -71,6 +60,7 @@ List<T>::~List(){
 
 template <typename T>
 List<T>& List<T>::operator=(const List<T>& other){
+
     if(this != &other){
         free();
         copyFrom(other);
@@ -78,10 +68,24 @@ List<T>& List<T>::operator=(const List<T>& other){
     return *this;
 }
 template <typename T>
+List<T>& List<T>::operator=(List<T>&& other){
+
+    if(this != &other){
+        free();
+        move(std::move(other));
+    }
+    return *this;
+}
+
+template <typename T>
 List<T>::List(const List<T>& other){
     copyFrom(other);
 }
 
+template <typename T>
+List<T>::List(List<T>&& other){
+    move(other);
+}
 template <typename T>
 void List<T>::push_back(const T& data){
     if(head == nullptr){
@@ -243,4 +247,50 @@ void List<T>::swap(size_t idx1, size_t idx2){
 
 
 
+}
+
+template <typename T>
+void List<T>::reverse(){
+    if(head)
+        reverse(nullptr, head);
+}
+
+template <typename T>
+void List<T>::reverse(Node<T>& previous, Node<T>& current){
+    if(!current->next){
+        head = current; 
+    }
+    else
+        reverse(current, current->next);
+    current->next = previous;
+}
+
+
+template <typename T>
+void List<T>::free(){
+    Node* iter = head->next;
+    while(iter != nullptr){
+        delete[] head;
+        head = iter;
+        iter = iter->next;
+    }
+    head->data = 0;
+}
+template <typename T>
+void List<T>::copyFrom(const List<T>& other){
+    Node* otherIter = other.head->next;
+    head = new Node(other.head->data);
+    Node* thisIter = head;
+
+    while(otherIter != nullptr){
+        thisIter->next = new Node(otherIter->data);
+        thisIter = thisIter->next;
+        otherIter = otherIter->next;
+    }
+}
+
+template <typename T>
+void List<T>::move(const List<T>& other){
+    head = other.head;
+    other.head = nullptr;
 }
