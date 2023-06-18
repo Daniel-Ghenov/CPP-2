@@ -10,10 +10,10 @@ private:
 
     struct Link{
         char ch = '\0';
-        unsigned state = -1;
+        unsigned dest = -1;
     
         Link() = default;
-        Link(char ch, unsigned state);
+        Link(char ch, unsigned dest);
 
     };
 
@@ -41,12 +41,12 @@ private:
 
     Automata(char ch);
 
-    bool isFinal(unsigned state) const;
     void makeFinalState(unsigned state);
     bool getStart() const;
 
     void makeStartState(unsigned state);
     void addState();
+    void absorb(const Automata& other);
 
     bool belongsToAlphabet(char ch) const;
     void addLink(unsigned from, char ch, unsigned to);

@@ -1,6 +1,6 @@
 #include "Automata.h"
 
-Automata::Link::Link(char ch, unsigned state): ch(ch), state(state) {}
+Automata::Link::Link(char ch, unsigned dest): ch(ch), dest(dest) {}
 
 Automata::Automata(const StringView& str){
 
@@ -32,7 +32,7 @@ Automata Complement(const Automata& automata){
 
     Vector<unsigned> newFinal;
     for(size_t i = 0; i < automata.links.size(); i++){
-        if(!automata.isFinal(i))
+        if(!automata.finalStates.contains(i))
             newFinal.push_back(i);
     }
 
@@ -61,18 +61,15 @@ Automata Union(const Automata& a1, const Automata& a2){
 }
 Automata Concatenation(const Automata& a1, const Automata& a2){
 
+    Automata result = a1;
+    result.absorb(a2);
+
 }
  
 
 void Automata::makeFinalState(unsigned state){
     if(finalStates.contains(state))
         finalStates.push_back(state);
-}
-bool Automata::isFinal(unsigned state) const{
-    if(finalStates.contains(state))
-        return true;
-    return false;
-
 }
 
 
@@ -85,6 +82,24 @@ bool Automata::getStart() const{
 
 void Automata::addState(){
     links.push_back(Vector<Link>());
+}
+void Automata::absorb(const Automata& other){
+
+    size_t currSize = links.size();
+
+    for(size_t i = 0; i < other.links.size(); i++){
+        links.push_back(other.links[i]);
+
+        for(size_t j = 0 ; j < other.links[i].size(); j++){
+            links[currSize + i][j].dest += currSize;
+
+        }
+    }
+
+    for(size_t i {0}; i < other.finalStates.size(); i++){
+        finalStates.push_back(other.finalStates[i] + currSize);
+    }
+
 }
 
 void Automata::addLink(unsigned from, char ch, unsigned to){
@@ -104,16 +119,3 @@ bool Automata::belongsToAlphabet(char ch) const{
 }
 
 
-
-
-bool Automata::_isIn(unsigned state, const StringView& word) const{
-    if(word.size() == 0)
-        return isFinal(state);
-    
-    for(size_t i {0}; i < links[state].size(); i++){
-
-        if(word[0] == links[state][i].ch && _isIn(links[state][i].state , word.substr(1, word.size())))
-            return true;
-    }
-    return false;
-}
