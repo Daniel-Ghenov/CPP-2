@@ -1,6 +1,6 @@
 #include "Automata.h"
 
-Automata::Link::Link(char ch, unsigned state): ch(ch), state(state) {}
+Automata::Link::Link(char ch, unsigned dest): ch(ch), dest(dest) {}
 
 Automata::Automata(size_t size): links(size) {}
 
@@ -103,22 +103,6 @@ Automata Concatenation(const Automata& a1, const Automata& a2){
     return result;
 }
 
- 
-void Automata::absorb(const Automata& a){
-    size_t currSize = links.size();
-
-    for(size_t i = 0; i < a.links.size(); i++){
-        links.push_back(a.links[i]);
-
-        for(size_t j = 0; j < a.links[i].size(); j++){
-            links[i][j].dest += currSize;
-        }
-
-        if(a.finalStates.contains(i))
-            finalStates.push_back(i + currSize);
-    }
-    
-}
 
 void Automata::makeFinalState(unsigned state){
     if(finalStates.contains(state))
