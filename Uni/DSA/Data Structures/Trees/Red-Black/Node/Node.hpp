@@ -2,16 +2,24 @@
 
 template <typename T>
 struct Node{
-    unsigned key;
-    T data;
-    bool color; //false is black true is red
-    Node<T>* parent;
-    Node<T>* left;
-    Node<T>* right;
 
-    Node(key, const T& data, Node<T>* parent ,bool color, Node<T>* left, Node<T>* right);
-    Node(key, const T& data, Node<T>* parent ,bool color);
-    Node(key, const T& data, Node<T>* parent);
+    unsigned key = 0;
+    T data;
+    bool color = false; //false is black true is red
+    Node<T>* parent = nullptr;
+    Node<T>* left = nullptr;
+    Node<T>* right = nullptr;
+
+    Node() = default;
+    Node(unsigned key, const T& data, bool color, Node<T>* parent);
+    Node(unsigned key, const T& data, bool color);
 
 
 };
+
+
+template <typename T>
+Node<T>::Node(unsigned key, const T& data,bool color, Node<T>* parent ): key(key), data(data), color(color), parent(parent) {}
+
+template <typename T>
+Node<T>::Node(unsigned key, const T& data, bool color): key(key), data(data), color(color) {}

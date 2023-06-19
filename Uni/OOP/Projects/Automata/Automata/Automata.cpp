@@ -15,17 +15,42 @@ Automata::Automata(char ch){    //automata that recognises the language: {ch}
 
 void Automata::determinate(){
     
+    Automata result;
+    result.addState();
+    result.makeStartState(0);
+
+
+    Queue<Vector<unsigned>> creationQueue;
+
+    creationQueue.push({startState});
+
+    Vector<Vector<unsigned>> oldToNew;
+    oldToNew.push_back({startState});
+
+    while(!creationQueue.empty()){
+        Vector<unsigned> currState = creationQueue.peek();
+
+        for(size_t i = 0;;); //add alphabet
+
+    }
+
+    determinate_ = true;
 }
 
 bool Automata::isDeterminate() const{
     return determinate_;
 }
 
-
-
-bool Automata::isIn(const String& word) const{
+bool Automata::accepts(const String& word) const{
+    Vector<unsigned> reach = reachable(startState, word);
     
+    for(size_t i = 0; i < reach.size(); i++){
+        if(finalStates.contains(reach[i]))
+            return true;
+    }
+    return false;
 }
+
 
 void Automata::reverse(){
 
@@ -123,24 +148,6 @@ size_t Automata::getStateCount() const{
 void Automata::addState(){
     links.push_back(Vector<Link>());
 }
-void Automata::absorb(const Automata& other){
-
-    size_t currSize = links.size();
-
-    for(size_t i = 0; i < other.links.size(); i++){
-        links.push_back(other.links[i]);
-
-        for(size_t j = 0 ; j < other.links[i].size(); j++){
-            links[currSize + i][j].dest += currSize;
-
-        }
-    }
-
-    for(size_t i {0}; i < other.finalStates.size(); i++){
-        finalStates.push_back(other.finalStates[i] + currSize);
-    }
-
-}
 
 void Automata::addLink(unsigned from, char ch, unsigned to){
     links[from].push_back({ch, to});
@@ -173,18 +180,29 @@ bool Automata::belongsToAlphabet(char ch) const{
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '1');
 }
 
+Vector<unsigned> Automata::reachable(unsigned from, const StringView& str) const{
 
+    Vector<unsigned> reachFrom;
+    reachFrom.push_back(from);
 
+    for(size_t i = 0; i < str.size(); i++){
+        Vector<unsigned> nextCycle;
 
+        for(size_t j = 0; j < reachFrom.size(); j++){
 
-bool Automata::_isIn(unsigned state, const StringView& word) const{
-    if(word.size() == 0)
-        return finalStates.contains(state);
-    
-    for(size_t i {0}; i < links[state].size(); i++){
+            for(size_t k = 0; k < links[j].size(); k++){
 
-        if(word[0] == links[state][i].ch && _isIn(links[state][i].dest , word.substr(1, word.size())))
-            return true;
+                if(links[j][k].ch == str[i])
+                    nextCycle.push_back(links[j][k].dest);
+            }
+
+        }
+
+        if(nextCycle.empty())
+            return nextCycle;
+        
+        reachFrom = std::move(nextCycle);
     }
-    return false;
+    return reachFrom;
 }
+

@@ -2,6 +2,7 @@
 #include "../Helper\Pair\Pair.hpp"
 #include "../Helper\Tripple\Tripple.hpp"
 #include "../Helper\Vector\Vector.hpp"
+#include "../Helper\Queue\Queue.hpp"
 #include "../Helper\String\StringView.h"
 
 
@@ -31,7 +32,7 @@ public:
     void minimize();
     void reverse();
 
-    bool isIn(const String& word) const;
+    bool accepts(const String& word) const;
 
     friend Automata Complement(const Automata& automata);
     friend Automata KleeneStarOf(const Automata& automata);
@@ -54,8 +55,7 @@ private:
     void addLink(unsigned from, char ch, unsigned to);
     void copyLinks(unsigned to, unsigned from);
 
-    bool _isIn(unsigned state, const StringView& word) const;
-
+    Vector<unsigned> reachable(unsigned from, const StringView& str) const;
 
     Automata reverseLinks();
 
