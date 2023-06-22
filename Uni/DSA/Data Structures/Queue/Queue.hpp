@@ -15,6 +15,7 @@ public:
     Queue(Queue<T>&& other);
     Queue<T>& operator=(const Queue<T>& other);
     Queue<T>& operator=(Queue<T>&& other);
+    ~Queue();
 
 
     void push(const T& data);
@@ -56,6 +57,11 @@ Queue<T>& Queue<T>::operator=(Queue<T>&& other){
         move(std::move(other));
     }
     return *this;
+}
+
+template <typename T>
+Queue<T>::~Queue(){
+    free();
 }
 
 

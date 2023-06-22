@@ -15,15 +15,24 @@ public:
     Tree(Tree<T>&& other);
     Tree<T>& operator=(const Tree<T>& other);
     Tree<T>& operator=(Tree<T>&& other);
+    ~Tree();
 
+    void push(const T& data);
+    void push(T&& data);
+    bool contains(const T& data);
+    
 
 private:
 
     void free();
     void _free(Node<T>* current);
     void copyFrom(const Tree<T>& other);
-    Node<T>* _copyFrom(Node<T>* current, const Node<T>* otherIter);
+    Node<T>* _copyFrom(const Node<T>* otherIter);
     void move(Tree<T>&& other);
+
+    void leftRotate(Node<T>* node);
+    void rightRotate(Node<T>* node);
+    void insertFix(Node<T>* node);
 };
 
 template <typename T>
@@ -65,6 +74,26 @@ Tree<T>& Tree<T>::operator=(Tree<T>&& other){
     return *this;
 }
 
+template <typename T>
+Tree<T>::~Tree(){
+    free();
+}
+
+template <typename T>
+void Tree<T>::push(const T& data){
+
+}
+
+template <typename T>
+void Tree<T>::push(T&& data){
+
+}
+
+template <typename T>
+bool Tree<T>::contains(const T& data){
+
+}
+
 
 
 
@@ -96,11 +125,14 @@ void Tree<T>::copyFrom(const Tree<T>& other){
 }
 
 template <typename T>
-Node<T>* Tree<T>::_copyFrom(Node<T>* curr, const Node<T>* otherIter){
+Node<T>* Tree<T>::_copyFrom(const Node<T>* otherIter){
     if(!otherIter)
         return nullptr;
     
-    Node<T> newNode(otherIter->key, otherIter->data, otherIter->color);
+    Node<T> newNode(otherIter->data, otherIter->color);
+    newNode->left = _copyFrom(otherIter->left);
+    newNode->right = _copyFrom(otherIter->right);
+    return newNode;
 
 }
 
