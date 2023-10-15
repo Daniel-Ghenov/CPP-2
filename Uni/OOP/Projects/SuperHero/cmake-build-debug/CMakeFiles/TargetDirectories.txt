@@ -1,0 +1,3 @@
+C:/Users/Danny/Code/C++/Uni/OOP/Projects/SuperHero/cmake-build-debug/CMakeFiles/SuperHero.dir
+C:/Users/Danny/Code/C++/Uni/OOP/Projects/SuperHero/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Danny/Code/C++/Uni/OOP/Projects/SuperHero/cmake-build-debug/CMakeFiles/rebuild_cache.dir

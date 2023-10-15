@@ -1,4 +1,5 @@
 #include "Admin.h"
+#include "SuperHero.h"
 
 Admin::Admin(const String& firstName, const String& lastName, const String& email, const char* username, const String& password):
             User(firstName, lastName, email, username, password){
@@ -14,5 +15,6 @@ void Admin::print() const{
 }
 void Admin::adminPrint() const{
     print();
+
 }
 
