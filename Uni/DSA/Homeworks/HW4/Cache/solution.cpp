@@ -53,12 +53,52 @@ public:
     void put(int key, int data);
     void get(int key);
 
+
+
+private:
+
     void pop_back();
+    void overheat();
+
+    Node* find(int key);
 };
 
+void List::pop_back(){
+    if(head == nullptr)
+        throw std::out_of_range("No elements");
+
+    if(head->next == nullptr){
+        head = nullptr;
+        return;
+    }
+
+    Node* ntlast = head;
+
+    while(ntlast->next->next != nullptr){
+        ntlast = ntlast->next;
+    }
+    delete ntlast->next;
+    ntlast->next = nullptr;
+
+}
+
+void List::overheat() {
+    pop_back();
+}
+
+Node* List::find(int key) {
+
+    if(head == nullptr)
+        throw std::out_of_range("No elements");
+
+}
 
 
 int main() {
-    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+
+
+
+
+
     return 0;
 }
