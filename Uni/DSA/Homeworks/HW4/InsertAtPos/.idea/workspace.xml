@@ -9,13 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb128689-e064-48f5-a159-6b5aa937082b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../HW 3/Company CEO/solution.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../HW 3/Grades/solution.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../HW 3/Projects/solution.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../CombineLinkedLists/solution.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HW2/Gym Maths/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/../../HW2/Gym Maths/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-    </list>
+    <list default="true" id="bb128689-e064-48f5-a159-6b5aa937082b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,9 +21,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2XDvTRZg9qKVFTDWmO1rBlqpsuQ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -44,7 +38,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW4/InsertAtPos",
+    "last_opened_file_path": "C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW4/Cache",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -61,6 +55,7 @@
       <option name="presentableId" value="Default" />
       <updated>1698176471736</updated>
       <workItem from="1698176472760" duration="3233000" />
+      <workItem from="1698596036787" duration="88000" />
     </task>
     <servers />
   </component>
