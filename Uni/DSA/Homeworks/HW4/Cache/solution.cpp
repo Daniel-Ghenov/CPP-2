@@ -47,57 +47,158 @@ private:
     Node* tail = nullptr;
     int overHeatNum;
     int currOverHeat = 0;
-
+    Node* nodes[10000];
+    int capacity;
+    int currCap = 0;
 public:
 
+    List(int overHeatNum, int capacity): overHeatNum(overHeatNum), capacity(capacity) {
+        for(int i = 0; i < 10000; i++){
+            nodes[i] = nullptr;
+        }
+    }
+
     void put(int key, int data);
-    void get(int key);
+    int get(int key);
 
 
 
 private:
 
+    void push_front(int key, int data);
     void pop_back();
+    void remove(Node* node);
     void overheat();
+    void checkOverHeat();
+    void checkCapacity();
 
-    Node* find(int key);
 };
+
+void List::put(int key, int data) {
+    bool checkCap = false;
+    if(!nodes[key]){
+        checkCap = true;
+    }else{
+        remove(nodes[key]);
+    }
+
+    push_front(key, data);
+    nodes[key] = head;
+
+    if(checkCap){
+        currCap++;
+        checkCapacity();
+    }
+
+    currOverHeat++;
+    checkOverHeat();
+
+}
+
+int List::get(int key) {
+    if(!nodes[key]){
+        currOverHeat++;
+        return -1;
+    }
+    int data = nodes[key]->data;
+    remove(nodes[key]);
+    push_front(key, data);
+    nodes[key] = head;
+    currOverHeat++;
+    checkOverHeat();
+    return data;
+}
+
+void List::push_front(int key, int data){
+    head = new Node(key, data, head, nullptr);
+    if(tail == nullptr){
+        tail = head;
+    }
+    if(head->next)
+        head->next->prev = head;
+}
 
 void List::pop_back(){
     if(head == nullptr)
         throw std::out_of_range("No elements");
 
-    if(head->next == nullptr){
-        head = nullptr;
+    if(head == tail){
+        delete head;
+        head = tail = nullptr;
         return;
     }
 
-    Node* ntlast = head;
+    Node* last = tail;
+    tail = tail->prev;
+    tail->next = nullptr;
 
-    while(ntlast->next->next != nullptr){
-        ntlast = ntlast->next;
+    int key = last->key;
+    nodes[key] = nullptr;
+    delete last;
+}
+
+void List::remove(Node* node){
+
+    if(node == head){
+        head = node->next;
+        if(head == nullptr) {
+            tail = nullptr;
+        } else {
+            head->prev = nullptr;
+        }
+        delete node;
+        return;
     }
-    delete ntlast->next;
-    ntlast->next = nullptr;
+    if(node == tail){
+        tail = node->prev;
+        tail->next = nullptr;
+        delete node;
+        return;
+    }
+
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
 
 }
+
 
 void List::overheat() {
     pop_back();
 }
 
-Node* List::find(int key) {
-
-    if(head == nullptr)
-        throw std::out_of_range("No elements");
-
+void List::checkOverHeat(){
+    if(currOverHeat == overHeatNum){
+        overheat();
+        currOverHeat = 0;
+        currCap--;
+    }
 }
 
+void List::checkCapacity() {
+    if(currCap > capacity){
+        overheat();
+        currCap = capacity;
+    }
+}
 
 int main() {
 
-
-
+    int cap, queries, overheat;
+    std::cin>>cap>>queries>>overheat;
+    List list(overheat, cap);
+    for(int i = 0; i < queries; i++){
+        std::string query;
+        std::cin>>query;
+        if(query == "put"){
+            int key, data;
+            std::cin>>key>>data;
+            list.put(key, data);
+        }else{
+            int key;
+            std::cin>>key;
+            std::cout<<list.get(key)<<std::endl;
+        }
+    }
 
 
     return 0;
