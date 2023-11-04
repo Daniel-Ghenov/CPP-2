@@ -5,200 +5,296 @@
 #include <algorithm>
 
 struct Node{
-    int key;
-    int data;
-    Node* next = nullptr;
-    Node* prev = nullptr;
 
-    Node(int key, int data);
-    Node(int key, int data, Node* next);
-    Node(int key, int data, Node* next, Node* prev);
-    Node(const Node& other);
-    Node& operator=(const Node& other);
+    int data;
+    int key;
+    Node * next = nullptr;
+
+    Node (const int& data);
+    Node (const Node & other);
+    Node & operator=(const Node & other);
 
 };
 
-Node::Node(int key, int data){
-    this->key = key;
+Node::Node(const int& data){
     this->data = data;
 }
-
 Node::Node(const Node& other){
-    this->key = other.key;
-    this->data = other.data;
-}
-
-Node::Node(int key, int data, Node* next){
-    this->key = key;
-    this->data = data;
-    this-> next = next;
-}
-
-Node::Node(int key, int data, Node* next, Node* prev){
-    this->key = key;
-    this->data = data;
-    this->next = next;
-    this->prev = prev;
+    data = other.data;
 }
 
 class List{
 private:
     Node* head = nullptr;
-    Node* tail = nullptr;
-    int overHeatNum;
-    int currOverHeat = 0;
-    Node* nodes[10000];
-    int capacity;
-    int currCap = 0;
+
+    void free();
+    void copyFrom(const List& other);
+
 public:
-
-    List(int overHeatNum, int capacity): overHeatNum(overHeatNum), capacity(capacity) {
-        for(int i = 0; i < 10000; i++){
-            nodes[i] = nullptr;
-        }
-    }
-
-    void put(int key, int data);
-    int get(int key);
+    List() = default;
+    List(const int& data);
+    ~List();
+    List(const List& other);
+    List(List&& other);
+    List& operator=(const List& other);
+    List& operator=(List&& other);
 
 
+    void push_back(const int& data);
+    void push_front(const int& data);
+    void pop_back();
+    void pop_front();
+    void remove(size_t index);
+    void insert(size_t index, const int& data);
+    bool contains(const int& data);
+
+    void print() const;
+
+    void reverse(); //recursive reversal
+
+    const int& find(const int& data) const;
+    void swap(size_t idx1, size_t idx2);
 
 private:
 
-    void push_front(int key, int data);
-    void pop_back();
-    void remove(Node* node);
-    void overheat();
-    void checkOverHeat();
-    void checkCapacity();
+    void free();
+    void copyFrom(const List& other);
+    void move(const List& other);
+
+    void reverse(Node& current, Node& previous);
 
 };
 
-void List::put(int key, int data) {
-    bool checkCap = false;
-    if(!nodes[key]){
-        checkCap = true;
-    }else{
-        remove(nodes[key]);
-    }
 
-    push_front(key, data);
-    nodes[key] = head;
 
-    if(checkCap){
-        currCap++;
-        checkCapacity();
-    }
 
-    currOverHeat++;
-    checkOverHeat();
-
+List::List(const int& data){
+    Node* newHead = new Node(data);
+    head = newHead;
+}
+List::~List(){
+    free();
 }
 
-int List::get(int key) {
-    if(!nodes[key]){
-        currOverHeat++;
-        return -1;
+List& List::operator=(const List& other){
+
+    if(this != &other){
+        free();
+        copyFrom(other);
     }
-    int data = nodes[key]->data;
-    remove(nodes[key]);
-    push_front(key, data);
-    nodes[key] = head;
-    currOverHeat++;
-    checkOverHeat();
-    return data;
+    return *this;
+}
+List& List::operator=(List&& other){
+
+    if(this != &other){
+        free();
+        move(std::move(other));
+    }
+    return *this;
 }
 
-void List::push_front(int key, int data){
-    head = new Node(key, data, head, nullptr);
-    if(tail == nullptr){
-        tail = head;
-    }
-    if(head->next)
-        head->next->prev = head;
+List::List(const List& other){
+    copyFrom(other);
 }
 
+List::List(List&& other){
+    move(other);
+}
+void List::push_back(const int& data){
+    if(head == nullptr){
+        push_front(data);
+    }
+    Node* last = head;
+    while(last->next != nullptr){
+        last = last->next;
+    }
+    last->next = new Node(data);
+
+}
+void List::push_front(const int& data){
+    Node* newNode = new Node(data);
+    newNode->next = head;
+    head = newNode;
+}
 void List::pop_back(){
     if(head == nullptr)
         throw std::out_of_range("No elements");
 
-    if(head == tail){
-        delete head;
-        head = tail = nullptr;
+    if(head->next == nullptr){
+        head->data = 0;
         return;
     }
+    Node* ntlast = head;
 
-    Node* last = tail;
-    tail = tail->prev;
-    tail->next = nullptr;
+    while(ntlast->next->next != nullptr){
+        ntlast = ntlast->next;
+    }
+    delete ntlast->next;
+    ntlast->next = nullptr;
 
-    int key = last->key;
-    nodes[key] = nullptr;
-    delete last;
+}
+void List::pop_front(){
+    if(head == nullptr)
+        throw std::out_of_range("No elements");
+
+    Node* newHead = head->next;
+
+    delete[] head;
+    head = newHead;
 }
 
-void List::remove(Node* node){
+void List::remove(size_t index){
+    if(index == 0)
+        pop_front();
 
-    if(node == head){
-        head = node->next;
-        if(head == nullptr) {
-            tail = nullptr;
-        } else {
-            head->prev = nullptr;
+
+    Node* iter = head;
+    while(iter->next != nullptr){
+        if(index == 1){
+            Node* gointo = iter->next->next;
+            delete[] iter->next;
+            iter->next = gointo;
+            return;
         }
-        delete node;
+        index--;
+        iter = iter->next;
+    }
+
+    if(index == 1){
+        delete[] iter->next;
+        iter->next = nullptr;
+    }
+    else
+        throw std::out_of_range("Out of Range");
+
+}
+bool List::contains(const int& data){
+    Node* iter = head;
+
+    while(iter != nullptr){
+        if(iter->data == data)
+            return true;
+        iter = iter->next;
+    }
+    return false;
+}
+
+void List::insert(size_t index, const int& data){
+    if(index == 0){
+        push_front(data);
         return;
     }
-    if(node == tail){
-        tail = node->prev;
-        tail->next = nullptr;
-        delete node;
-        return;
+
+    Node* iter = head;
+    while(iter != nullptr){
+        if(index == 1){
+            Node* newData = new Node(data);
+            newData->next = iter->next;
+            iter->next = newData;
+            return;
+        }
+        index--;
+        if(index == 1 && iter->next == nullptr){
+            iter->next = new Node(data);
+            return;
+        }
+        iter = iter->next;
     }
-
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-
-}
-
-
-void List::overheat() {
-    pop_back();
-}
-
-void List::checkOverHeat(){
-    if(currOverHeat == overHeatNum){
-        overheat();
-        currOverHeat = 0;
-        currCap--;
+    if(index > 0){
+        throw std::out_of_range("Out of Range");
     }
 }
 
-void List::checkCapacity() {
-    if(currCap > capacity){
-        overheat();
-        currCap = capacity;
+
+
+
+void List::print() const {
+    Node* iter = head;
+    while(iter != nullptr){
+        std::cout<<iter->data<<' ';
+        iter = iter->next;
     }
+}
+
+const int& List::find(const int& data) const{
+    size_t index = 0;
+    Node*iter = head;
+    while(iter != nullptr){
+        if(iter->data == data){
+            return index;
+        }
+        index++;
+        iter = iter->next;
+    }
+    return -1;
+
+}
+
+void List::swap(size_t idx1, size_t idx2){
+
+    Node* iter1 = head;
+    Node* iter2;
+
+    if(idx1 > idx2){
+        swap(idx1, idx2);
+    }
+
+    while(idx1--){
+        iter1 = iter1->next;
+    }
+    iter2 = iter1;
+    idx2 -= idx1;
+    while(idx2--){
+        iter2 = iter2->next;
+    }
+    swap(iter1->data, iter2->data);
+
+
+
+}
+
+void List::reverse(){
+    if(head)
+        reverse(nullptr, head);
+}
+
+void List::reverse(Node& previous, Node& current){
+    if(!current->next){
+        head = current;
+    }
+    else
+        reverse(current, current->next);
+    current->next = previous;
+}
+
+
+void List::free(){
+    Node* iter = head->next;
+    while(iter != nullptr){
+        delete[] head;
+        head = iter;
+        iter = iter->next;
+    }
+    head->data = 0;
+}
+void List::copyFrom(const List& other){
+    Node* otherIter = other.head->next;
+    head = new Node(other.head->data);
+    Node* thisIter = head;
+
+    while(otherIter != nullptr){
+        thisIter->next = new Node(otherIter->data);
+        thisIter = thisIter->next;
+        otherIter = otherIter->next;
+    }
+}
+
+void List::move(const List& other){
+    head = other.head;
+    other.head = nullptr;
 }
 
 int main() {
-
-    int cap, queries, overheat;
-    std::cin>>cap>>queries>>overheat;
-    List list(overheat, cap);
-    for(int i = 0; i < queries; i++){
-        std::string query;
-        std::cin>>query;
-        if(query == "put"){
-            int key, data;
-            std::cin>>key>>data;
-            list.put(key, data);
-        }else{
-            int key;
-            std::cin>>key;
-            std::cout<<list.get(key)<<std::endl;
-        }
-    }
 
 
     return 0;
