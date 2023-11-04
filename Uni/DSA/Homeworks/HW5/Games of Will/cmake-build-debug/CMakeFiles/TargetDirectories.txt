@@ -1,0 +1,3 @@
+C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW5/Games of Will/cmake-build-debug/CMakeFiles/Games_of_Will.dir
+C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW5/Games of Will/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW5/Games of Will/cmake-build-debug/CMakeFiles/rebuild_cache.dir
