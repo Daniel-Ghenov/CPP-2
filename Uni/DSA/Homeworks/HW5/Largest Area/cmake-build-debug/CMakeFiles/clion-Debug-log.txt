@@ -1,1 +1,0 @@
-CMakeLists.txt not found in C:\Users\PC-Admin\Desktop\Code\CPP-2\Uni\DSA\Homeworks\HW5\Largest Area Select CMakeLists.txt
