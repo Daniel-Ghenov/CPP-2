@@ -1,0 +1,3 @@
+C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW5/Bridge Battles/cmake-build-debug/CMakeFiles/Bridge_Battles.dir
+C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW5/Bridge Battles/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW5/Bridge Battles/cmake-build-debug/CMakeFiles/rebuild_cache.dir
