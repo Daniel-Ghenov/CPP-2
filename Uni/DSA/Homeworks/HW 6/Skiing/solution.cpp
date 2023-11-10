@@ -19,12 +19,11 @@ public:
 
     std::vector<int> getSkiingSlopes(Node* root){
         getSlopes(root, 0);
-        int combSize = slopesNeg.size() + slopesPos.size();
-        std::vector<int> ans(combSize);
+        std::vector<int> ans;
         for(auto it = slopesNeg.rbegin(); it != slopesNeg.rend(); it++){
             ans.push_back(*it);
         }
-        for(auto it = slopesPos.begin(); it != slopesNeg.end(); it++){
+        for(auto it = slopesPos.begin(); it != slopesPos.end(); it++){
             ans.push_back(*it);
         }
         return ans;
