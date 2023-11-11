@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f54cd235-e15c-497e-b309-521391a979de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/CMakeFiles/Games_of_Will.dir/solution.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/CMakeFiles/Games_of_Will.dir/solution.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/Games_of_Will.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/Games_of_Will.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../DSA/Homeworks/HW5/Games of Will/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-    </list>
+    <list default="true" id="f54cd235-e15c-497e-b309-521391a979de" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,7 +25,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Danny/Code/C++/Uni/Modern Java Technologies/Homeworks/HW 4/src",
+    "last_opened_file_path": "C:/Users/Danny/Code/C++/Uni/Modern Java Technologies/Homeworks/HW5/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -47,7 +41,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1699443216793</updated>
-      <workItem from="1699443217998" duration="3107000" />
+      <workItem from="1699443217998" duration="3672000" />
     </task>
     <servers />
   </component>
