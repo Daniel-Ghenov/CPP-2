@@ -5,27 +5,24 @@
 #include <algorithm>
 
 struct Node{
-    int value;
+    long long value;
     Node* left;
     Node* right;
 
 }nodes[(int) 1e7];
 
 class Solution{
-    std::vector<size_t> slopesPos;
-    std::vector<size_t> slopesNeg;
+    std::vector<long long> ans = std::vector<long long>(8,0);
+    int minSlope = 0;
+    int maxSlope = 0;
 
 public:
 
-    std::vector<size_t> getSkiingSlopes(Node* root){
-        getSlopes(root, 0);
-        std::vector<size_t> ans;
-        for(auto it = slopesNeg.rbegin(); it != slopesNeg.rend(); it++){
-            ans.push_back(*it);
-        }
-        for(auto it = slopesPos.begin(); it != slopesPos.end(); it++){
-            ans.push_back(*it);
-        }
+
+    std::vector<long long> getSkiingSlopes(Node* root){
+        getBorders(root, 0);
+        ans.resize(maxSlope - minSlope + 1, 0);
+        getSlopes(root, abs(minSlope));
         return ans;
     }
 
@@ -34,33 +31,37 @@ private:
         if(root == nullptr){
             return;
         }
-        if(slope >= 0){
-            if(slope >= slopesPos.size()){
-                slopesPos.push_back(root->value);
-            }else{
-                slopesPos[slope] += root->value;
-            }
-        }else{
-            if(abs(slope) >= slopesNeg.size()){
-                slopesNeg.push_back(root->value);
-            }else{
-                slopesNeg[abs(slope)] += root->value;
-            }
-        }
+        ans[slope] += root->value;
         getSlopes(root->left, slope - 1);
         getSlopes(root->right, slope + 1);
+    }
 
+    void getBorders(Node* root, int slope){
+        if(root == nullptr){
+            return;
+        }
+        if(slope > maxSlope){
+            maxSlope = slope;
+        }
+        if(slope < minSlope){
+            minSlope = slope;
+        }
+        getBorders(root->left, slope - 1);
+        getBorders(root->left, slope + 1);
     }
 
 };
 
 
 int main() {
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+
     Solution sol;
-    size_t n;
+    long long n;
     std::cin>>n;
-    for (size_t i = 0; i < n; ++i) {
-        size_t val, l, r;
+    for (long long i = 0; i < n; ++i) {
+        long long val, l, r;
         std::cin>>val>>l>>r;
         nodes[i].value = val;
         if(l != -1){
@@ -70,10 +71,12 @@ int main() {
             nodes[i].right = &nodes[r];
         }
     }
-    std::vector<size_t> slopes = sol.getSkiingSlopes(&nodes[0]);
-
-    for (size_t i: slopes) {
-        std::cout<<i<<' ';
+    std::vector<long long> slopes = sol.getSkiingSlopes(&nodes[0]);
+    for (int i = 0; i < slopes.size(); ++i) {
+        if(slopes[i] > 0)
+        std::cout<<slopes[i]<<' ';
     }
+
+    std::flush(std::cout);
     return 0;
 }

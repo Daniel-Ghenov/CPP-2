@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\Painting_Trees.dir/objects.a
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\ar.exe qc CMakeFiles\Painting_Trees.dir/objects.a @CMakeFiles\Painting_Trees.dir\objects1.rsp
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE -g -Wl,--whole-archive CMakeFiles\Painting_Trees.dir/objects.a -Wl,--no-whole-archive -o Painting_Trees.exe -Wl,--out-implib,libPainting_Trees.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Painting_Trees.dir\linkLibs.rsp
