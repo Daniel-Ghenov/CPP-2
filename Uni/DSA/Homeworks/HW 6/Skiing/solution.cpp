@@ -12,14 +12,14 @@ struct Node{
 }nodes[(int) 1e7];
 
 class Solution{
-    std::vector<int> slopesPos;
-    std::vector<int> slopesNeg;
+    std::vector<size_t> slopesPos;
+    std::vector<size_t> slopesNeg;
 
 public:
 
-    std::vector<int> getSkiingSlopes(Node* root){
+    std::vector<size_t> getSkiingSlopes(Node* root){
         getSlopes(root, 0);
-        std::vector<int> ans;
+        std::vector<size_t> ans;
         for(auto it = slopesNeg.rbegin(); it != slopesNeg.rend(); it++){
             ans.push_back(*it);
         }
@@ -57,10 +57,10 @@ private:
 
 int main() {
     Solution sol;
-    int n;
+    size_t n;
     std::cin>>n;
-    for (int i = 0; i < n; ++i) {
-        int val, l, r;
+    for (size_t i = 0; i < n; ++i) {
+        size_t val, l, r;
         std::cin>>val>>l>>r;
         nodes[i].value = val;
         if(l != -1){
@@ -70,9 +70,9 @@ int main() {
             nodes[i].right = &nodes[r];
         }
     }
-    std::vector<int> slopes = sol.getSkiingSlopes(&nodes[0]);
+    std::vector<size_t> slopes = sol.getSkiingSlopes(&nodes[0]);
 
-    for (int i: slopes) {
+    for (size_t i: slopes) {
         std::cout<<i<<' ';
     }
     return 0;
