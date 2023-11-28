@@ -1,3 +1,2 @@
-C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW 6/Skiing/cmake-build-debug/CMakeFiles/Skiing.dir
-C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW 6/Skiing/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Danny/Code/C++/Uni/DSA/Homeworks/HW 6/Skiing/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW 6/Skiing/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW 6/Skiing/cmake-build-debug/CMakeFiles/rebuild_cache.dir
