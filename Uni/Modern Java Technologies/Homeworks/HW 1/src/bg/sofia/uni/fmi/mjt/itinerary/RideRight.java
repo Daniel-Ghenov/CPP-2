@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SequencedCollection;
 
@@ -37,14 +39,13 @@ public class RideRight implements ItineraryPlanner{
         Set<City> openSet = new HashSet<>();
         openSet.add(start);
 
-
         Map<City, Journey> cameFrom = new HashMap<>();
 
         Map<City, BigDecimal> gScore = new HashMap<>();
         gScore.put(start, BigDecimal.ZERO);
 
         Map<City, BigDecimal> fScore = new HashMap<>();
-        gScore.put(start, BigDecimal.ZERO);
+        fScore.put(start, BigDecimal.ZERO);
 
         while (!openSet.isEmpty()) {
             City current = lowestFScore(openSet, fScore);
@@ -61,7 +62,7 @@ public class RideRight implements ItineraryPlanner{
                 if(!gScore.containsKey(neighbour) || tentativeGScore.compareTo(gScore.get(neighbour)) < 0) {
                     cameFrom.put(neighbour, journey);
                     gScore.put(neighbour, tentativeGScore);
-                    fScore.put(neighbour, tentativeGScore.add(journey.computePrice()));
+                    fScore.put(neighbour, tentativeGScore.add(BigDecimal.valueOf(heuristicCostEstimate(neighbour, destination))));
                     openSet.add(neighbour);
                 }
 
@@ -83,6 +84,13 @@ public class RideRight implements ItineraryPlanner{
         return neighbours;
     }
 
+    private int heuristicCostEstimate(City start, City destination) {
+        return manhattanDistance(start, destination) * 20;
+    }
+    private int manhattanDistance(City start, City destination) {
+        return (Math.abs(start.location().x() - destination.location().x()) + Math.abs(start.location().y() - destination.location().y())) / 1000;
+    }
+
 
     private SequencedCollection<Journey> reconstructPath(City current, Map<City, Journey> cameFrom) {
         List<Journey> path = new LinkedList<>();
@@ -98,13 +106,24 @@ public class RideRight implements ItineraryPlanner{
 
     private City lowestFScore(Set<City> openSet, Map<City, BigDecimal> fScore) {
         //TODO: fix implementation, so that this is O(logN) instead of O(n)
-        BigDecimal lowest = fScore.get(openSet.iterator().next());
+        BigDecimal lowest = fScore.getOrDefault(openSet.iterator().next(), BigDecimal.valueOf(Integer.MAX_VALUE));
         City lowestCity = openSet.iterator().next();
 
         for(City c : openSet) {
+            if(fScore.get(c) == null) {
+                fScore.put(c, BigDecimal.valueOf(Integer.MAX_VALUE));
+            }
+
             if(fScore.get(c).compareTo(lowest) < 0) {
                 lowest = fScore.get(c);
                 lowestCity = c;
+            }
+
+            if(fScore.get(c).compareTo(lowest) == 0) {
+                if(c.name().compareTo(lowestCity.name()) < 0) {
+                    lowest = fScore.get(c);
+                    lowestCity = c;
+                }
             }
         }
 
@@ -125,7 +144,7 @@ public class RideRight implements ItineraryPlanner{
                     lowest = journey.computePrice();
                     lowestJourney = journey;
                     found = true;
-                } else if(lowest.compareTo(journey.computePrice()) < 0) {
+                } else if(lowest.compareTo(journey.computePrice()) > 0) {
                     lowest = journey.computePrice();
                     lowestJourney = journey;
                 }
