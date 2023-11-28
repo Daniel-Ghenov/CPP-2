@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.itinerary.exception;
+package bg.sofia.uni.fmi.mjt.itinerary;
 
-public class Location {
+public record Location(int x, int y) {
 }
