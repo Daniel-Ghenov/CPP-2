@@ -38,7 +38,7 @@ public class BaseTable implements Table{
         for(BaseColumn column : columns){
             names.add(column.getData().iterator().next());
         }
-        return names;
+        return List.copyOf(names);
     }
 
     @Override

@@ -18,7 +18,7 @@ import java.util.TreeSet;
 
 public class CsvProcessor implements CsvProcessorAPI {
 
-    private Table table;
+    private final Table table;
     private final TablePrinter tablePrinter;
     public CsvProcessor() {
         this(new BaseTable());
@@ -40,8 +40,6 @@ public class CsvProcessor implements CsvProcessorAPI {
                 table.addData(data);
                 line = bufferedReader.readLine();
             }
-
-
         }catch (IOException e){
             throw new CsvDataNotCorrectException("Error reading from reader");
         }
@@ -57,9 +55,11 @@ public class CsvProcessor implements CsvProcessorAPI {
         Collection<String> lines = tablePrinter.printTable(table, alignments);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
-            for (String line : lines) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
+            for (int i = 0; i < lines.size(); i++) {
+                bufferedWriter.write(lines.toArray()[i].toString());
+                if(i != lines.size() - 1){
+                    bufferedWriter.newLine();
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Error writing to writer");
