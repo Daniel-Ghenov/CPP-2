@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +16,7 @@ import java.util.NoSuchElementException;
 
 public class FootballPlayerAnalyzer {
 
+    private static final int MAX_RATING_DIFFERENCE_FOR_SIMILARITY = 3;
 
     private final List<Player> players;
 
@@ -30,13 +30,14 @@ public class FootballPlayerAnalyzer {
 
         players = new ArrayList<>();
 
-        try(BufferedReader br = new BufferedReader(reader)) {
+        try (BufferedReader br = new BufferedReader(reader)) {
+            br.readLine();
             String line = br.readLine();
-            while(line != null) {
+            while (line != null) {
                 players.add(Player.of(line));
                 line = br.readLine();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Error reading from reader", e);
         }
     }
@@ -73,14 +74,13 @@ public class FootballPlayerAnalyzer {
      */
     public Player getHighestPaidPlayerByNationality(String nationality) {
 
-        if(nationality == null) {
+        if (nationality == null) {
             throw new IllegalArgumentException("Nationality cannot be null");
         }
 
         return players.stream()
-                .sorted(Comparator.comparing(Player::wageEuro))
-                .filter(player -> player.nationality().equals(nationality))
-                .findFirst().get();
+					  .filter(player -> player.nationality().equals(nationality))
+                        .max(Comparator.comparing(Player::wageEuro)).get();
     }
 
     /**
@@ -95,17 +95,14 @@ public class FootballPlayerAnalyzer {
 
         Map<Position, Set<Player>> byPosition = new HashMap<>();
 
-
-        players.stream()
-                .forEach(
-                        player -> player.positions().stream()
-                                .forEach(
+        players.forEach(player ->
+                                player.positions().forEach(
                                         position -> {
                                             byPosition.putIfAbsent(position, new HashSet<>());
-                                            byPosition.put(position, Set.of(player));
+                                            byPosition.get(position).add(player);
                                         }
                                 )
-                );
+        );
         return byPosition;
     }
 
@@ -124,17 +121,20 @@ public class FootballPlayerAnalyzer {
      */
     public Optional<Player> getTopProspectPlayerForPositionInBudget(Position position, long budget) {
 
-        if(position == null) {
+        if (position == null) {
             throw new IllegalArgumentException("Position must not be null.");
         }
-        if(budget < 0) {
+        if (budget < 0) {
             throw new IllegalArgumentException("Budget must not be negative.");
         }
 
         return players.stream()
-                .sorted(Comparator.comparing(Player::potential))
-                .filter( player -> player.valueEuro() <= budget)
-                .findFirst();
+					  .filter(player -> player.valueEuro() <= budget)
+                      .max(Comparator.comparing(this::getProspect));
+    }
+
+    private double getProspect(Player player) {
+        return (double) (player.overallRating() + player.potential()) / player.age();
     }
 
     /**
@@ -149,15 +149,16 @@ public class FootballPlayerAnalyzer {
      */
     public Set<Player> getSimilarPlayers(Player player) {
 
-        if(player == null) {
+        if (player == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
 
         return players.stream()
                 .filter(player1 -> player1.preferredFoot().equals(player.preferredFoot())
                 && player1.positions().stream().anyMatch(position -> player.positions().contains(position))
-                && Math.abs(player1.overallRating() - player.overallRating()) <= 3)
-                .collect(Collectors.toSet());
+                && Math.abs(player1.overallRating() - player.overallRating()) <= MAX_RATING_DIFFERENCE_FOR_SIMILARITY
+                && !player1.equals(player))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -169,13 +170,13 @@ public class FootballPlayerAnalyzer {
      */
     public Set<Player> getPlayersByFullNameKeyword(String keyword) {
 
-        if(keyword == null) {
+        if (keyword == null) {
             throw new IllegalArgumentException("Keyword cannot be null");
         }
 
         return players.stream()
                 .filter( player ->  player.fullName().contains(keyword))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 }

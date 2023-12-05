@@ -16,18 +16,18 @@ public class FootballPlayerAnalyzerTest {
 
 
 
-    private static final String messi = "Messi;Lionel Messi;1987-06-24;33;170.0;72.0;CF;Argentina;93;93;67500000;560000;LEFT";
+    private static final String messi = "Messi;Lionel Messi;06/24/1987;33;170.0;72.0;CF;Argentina;93;93;67500000;560000;LEFT";
 
-    private static final String ronaldo = "Ronaldo;Cristiano Ronaldo;1985-02-05;35;187.0;83.0;ST,LW;Portugal;92;92;46000000;220000;RIGHT";
+    private static final String ronaldo = "Ronaldo;Cristiano Ronaldo;02/05/1985;35;187.0;83.0;ST,LW;Portugal;92;92;46000000;220000;RIGHT";
 
-    private static final String lewandowski = "Lewandowski;Robert Lewandowski;1988-08-21;32;184.0;80.0;ST;Poland;91;91;80000000;240000;RIGHT";
+    private static final String lewandowski = "Lewandowski;Robert Lewandowski;08/21/1988;32;184.0;80.0;ST;Poland;91;91;80000000;240000;RIGHT";
 
-    private static final String messiRonaldoLewandowski = messi + '\n' + ronaldo + '\n' + lewandowski;
+    private static final String messiRonaldoLewandowski ='\n' +  messi + '\n' + ronaldo + '\n' + lewandowski;
 
     @Test
     void testGetAllPlayers() {
         Player player = Player.of(messi);
-        Reader reader = new StringReader(messi);
+        Reader reader = new StringReader('\n' +  messi);
 
         FootballPlayerAnalyzer analyzer = new FootballPlayerAnalyzer(reader);
 
@@ -41,7 +41,7 @@ public class FootballPlayerAnalyzerTest {
 
         FootballPlayerAnalyzer analyzer = new FootballPlayerAnalyzer(reader);
 
-        assertIterableEquals(Set.of("Argentina", "Portugal", "Poland"), analyzer.getAllNationalities());
+        assertEquals(Set.of("Argentina", "Portugal", "Poland"), analyzer.getAllNationalities());
     }
 
     @Test
@@ -79,9 +79,9 @@ public class FootballPlayerAnalyzerTest {
 
         assertEquals(Map.of(
                 Position.CF, Set.of(Player.of(messi)),
-                Position.ST, Set.of(Player.of(ronaldo), Player.of(lewandowski),
+                Position.ST, Set.of(Player.of(ronaldo), Player.of(lewandowski)),
                 Position.LW, Set.of(Player.of(ronaldo)))
-        ), analyzer.groupByPosition());
+        , analyzer.groupByPosition());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class FootballPlayerAnalyzerTest {
 
     @Test
     void testGetSimilarPlayersWhenNoSimilarPlayers() {
-        Reader reader = new StringReader(messi + ronaldo);
+        Reader reader = new StringReader('\n' +  messi + '\n' + ronaldo);
 
         FootballPlayerAnalyzer analyzer = new FootballPlayerAnalyzer(reader);
 
