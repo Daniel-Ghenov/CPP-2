@@ -67,20 +67,23 @@ private:
         while(!queue.empty()) {
             Point top = queue.front();
             queue.pop();
-            visited[top.x][top.y] = true;
             corners.update(top);
 
             if(top.x + 1 < forest.size() && forest[top.x + 1][top.y] && !visited[top.x + 1][top.y]) {
                 queue.emplace(top.x + 1, top.y);
+                visited[top.x + 1][top.y] = true;
             }
             if(top.x - 1 < forest.size() && forest[top.x - 1][top.y] && !visited[top.x - 1][top.y]) {
                 queue.emplace(top.x - 1, top.y);
+                visited[top.x - 1][top.y] = true;
             }
             if(top.y - 1 < forest.size() && forest[top.x][top.y - 1] && !visited[top.x][top.y - 1]) {
                 queue.emplace(top.x, top.y - 1);
+                visited[top.x][top.y - 1] = true;
             }
             if(top.y + 1 < forest.size() && forest[top.x][top.y + 1] && !visited[top.x][top.y + 1]) {
                 queue.emplace(top.x, top.y + 1);
+                visited[top.x][top.y + 1] = true;
             }
 
         }
