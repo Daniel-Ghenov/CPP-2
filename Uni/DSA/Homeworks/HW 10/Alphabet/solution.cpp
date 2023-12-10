@@ -9,44 +9,37 @@ bool compare(std::pair<int, int>& pair1, std::pair<int, int>& pair2) {
     return pair1.first > pair2.first;
 }
 
-std::vector<char> getTopoOrder(std::vector<std::vector<int>>& graph, int start) {
+
+void getTopoOrderRecurs(std::vector<std::vector<int>>& graph, std::stack<int>& orderStack, std::vector<bool>& visited, int curr) {
+    if(visited[curr]) {
+        return;
+    }
+    visited[curr] = true;
+    for(int i = graph[curr].size() - 1; i >= 0; i--) {
+        if(!visited[graph[curr][i]]) {
+            getTopoOrderRecurs(graph, orderStack, visited, graph[curr][i]);
+        }
+    }
+    orderStack.push(curr);
+
+}
+
+void getTopoOrder(std::vector<std::vector<int>>& graph, int start) {
 
     std::vector<std::pair<int, int>> finished;
     std::vector<bool> visited(graph.size(), false);
 
-    std::stack<int> st;
-    st.push(start);
+    std::stack<int> topoOrder;
 
-    visited[start] = true;
-    int order = 0;
-    while(!st.empty()) {
+    getTopoOrderRecurs(graph, topoOrder, visited, start);
 
-        int top = st.top();
-
-        if(!visited[top]) {
-            visited[top] = true;
-        }
-        bool added = false;
-        for(int i = graph[top].size() - 1; i >= 0; i--) {
-            if(!visited[graph[top][i]]) {
-                st.push(graph[top][i]);
-                added = true;
-            }
-        }
-
-        if(!added) {
-            st.pop();
-            finished.emplace_back(order++, top);
-        }
+    while(!topoOrder.empty()) {
+        std::cout<< char(topoOrder.top() + 'a')<<' ';
+        topoOrder.pop();
     }
 
-    std::sort(finished.begin(), finished.end(), compare);
-    std::vector<char> sol;
-    for(std::pair<int, int> pair : finished) {
-        sol.emplace_back( 'a' + pair.second );
-    }
-    return sol;
 }
+
 
 void addEdge(std::vector<std::vector<int>>& graph, const std::string& str1, const std::string& str2, int& currStart) {
 
@@ -84,11 +77,7 @@ int main() {
         addEdge(graph, str1, str2, start);
         str1 = std::move(str2);
     }
-    std::vector<char> topoOrder = getTopoOrder(graph, start);
-
-    for(char i : topoOrder) {
-        std::cout<<i<<' ';
-    }
+    getTopoOrder(graph, start);
 
 
     return 0;

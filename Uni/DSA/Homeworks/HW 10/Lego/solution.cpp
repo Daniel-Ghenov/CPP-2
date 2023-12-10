@@ -29,10 +29,10 @@ int bfs(std::vector<std::vector<int>>& graph, int from, int to) {
             return currDist;
         }
 
-        for(int loopFriend : graph[top]) {
-            if(!visited[loopFriend]) {
-                queue.push(loopFriend);
-                visited[loopFriend] = true;
+        for(int neighbour : graph[top]) {
+            if(!visited[neighbour]) {
+                queue.push(neighbour);
+                visited[neighbour] = true;
             }
 
         }
@@ -52,7 +52,6 @@ int bfs(std::vector<std::vector<int>>& graph, int from, int to) {
 int pathFromTo(std::vector<std::vector<Edge>>& graph, int from, int to) {
 
     std::vector<std::vector<int>> updatedGraph(graph.size(), std::vector<int>());
-
     for (int i = 0; i < graph.size(); ++i) {
 
         for (int j = 0; j < graph[i].size(); ++j) {
@@ -71,11 +70,9 @@ int pathFromTo(std::vector<std::vector<Edge>>& graph, int from, int to) {
 
     return bfs(updatedGraph, from, to);
 
-
 }
 
 int main() {
-    //todo check if 0 to n-1 or 1 to n
     int n,m;
     std::cin>>n>>m;
     std::vector<std::vector<Edge>> graph(n);
@@ -83,6 +80,7 @@ int main() {
         int from, to, weight;
         std::cin>>from>>to>>weight;
         graph[from].emplace_back(to, weight);
+        graph[to].emplace_back(from, weight);
     }
     int from , to;
     std::cin>>from>>to;
