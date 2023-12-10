@@ -76,7 +76,7 @@ int main() {
     int groupToLookAt;
     std::cin >> groupToLookAt;
 
-    std::cout<<minDistFromGroup(friends, friendGroups, groupToLookAt);
+    std::cout<<minDistFromGroup(friends, friendGroups, groupToLookAt) - 1;
 
     return 0;
 }

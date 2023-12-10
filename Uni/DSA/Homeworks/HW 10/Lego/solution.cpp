@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <queue>
+#include <climits>
 
 struct Edge {
     int to;
@@ -12,10 +13,63 @@ struct Edge {
     Edge(int to, int weight) : to(to), weight(weight) {}
 };
 
+int bfs(std::vector<std::vector<int>>& graph, int from, int to) {
+
+    std::vector<bool> visited(graph.size());
+
+    std::queue<int> queue;
+    queue.push(from);
+    int currDist = 0;
+    int levelSize = 1;
+    while(!queue.empty()) {
+        int top = queue.front();
+        queue.pop();
+
+        if(top == to) {
+            return currDist;
+        }
+
+        for(int loopFriend : graph[top]) {
+            if(!visited[loopFriend]) {
+                queue.push(loopFriend);
+                visited[loopFriend] = true;
+            }
+
+        }
+
+        levelSize--;
+        if(levelSize == 0) {
+            levelSize = queue.size();
+            currDist++;
+        }
+
+    }
+
+    return INT_MAX;
+}
+
+
 int pathFromTo(std::vector<std::vector<Edge>>& graph, int from, int to) {
 
-    std::vector<int>
-    std::queue<int> queue;
+    std::vector<std::vector<int>> updatedGraph(graph.size(), std::vector<int>());
+
+    for (int i = 0; i < graph.size(); ++i) {
+
+        for (int j = 0; j < graph[i].size(); ++j) {
+
+            if(graph[i][j].weight == 1) {
+                updatedGraph[i].push_back(graph[i][j].to);
+            } else {
+                updatedGraph[i].push_back(updatedGraph.size());
+                updatedGraph.push_back(std::vector<int>());
+                updatedGraph[updatedGraph.size() - 1].push_back(graph[i][j].to);
+            }
+
+        }
+
+    }
+
+    return bfs(updatedGraph, from, to);
 
 
 }
