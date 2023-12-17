@@ -23,15 +23,7 @@ struct Edge {
         return weight < other.weight;
     }
 
-    bool operator==(const Edge& other) const {
-        return weight == other.weight && to == other.to;
-    }
-
 };
-
-long long getBusWaitTime(long long currentTime, long long interval) {
-    return interval * ceil((double) currentTime / (double) interval) - currentTime;
-}
 
 long long timeToArriveTo(const std::vector<std::vector<Edge>>& graph, long long start, long long end) {
 
@@ -43,17 +35,21 @@ long long timeToArriveTo(const std::vector<std::vector<Edge>>& graph, long long 
     while(!edges.empty()) {
         Edge temp = *(edges.begin());
         edges.erase(edges.begin());
-        long long to = temp.to;
+        long long curr = temp.to;
 
-        if(to == end) {
-            return temp.weight + getBusWaitTime(temp.weight, intervals[to]);
+        if(curr == end) {
+            return temp.weight;
         }
 
-        for(long long i = 0; i < graph[to].size(); i++) {
-            long long weight = graph[to][i].weight;
-            long long next = graph[to][i].to;
+        for(long long i = 0; i < graph[curr].size(); i++) {
+            long long weight = graph[curr][i].weight;
+            long long next = graph[curr][i].to;
 
-            long long newArrivalTime = dist[to] + getBusWaitTime(dist[to], intervals[to]) + weight;
+            long long newArrivalTime = dist[curr] + weight;
+            long long waitTime = newArrivalTime % intervals[next];
+            if(waitTime != 0 && next != end) {
+                newArrivalTime += intervals[next] - waitTime;
+            }
 
             if(newArrivalTime < dist[next]) {
 
