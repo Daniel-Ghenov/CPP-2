@@ -9,6 +9,7 @@ public class ImageQueue  {
     public ImageQueue(Queue<Image> images) {
         this.images = images;
     }
+
     public ImageQueue() {
         this.images = new LinkedList<>();
     }
@@ -19,6 +20,13 @@ public class ImageQueue  {
     }
 
     public synchronized Image get() {
+        if (images.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Image img = images.poll();
         notifyAll();
         return img;
