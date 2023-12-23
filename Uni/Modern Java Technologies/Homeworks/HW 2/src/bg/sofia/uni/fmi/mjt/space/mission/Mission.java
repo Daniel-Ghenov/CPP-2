@@ -14,7 +14,7 @@ public record Mission(String id, String company, String location, LocalDate date
 		String id = parts[0];
 		String company = parts[1];
 		String location = parts[2].substring(1, parts[2].length() - 1);
-		LocalDate date = LocalDate.parse(parts[3].substring(1, parts[3].length() - 1), DateTimeFormatter.ofPattern("EEE MMM dd, yyyy")); // remove quotes and parse date
+		LocalDate date = LocalDate.parse(parts[3].substring(1, parts[3].length() - 1), DateTimeFormatter.ofPattern("EEE MMM dd, yyyy"));
 		Detail detail = Detail.fromString(parts[4]);
 		RocketStatus rocketStatus = RocketStatus.valueOf(parts[5].substring(1, parts[5].length() - 1));
 		String costStr = parts[6].substring(1, parts[6].length() - 2);
