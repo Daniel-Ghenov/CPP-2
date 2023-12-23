@@ -12,8 +12,7 @@ import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Rijndael implements SymmetricBlockCipher
-{
+public class Rijndael implements SymmetricBlockCipher {
 	private static final int KILOBYTE = 1024;
 
 	private static final String ENCRYPTION_ALGORITHM = "AES";
@@ -24,15 +23,12 @@ public class Rijndael implements SymmetricBlockCipher
 		this.secretKey = secretKey;
 	}
 
-	@Override public void encrypt(InputStream inputStream, OutputStream outputStream) throws CipherException
-	{
+	@Override public void encrypt(InputStream inputStream, OutputStream outputStream) throws CipherException {
 		Cipher cipher = null;
 		try  {
 			cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-		}
-		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-		{
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
 			throw new CipherException(e.getMessage());
 		}
 
@@ -42,22 +38,17 @@ public class Rijndael implements SymmetricBlockCipher
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				os.write(buffer, 0, bytesRead);
 			}
-		}
-		catch (IOException  e)
-		{
+		} catch (IOException  e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	@Override public void decrypt(InputStream inputStream, OutputStream outputStream) throws CipherException
-	{
+	@Override public void decrypt(InputStream inputStream, OutputStream outputStream) throws CipherException {
 		Cipher cipher = null;
 		try  {
 			cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
-		}
-		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-		{
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
 			throw new CipherException(e.getMessage());
 		}
 
@@ -69,9 +60,7 @@ public class Rijndael implements SymmetricBlockCipher
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				decryptedOutputStream.write(buffer, 0, bytesRead);
 			}
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}

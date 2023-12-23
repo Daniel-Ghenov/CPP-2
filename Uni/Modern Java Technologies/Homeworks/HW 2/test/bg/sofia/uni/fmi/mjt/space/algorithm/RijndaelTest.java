@@ -15,6 +15,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class RijndaelTest
@@ -50,6 +51,32 @@ public class RijndaelTest
 		{
 			fail("Unexpected exception");
 		}
+	}
+
+	@Test
+	public void testEncryptWhenNullKeyShouldThrowCipherException()
+	{
+		String messageStr = "Hello World!";
+		byte[] message = messageStr.getBytes();
+		ByteArrayInputStream stream = new ByteArrayInputStream(message);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		Rijndael cipher = new Rijndael(null);
+
+		assertThrowsExactly(CipherException.class, () -> cipher.encrypt(stream, outputStream));
+	}
+
+	@Test
+	public void testDecryptWhenNullKeyShouldThrowCipherException()
+	{
+		String messageStr = "Hello World!";
+		byte[] message = messageStr.getBytes();
+		ByteArrayInputStream stream = new ByteArrayInputStream(message);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		Rijndael cipher = new Rijndael(null);
+
+		assertThrowsExactly(CipherException.class, () -> cipher.decrypt(stream, outputStream));
 	}
 
 	@Test

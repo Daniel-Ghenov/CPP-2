@@ -14,7 +14,6 @@ public enum RocketStatus {
 		return value;
 	}
 
-
 	public static RocketStatus fromString(String text) {
 		for (RocketStatus status : RocketStatus.values()) {
 			if (status.value.equalsIgnoreCase(text)) {

@@ -31,6 +31,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -49,8 +50,7 @@ public class MJTSpaceScannerTest
 	private static final List<Rocket> rockets;
 
 	@BeforeEach
-	public void setUp()
-	{
+	public void setUp() {
 		this.scanner = new MJTSpaceScanner(missions, rockets, createCipher());
 	}
 
@@ -70,8 +70,8 @@ public class MJTSpaceScannerTest
 			cipher.encrypt(missionsStream, missionsOs);
 			cipher.encrypt(rocketsStream, rocketsOs);
 
-			missionsReader = new StringReader(missionsOs.toString());
-			rocketsReader = new StringReader(rocketsOs.toString());
+			missionsReader = new StringReader(missionsOs.toString(StandardCharsets.ISO_8859_1));
+			rocketsReader = new StringReader(rocketsOs.toString(StandardCharsets.ISO_8859_1));
 		}
 		catch (CipherException e)
 		{
@@ -80,9 +80,38 @@ public class MJTSpaceScannerTest
 
 		MJTSpaceScanner scanner = new MJTSpaceScanner(missionsReader, rocketsReader, cipher);
 
-		assertEquals(missions, scanner.getAllMissions());
-		assertEquals(rockets, scanner.getAllRockets());
+		assertIterableEquals(missions, scanner.getAllMissions());
+		assertIterableEquals(rockets, scanner.getAllRockets());
 
+	}
+
+	@Test
+	public void testParseMissionsWhenCipherKeyIsNull()
+	{
+		SymmetricBlockCipher cipherToTest = new Rijndael(null);
+		SymmetricBlockCipher cipher = createCipher();
+
+		InputStream missionsStream = new ByteArrayInputStream(MISSIONS_CSV.getBytes());
+		InputStream rocketsStream = new ByteArrayInputStream(ROCKETS_CSV.getBytes());
+		ByteArrayOutputStream missionsOs = new ByteArrayOutputStream();
+		ByteArrayOutputStream rocketsOs = new ByteArrayOutputStream();
+
+		Reader missionsReader;
+		Reader rocketsReader;
+		try
+		{
+			cipher.encrypt(missionsStream, missionsOs);
+			cipher.encrypt(rocketsStream, rocketsOs);
+
+			missionsReader = new StringReader(missionsOs.toString(StandardCharsets.ISO_8859_1));
+			rocketsReader = new StringReader(rocketsOs.toString(StandardCharsets.ISO_8859_1));
+		}
+		catch (CipherException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		assertThrows(RuntimeException.class, () -> new MJTSpaceScanner(missionsReader, rocketsReader, cipherToTest));
 	}
 
 
@@ -234,7 +263,7 @@ public class MJTSpaceScannerTest
 	public void testgetTopNTallestRockets()
 	{
 		List<Rocket> topNTallestRockets = scanner.getTopNTallestRockets(3);
-		assertIterableEquals(List.of(rockets.get(0), rockets.get(1), rockets.get(3)), topNTallestRockets);
+		assertIterableEquals(List.of(rockets.get(5), rockets.get(6), rockets.get(7)), topNTallestRockets);
 	}
 
 	@Test
@@ -247,6 +276,13 @@ public class MJTSpaceScannerTest
 		expected.put("Unha-2", Optional.of("https://en.wikipedia.org/wiki/Unha"));
 		expected.put("Unha-3", Optional.of("https://en.wikipedia.org/wiki/Unha"));
 		expected.put("Vanguard", Optional.of("https://en.wikipedia.org/wiki/Vanguard_(rocket)"));
+		expected.put("Falcon 9 Block 5", Optional.of("https://en.wikipedia.org/wiki/Falcon_9"));
+		expected.put("Atlas V 541", Optional.of("https://en.wikipedia.org/wiki/Atlas_V"));
+		expected.put("Proton-M/Briz-M", Optional.of("https://en.wikipedia.org/wiki/Proton-M"));
+		expected.put("Long March 4B", Optional.of("https://en.wikipedia.org/wiki/Long_March_4B"));
+		expected.put("Long March 2D", Optional.of("https://en.wikipedia.org/wiki/Long_March_2D"));
+
+
 		assertIterableEquals(expected.entrySet(), wikiPageForRocket.entrySet());
 	}
 
@@ -272,7 +308,7 @@ public class MJTSpaceScannerTest
 	public void testGetWikiPagesForRocketsUsedInMostExpensiveMissions()
 	{
 		List<String> wikiPagesForRocketsUsedInMostExpensiveMissions = scanner.getWikiPagesForRocketsUsedInMostExpensiveMissions(3, MissionStatus.SUCCESS, RocketStatus.STATUS_ACTIVE);
-		assertIterableEquals(List.of("https://en.wikipedia.org/wiki/Atlas_V", "https://en.wikipedia.org/wiki/Proton-M", "https://en.wikipedia.org/wiki/Long_March_4B"), wikiPagesForRocketsUsedInMostExpensiveMissions);
+		assertIterableEquals(List.of("https://en.wikipedia.org/wiki/Atlas_V", "https://en.wikipedia.org/wiki/Proton-M", "https://en.wikipedia.org/wiki/Falcon_9"), wikiPagesForRocketsUsedInMostExpensiveMissions);
 	}
 
 
@@ -314,7 +350,7 @@ public class MJTSpaceScannerTest
 
 		try
 		{
-			cipher.encrypt(new ByteArrayInputStream("SpaceX".getBytes(StandardCharsets.ISO_8859_1)), expectedOutputStream);
+			cipher.encrypt(new ByteArrayInputStream(rockets.get(5).toString().getBytes()), expectedOutputStream);
 		}
 		catch (CipherException e)
 		{
@@ -382,6 +418,7 @@ public class MJTSpaceScannerTest
 				103,Atlas V 541,https://en.wikipedia.org/wiki/Atlas_V,62.2 m
 				294,Proton-M/Briz-M,https://en.wikipedia.org/wiki/Proton-M,58.2 m
 				228,Long March 4B,https://en.wikipedia.org/wiki/Long_March_4B,44.1 m
+				213,Long March 2D,https://en.wikipedia.org/wiki/Long_March_2D,41.06 m
 				""";
 
 	static {
