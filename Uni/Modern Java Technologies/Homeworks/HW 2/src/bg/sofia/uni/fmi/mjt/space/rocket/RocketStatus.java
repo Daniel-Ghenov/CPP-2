@@ -13,4 +13,14 @@ public enum RocketStatus {
 	public String toString() {
 		return value;
 	}
+
+
+	public static RocketStatus fromString(String text) {
+		for (RocketStatus status : RocketStatus.values()) {
+			if (status.value.equalsIgnoreCase(text)) {
+				return status;
+			}
+		}
+		throw new IllegalArgumentException("No constant with text " + text + " found");
+	}
 }

@@ -15,4 +15,13 @@ public enum MissionStatus {
 	public String toString() {
 		return value;
 	}
+
+	public static MissionStatus fromString(String text) {
+		for (MissionStatus status : MissionStatus.values()) {
+			if (status.value.equalsIgnoreCase(text)) {
+				return status;
+			}
+		}
+		throw new IllegalArgumentException("No constant with text " + text + " found");
+	}
 }
