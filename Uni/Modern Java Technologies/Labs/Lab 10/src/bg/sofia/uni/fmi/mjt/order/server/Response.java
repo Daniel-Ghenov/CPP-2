@@ -16,7 +16,7 @@ public record Response(Status status, String additionalInfo, Collection<Order> o
 	 * @return response with status Status.CREATED and with proper message for additional info
 	 */
 	public static Response create(int id) {
-		return new Response(Status.CREATED, "Order with id " + id + " was created", null);
+		return new Response(Status.CREATED, "ORDER_ID=" + id, null);
 	}
 
 
@@ -47,6 +47,6 @@ public record Response(Status status, String additionalInfo, Collection<Order> o
 	 * @return response with status Status.NOT_FOUND and with proper message for additional info
 	 */
 	public static Response notFound(int id) {
-		return new Response(Status.NOT_FOUND, "Order with id " + id + " was not found", null);
+		return new Response(Status.NOT_FOUND, "Order with id = " + id + " does not exist.", null);
 	}
 }

@@ -2,8 +2,10 @@ package bg.sofia.uni.fmi.mjt.order.server.repository;
 
 import bg.sofia.uni.fmi.mjt.order.server.Response;
 import bg.sofia.uni.fmi.mjt.order.server.destination.Destination;
+import bg.sofia.uni.fmi.mjt.order.server.order.Order;
 import bg.sofia.uni.fmi.mjt.order.server.tshirt.Color;
 import bg.sofia.uni.fmi.mjt.order.server.tshirt.Size;
+import bg.sofia.uni.fmi.mjt.order.server.tshirt.TShirt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,9 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MJTOrderRepository implements OrderRepository
 {
 
-	private final Map<Integer, Response> orders;
+	private final Map<Integer, Order> orders;
 
-	public MJTOrderRepository(Map<Integer, Response> orders)
+	public MJTOrderRepository(Map<Integer, Order> orders)
 	{
 		this.orders = orders;
 	}
@@ -31,11 +33,20 @@ public class MJTOrderRepository implements OrderRepository
 	{
 		Response response = validateRequest(size, color, destination);
 		if (response != null) {
+			createOrder(-1, size, color, destination);
 			return response;
 		}
-
 		int orderId = orders.size() + 1;
+		createOrder(orderId ,size, color, destination);
 
+		return Response.create(orderId);
+	}
+
+	private void createOrder(int orderId ,String size, String color, String destination)
+	{
+		TShirt tShirt = new TShirt(Size.valueOf(size), Color.valueOf(color));
+		Order order = new Order(orderId, tShirt, Destination.valueOf(destination));
+		orders.put(orderId, order);
 	}
 
 	private Response validateRequest(String size, String color, String destination)
@@ -65,17 +76,26 @@ public class MJTOrderRepository implements OrderRepository
 
 	@Override public Response getOrderById(int id)
 	{
-		return null;
+		Order order = orders.get(id);
+		if (order == null) {
+			return Response.notFound(id);
+		}
+		return Response.ok(List.of(order));
 	}
 
 	@Override public Response getAllOrders()
 	{
-		return null;
+		return Response.ok(orders.values());
 	}
 
 	@Override public Response getAllSuccessfulOrders()
 	{
-		return null;
+		List<Order> successfulOrders = orders.values()
+				.stream()
+				.filter(order -> order.id() >= 0)
+				.toList();
+
+		return Response.ok(successfulOrders);
 	}
 
 	String validateEnum(String enumName, Class<? extends Enum> enumClass)
@@ -83,6 +103,7 @@ public class MJTOrderRepository implements OrderRepository
 		if (enumName == null) {
 			return "INVALID";
 		}
+
 		boolean isCorrect = Arrays.stream(enumClass.getEnumConstants())
 				.map(Enum::name)
 				.anyMatch(enumName::equals);
