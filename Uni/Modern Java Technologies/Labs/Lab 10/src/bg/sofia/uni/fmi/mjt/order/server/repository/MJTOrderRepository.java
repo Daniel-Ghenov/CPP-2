@@ -1,8 +1,14 @@
 package bg.sofia.uni.fmi.mjt.order.server.repository;
 
 import bg.sofia.uni.fmi.mjt.order.server.Response;
+import bg.sofia.uni.fmi.mjt.order.server.destination.Destination;
+import bg.sofia.uni.fmi.mjt.order.server.tshirt.Color;
+import bg.sofia.uni.fmi.mjt.order.server.tshirt.Size;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,20 +40,26 @@ public class MJTOrderRepository implements OrderRepository
 
 	private Response validateRequest(String size, String color, String destination)
 	{
-		if (size == null || color == null || destination == null)
-		{
-			return Response.decline("Invalid request arguments cannot be null");
+		List<String> invalidArguments = new ArrayList<>();
+
+		size = validateEnum(size, Size.class);
+		if (size.startsWith("INVALID")) {
+			invalidArguments.add("size");
 		}
 
-		size = validateSize(size);
-		color = validateColor(color);
-		destination = validateDestination(destination);
-
-		if (size.equals("INVALID_SIZE") || color.equals("INVALID_COLOR") || destination.equals("INVALID_DESTINATION"))
-		{
-			return Response.decline("Invalid request arguments");
+		color = validateEnum(color, Color.class);
+		if (color.startsWith("INVALID")) {
+			invalidArguments.add("color");
 		}
 
+		destination = validateEnum(destination, Destination.class);
+		if (destination.startsWith("INVALID")) {
+			invalidArguments.add("destination");
+		}
+
+		if(!invalidArguments.isEmpty()) {
+			return Response.decline("invalid:" + String.join(",", invalidArguments));
+		}
 		return null;
 	}
 
@@ -66,30 +78,20 @@ public class MJTOrderRepository implements OrderRepository
 		return null;
 	}
 
-	String validateSize(String size)
+	String validateEnum(String enumName, Class<? extends Enum> enumClass)
 	{
-		return switch (size)
-		{
-			case "S", "M", "L", "XL", "XXL" -> size;
-			default -> "INVALID_SIZE";
-		};
-	}
+		if (enumName == null) {
+			return "INVALID";
+		}
+		boolean isCorrect = Arrays.stream(enumClass.getEnumConstants())
+				.map(Enum::name)
+				.anyMatch(enumName::equals);
 
-	String validateColor(String color)
-	{
-		return switch (color)
-		{
-			case "RED", "GREEN", "BLUE", "BLACK", "WHITE" -> color;
-			default -> "INVALID_COLOR";
-		};
-	}
-
-	String validateDestination(String destination)
-	{
-		return switch (destination)
-		{
-			case "EUROPE", "NORTH_AMERICA", "SOUTH_AMERICA", "ASIA", "AUSTRALIA" -> destination;
-			default -> "INVALID_DESTINATION";
-		};
+		if(isCorrect) {
+			return enumName;
+		}
+		else {
+			return "INVALID";
+		}
 	}
 }

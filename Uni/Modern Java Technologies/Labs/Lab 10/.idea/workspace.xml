@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fed0069a-7442-43fd-b6a6-a9669a3dcdc9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/Response.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/destination/Destination.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/order/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/repository/MJTOrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/repository/OrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/tshirt/Color.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/tshirt/Size.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bg/sofia/uni/fmi/mjt/order/server/tshirt/TShirt.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab 9/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab 8/.idea/checkstyle-idea.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Homeworks/HW 1/src/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Homeworks/HW 1/src/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +30,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
   <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
     <option name="recentBranches">
       <RecentBranches>
         <option name="branchesForRepo">
@@ -165,6 +159,8 @@
       <workItem from="1703246284353" duration="3000" />
       <workItem from="1703247279387" duration="70000" />
       <workItem from="1703247352754" duration="17000" />
+      <workItem from="1703510182988" duration="11000" />
+      <workItem from="1703510203070" duration="2000" />
     </task>
     <servers />
   </component>
