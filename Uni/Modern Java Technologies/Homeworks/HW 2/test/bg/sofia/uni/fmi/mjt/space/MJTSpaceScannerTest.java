@@ -70,8 +70,8 @@ public class MJTSpaceScannerTest
 			cipher.encrypt(missionsStream, missionsOs);
 			cipher.encrypt(rocketsStream, rocketsOs);
 
-			missionsReader = new StringReader(missionsOs.toString(StandardCharsets.ISO_8859_1));
-			rocketsReader = new StringReader(rocketsOs.toString(StandardCharsets.ISO_8859_1));
+			missionsReader = new StringReader(missionsOs.toString());
+			rocketsReader = new StringReader(rocketsOs.toString());
 		}
 		catch (CipherException e)
 		{
@@ -103,8 +103,8 @@ public class MJTSpaceScannerTest
 			cipher.encrypt(missionsStream, missionsOs);
 			cipher.encrypt(rocketsStream, rocketsOs);
 
-			missionsReader = new StringReader(missionsOs.toString(StandardCharsets.ISO_8859_1));
-			rocketsReader = new StringReader(rocketsOs.toString(StandardCharsets.ISO_8859_1));
+			missionsReader = new StringReader(missionsOs.toString());
+			rocketsReader = new StringReader(rocketsOs.toString());
 		}
 		catch (CipherException e)
 		{

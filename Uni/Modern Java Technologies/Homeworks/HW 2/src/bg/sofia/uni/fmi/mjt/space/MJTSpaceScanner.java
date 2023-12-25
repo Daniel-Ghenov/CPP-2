@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -223,7 +222,7 @@ public class MJTSpaceScanner implements SpaceScannerAPI {
 		Map<Rocket, Long> unsuccessfulMissionsByRocket = missions.stream()
 						.filter(mission -> !mission.missionStatus().equals(MissionStatus.SUCCESS)
 										   && mission.date().isAfter(from) && mission.date().isBefore(to)
-							   				&& rocketsByName.containsKey(mission.detail().rocketName()))
+										   && rocketsByName.containsKey(mission.detail().rocketName()))
 						.collect(Collectors.groupingBy(mission -> rocketsByName.get(mission.detail().rocketName())
 								, Collectors.counting()));
 
@@ -232,7 +231,6 @@ public class MJTSpaceScanner implements SpaceScannerAPI {
 																	  unsuccessfulMissionsByRocket.get(r)
 																	  ))).get();
 		saveRocket(outputStream, mostReliable);
-
 	}
 
 	private void saveRocket(OutputStream outputStream, Rocket rocket) throws CipherException {
@@ -241,26 +239,27 @@ public class MJTSpaceScanner implements SpaceScannerAPI {
 	}
 
 	private static BigDecimal getReliability(Long successfulMissions, Long unsuccessfulMissions) {
-		if(successfulMissions == null) {
+		if (successfulMissions == null) {
 			successfulMissions = 0L;
 		}
-		if(unsuccessfulMissions == null) {
+		if (unsuccessfulMissions == null) {
 			unsuccessfulMissions = 0L;
 		}
-		if(successfulMissions + unsuccessfulMissions == 0) {
+		if (successfulMissions + unsuccessfulMissions == 0L) {
 			return BigDecimal.ZERO;
 		}
 
-		return BigDecimal.valueOf(2L * successfulMissions + unsuccessfulMissions).divide(BigDecimal.valueOf(2L * (successfulMissions + unsuccessfulMissions)), MathContext.DECIMAL64);
+		return BigDecimal.valueOf(2L * successfulMissions + unsuccessfulMissions)
+						 .divide(BigDecimal.valueOf(2L * (successfulMissions + unsuccessfulMissions))
+								 , MathContext.DECIMAL64);
 	}
-
 
 	private void parseMissions(Reader missionsReader) {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		InputStream is = new ByteArrayInputStream(parseFromReader(missionsReader));
 		try {
 			cipher.decrypt(is, os);
-			String[] lines = os.toString(StandardCharsets.ISO_8859_1).split("\n");
+			String[] lines = os.toString().split("\n");
 			for (int i = 1; i < lines.length; i++) {
 				missions.add(Mission.fromString(lines[i]));
 			}
@@ -274,7 +273,7 @@ public class MJTSpaceScanner implements SpaceScannerAPI {
 		InputStream is = new ByteArrayInputStream(parseFromReader(rocketsReader));
 		try {
 			cipher.decrypt(is, os);
-			String[] lines = os.toString(StandardCharsets.ISO_8859_1).split("\n");
+			String[] lines = os.toString().split("\n");
 			for (int i = 1; i < lines.length; i++) {
 				rockets.add(Rocket.fromString(lines[i]));
 			}
@@ -295,7 +294,7 @@ public class MJTSpaceScanner implements SpaceScannerAPI {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return sb.toString().getBytes(StandardCharsets.ISO_8859_1);
+		return sb.toString().getBytes();
 	}
 
 	private static final Comparator<Mission> COST_COMPARATOR = (o1, o2) -> {
