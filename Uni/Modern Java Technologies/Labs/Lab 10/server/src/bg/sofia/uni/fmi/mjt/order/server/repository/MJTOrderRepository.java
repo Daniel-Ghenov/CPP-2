@@ -12,12 +12,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MJTOrderRepository implements OrderRepository
 {
+	private static final int INVALID_ORDER_ID = -1;
 
 	private final Map<Integer, Order> orders;
+
+	private final AtomicInteger orderId = new AtomicInteger(1);
 
 	public MJTOrderRepository(Map<Integer, Order> orders)
 	{
@@ -33,19 +38,21 @@ public class MJTOrderRepository implements OrderRepository
 	{
 		Response response = validateRequest(size, color, destination);
 		if (response != null) {
-			createOrder(-1, size, color, destination);
 			return response;
 		}
-		int orderId = orders.size() + 1;
-		createOrder(orderId ,size, color, destination);
+		return createOrder(orderId.getAndIncrement() ,size, color, destination);
+	}
 
+	private Response createOrder(int orderId ,String size, String color, String destination)
+	{
+		createOrder(orderId, Size.valueOf(size), Color.valueOf(color), Destination.valueOf(destination));
 		return Response.create(orderId);
 	}
 
-	private void createOrder(int orderId ,String size, String color, String destination)
+	private void createOrder(int orderId ,Size size, Color color, Destination destination)
 	{
-		TShirt tShirt = new TShirt(Size.valueOf(size), Color.valueOf(color));
-		Order order = new Order(orderId, tShirt, Destination.valueOf(destination));
+		TShirt tShirt = new TShirt(size,color);
+		Order order = new Order(orderId, tShirt,destination);
 		orders.put(orderId, order);
 	}
 
@@ -53,22 +60,26 @@ public class MJTOrderRepository implements OrderRepository
 	{
 		List<String> invalidArguments = new ArrayList<>();
 
-		size = validateEnum(size, Size.class);
-		if (size.startsWith("INVALID")) {
+		Size sizeEnum = validateEnum(size, Size.class);
+		if (sizeEnum == null) {
 			invalidArguments.add("size");
+			sizeEnum = Size.UNKNOWN;
 		}
 
-		color = validateEnum(color, Color.class);
-		if (color.startsWith("INVALID")) {
+		Color colorEnum = validateEnum(color, Color.class);
+		if (colorEnum == null) {
 			invalidArguments.add("color");
+			colorEnum = Color.UNKNOWN;
 		}
 
-		destination = validateEnum(destination, Destination.class);
-		if (destination.startsWith("INVALID")) {
+		Destination destinationEnum = validateEnum(destination, Destination.class);
+		if (destinationEnum == null) {
 			invalidArguments.add("destination");
+			destinationEnum = Destination.UNKNOWN;
 		}
 
 		if(!invalidArguments.isEmpty()) {
+			createOrder(INVALID_ORDER_ID, sizeEnum, colorEnum, destinationEnum);
 			return Response.decline("invalid:" + String.join(",", invalidArguments));
 		}
 		return null;
@@ -92,27 +103,27 @@ public class MJTOrderRepository implements OrderRepository
 	{
 		List<Order> successfulOrders = orders.values()
 				.stream()
-				.filter(order -> order.id() >= 0)
+				.filter(this::isSuccessful)
 				.toList();
 
 		return Response.ok(successfulOrders);
 	}
+	private boolean isSuccessful(Order order)
+	{
+		return order.id() != INVALID_ORDER_ID &&
+				order.tShirt().size() != Size.UNKNOWN &&
+				order.tShirt().color() != Color.UNKNOWN &&
+				order.destination() != Destination.UNKNOWN;
+	}
 
-	String validateEnum(String enumName, Class<? extends Enum> enumClass)
+	private <T extends Enum<?>> T validateEnum(String enumName, Class<T> enumClass)
 	{
 		if (enumName == null) {
-			return "INVALID";
+			return null;
 		}
-
-		boolean isCorrect = Arrays.stream(enumClass.getEnumConstants())
-				.map(Enum::name)
-				.anyMatch(enumName::equals);
-
-		if(isCorrect) {
-			return enumName;
-		}
-		else {
-			return "INVALID";
-		}
+		return Arrays.stream(enumClass.getEnumConstants())
+				.filter(enumConstant -> enumConstant.name().equals(enumName))
+				.findFirst()
+				.orElse(null);
 	}
 }
