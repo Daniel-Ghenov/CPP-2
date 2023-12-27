@@ -9,55 +9,47 @@ import bg.sofia.uni.fmi.mjt.order.server.tshirt.TShirt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MJTOrderRepository implements OrderRepository
-{
+public class MJTOrderRepository implements OrderRepository {
 	private static final int INVALID_ORDER_ID = -1;
 
 	private final Map<Integer, Order> orders;
 
 	private final AtomicInteger orderId = new AtomicInteger(1);
 
-	public MJTOrderRepository(Map<Integer, Order> orders)
-	{
+	public MJTOrderRepository(Map<Integer, Order> orders) {
 		this.orders = orders;
 	}
 
-	public MJTOrderRepository()
-	{
+	public MJTOrderRepository() {
 		this(new ConcurrentHashMap<>());
 	}
 
-	@Override public Response request(String size, String color, String destination)
-	{
+	@Override
+	public Response request(String size, String color, String destination) {
 		Response response = validateRequest(size, color, destination);
 		if (response != null) {
 			return response;
 		}
-		return createOrder(orderId.getAndIncrement() ,size, color, destination);
+		return createOrder(orderId.getAndIncrement() , size, color, destination);
 	}
 
-	private Response createOrder(int orderId ,String size, String color, String destination)
-	{
+	private Response createOrder(int orderId , String size, String color, String destination) {
 		createOrder(orderId, Size.valueOf(size), Color.valueOf(color), Destination.valueOf(destination));
 		return Response.create(orderId);
 	}
 
-	private void createOrder(int orderId ,Size size, Color color, Destination destination)
-	{
-		TShirt tShirt = new TShirt(size,color);
-		Order order = new Order(orderId, tShirt,destination);
+	private void createOrder(int orderId , Size size, Color color, Destination destination) {
+		TShirt tShirt = new TShirt(size, color);
+		Order order = new Order(orderId, tShirt, destination);
 		orders.put(orderId, order);
 	}
 
-	private Response validateRequest(String size, String color, String destination)
-	{
+	private Response validateRequest(String size, String color, String destination) {
 		List<String> invalidArguments = new ArrayList<>();
 
 		Size sizeEnum = validateEnum(size, Size.class);
@@ -78,15 +70,14 @@ public class MJTOrderRepository implements OrderRepository
 			destinationEnum = Destination.UNKNOWN;
 		}
 
-		if(!invalidArguments.isEmpty()) {
+		if (!invalidArguments.isEmpty()) {
 			createOrder(INVALID_ORDER_ID, sizeEnum, colorEnum, destinationEnum);
-			return Response.decline("invalid:" + String.join(",", invalidArguments));
+			return Response.decline("invalid=" + String.join(",", invalidArguments));
 		}
 		return null;
 	}
 
-	@Override public Response getOrderById(int id)
-	{
+	@Override public Response getOrderById(int id) {
 		Order order = orders.get(id);
 		if (order == null) {
 			return Response.notFound(id);
@@ -94,13 +85,13 @@ public class MJTOrderRepository implements OrderRepository
 		return Response.ok(List.of(order));
 	}
 
-	@Override public Response getAllOrders()
-	{
+	@Override
+	public Response getAllOrders() {
 		return Response.ok(orders.values());
 	}
 
-	@Override public Response getAllSuccessfulOrders()
-	{
+	@Override
+	public Response getAllSuccessfulOrders() {
 		List<Order> successfulOrders = orders.values()
 				.stream()
 				.filter(this::isSuccessful)
@@ -108,16 +99,15 @@ public class MJTOrderRepository implements OrderRepository
 
 		return Response.ok(successfulOrders);
 	}
-	private boolean isSuccessful(Order order)
-	{
+
+	private boolean isSuccessful(Order order) {
 		return order.id() != INVALID_ORDER_ID &&
 				order.tShirt().size() != Size.UNKNOWN &&
 				order.tShirt().color() != Color.UNKNOWN &&
 				order.destination() != Destination.UNKNOWN;
 	}
 
-	private <T extends Enum<?>> T validateEnum(String enumName, Class<T> enumClass)
-	{
+	private <T extends Enum<?>> T validateEnum(String enumName, Class<T> enumClass) {
 		if (enumName == null) {
 			return null;
 		}

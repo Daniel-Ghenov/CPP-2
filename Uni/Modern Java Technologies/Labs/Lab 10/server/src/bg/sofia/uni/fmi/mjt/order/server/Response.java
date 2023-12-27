@@ -19,7 +19,6 @@ public record Response(Status status, String additionalInfo, Collection<Order> o
 		return new Response(Status.CREATED, "ORDER_ID=" + id, null);
 	}
 
-
 	/**
 	 * Creates a response
 	 *

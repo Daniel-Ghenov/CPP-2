@@ -8,21 +8,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientRequestHandler implements Runnable
-{
+public class ClientRequestHandler implements Runnable {
 
 	private final Socket socket;
 
 	private final MJTOrderRepository orderRepository;
 
-	public ClientRequestHandler(Socket socket, MJTOrderRepository orderRepository)
-	{
+	public ClientRequestHandler(Socket socket, MJTOrderRepository orderRepository) {
 		this.socket = socket;
 		this.orderRepository = orderRepository;
 	}
 
-	public void run()
-	{
+	public void run() {
 		Thread.currentThread().setName("Client Request Handler for " + socket.getRemoteSocketAddress());
 
 		try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -48,8 +45,7 @@ public class ClientRequestHandler implements Runnable
 		}
 	}
 
-	private Response processRequest(String request)
-	{
+	private Response processRequest(String request) {
 		String[] arguments = request.split(" ");
 		switch (arguments[0]) {
 			case "request" -> {
@@ -62,12 +58,11 @@ public class ClientRequestHandler implements Runnable
 				switch (arguments[1]) {
 					case "all" ->  {
 						return orderRepository.getAllOrders();
-					}
-					case "all-successful" -> {
+					} case "all-successful" -> {
 						return orderRepository.getAllSuccessfulOrders();
-					}
-					case "my-order" -> {
-						return orderRepository.getOrderById(Integer.parseInt(removeEquals(arguments[2])));
+					} case "my-order" -> {
+						return orderRepository.getOrderById(Integer.parseInt(
+								removeEquals(arguments[2])));
 					}
 				}
 			}
@@ -75,14 +70,13 @@ public class ClientRequestHandler implements Runnable
 				return null;
 			}
 			default -> {
-			return Response.decline("Unknown command");
+				return Response.decline("Unknown command");
 			}
 		}
 		return null;
 	}
 
-	private static String removeEquals(String string)
-	{
+	private static String removeEquals(String string) {
 		int index = string.indexOf('=');
 		if (index != -1) {
 			return string.substring(index + 1);

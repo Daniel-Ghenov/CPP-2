@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MJTOrderRepositoryTest
@@ -24,28 +25,28 @@ class MJTOrderRepositoryTest
 	void testRequestWithInvalidSize()
 	{
 		Response response = repository.request(null, Color.RED.toString(), Destination.EUROPE.toString());
-		assertAreEqual(Response.decline("invalid:size"), response);
+		assertAreEqual(Response.decline("invalid=size"), response);
 	}
 
 	@Test
 	void testRequestWithInvalidColor()
 	{
 		Response response = repository.request(Size.L.toString(), null, Destination.EUROPE.toString());
-		assertAreEqual(Response.decline("invalid:color"), response);
+		assertAreEqual(Response.decline("invalid=color"), response);
 	}
 
 	@Test
 	void testRequestWithInvalidDestination()
 	{
 		Response response = repository.request(Size.L.toString(), Color.RED.toString(), null);
-		assertAreEqual(Response.decline("invalid:destination"), response);
+		assertAreEqual(Response.decline("invalid=destination"), response);
 	}
 
 	@Test
 	void testRequestAllInvalid()
 	{
 		Response response = repository.request(null, null, null);
-		assertAreEqual(Response.decline("invalid:size,color,destination"), response);
+		assertAreEqual(Response.decline("invalid=size,color,destination"), response);
 	}
 
 	@Test
@@ -127,7 +128,7 @@ class MJTOrderRepositoryTest
 	{
 		if(expected == null)
 		{
-			assertEquals(expected, actual);
+			assertNull(actual);
 			return;
 		}
 		assertEquals(expected.size(), actual.size());

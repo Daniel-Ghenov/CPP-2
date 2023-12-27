@@ -8,45 +8,38 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class OrderServer
-{
+public class OrderServer {
 	private static final int SERVER_PORT = 8080;
 	private final MJTOrderRepository orderRepository;
 
-	public OrderServer(MJTOrderRepository orderRepository)
-	{
+	public OrderServer(MJTOrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		OrderServer server = new OrderServer(new MJTOrderRepository());
 		server.run();
 	}
 
 	public void run() {
 
-		try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor())
-		{
+		try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 			Thread.currentThread().setName("Echo Server Thread");
 
-			try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT))
-			{
+			try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
 				System.out.println("Server started and listening for connect requests");
 
 				Socket clientSocket;
 
-				while (true)
-				{
+				while (true) {
 					clientSocket = serverSocket.accept();
-					ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket, orderRepository);
+					ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,
+												  orderRepository);
 					executor.execute(clientHandler);
 				}
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				throw new RuntimeException("There is a problem with the server socket", e);
 			}
 		}

@@ -7,8 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class OrderClient
-{
+public class OrderClient {
 
 	private static final int SERVER_PORT = 8080;
 
@@ -20,9 +19,6 @@ public class OrderClient
 			 Scanner scanner = new Scanner(System.in)) {
 
 			Thread.currentThread().setName("TShirt client thread " + socket.getLocalPort());
-
-			System.out.println("Connected to the server.");
-
 			while (true) {
 				System.out.print("Enter message: ");
 				String message = scanner.nextLine();
