@@ -23,7 +23,8 @@ public record Mission(String id,
 		String id = parts[counter++];
 		String company = parts[counter++];
 		String location = parts[counter++].substring(1, parts[counter - 1].length() - 1);
-		LocalDate date = LocalDate.parse(parts[counter++].substring(1, parts[counter - 1].length() - 1), DateTimeFormatter.ofPattern("EEE MMM dd, yyyy", Locale.ENGLISH));
+		LocalDate date = LocalDate.parse(parts[counter++].substring(1, parts[counter - 1].length() - 1)
+				, DateTimeFormatter.ofPattern("EEE MMM dd, yyyy", Locale.ENGLISH));
 		Detail detail = Detail.fromString(parts[counter++]);
 		RocketStatus rocketStatus = RocketStatus.fromString(parts[counter++]);
 		String costStr = parts[counter++];
