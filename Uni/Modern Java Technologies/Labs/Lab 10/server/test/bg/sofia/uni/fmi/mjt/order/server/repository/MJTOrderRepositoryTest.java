@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MJTOrderRepositoryTest
@@ -24,29 +25,35 @@ class MJTOrderRepositoryTest
 	@Test
 	void testRequestWithInvalidSize()
 	{
-		Response response = repository.request(null, Color.RED.toString(), Destination.EUROPE.toString());
+		Response response = repository.request("NotKnownSize", Color.RED.toString(), Destination.EUROPE.toString());
 		assertAreEqual(Response.decline("invalid=size"), response);
 	}
 
 	@Test
 	void testRequestWithInvalidColor()
 	{
-		Response response = repository.request(Size.L.toString(), null, Destination.EUROPE.toString());
+		Response response = repository.request(Size.L.toString(), "NotKnownColor", Destination.EUROPE.toString());
 		assertAreEqual(Response.decline("invalid=color"), response);
 	}
 
 	@Test
 	void testRequestWithInvalidDestination()
 	{
-		Response response = repository.request(Size.L.toString(), Color.RED.toString(), null);
+		Response response = repository.request(Size.L.toString(), Color.RED.toString(), "NotKnownDestination");
 		assertAreEqual(Response.decline("invalid=destination"), response);
 	}
 
 	@Test
 	void testRequestAllInvalid()
 	{
-		Response response = repository.request(null, null, null);
+		Response response = repository.request("NotKnownSize", "NotKnownColor", "NotKnownDestination");
 		assertAreEqual(Response.decline("invalid=size,color,destination"), response);
+	}
+
+	@Test
+	void testRequestAllNullSizeAndColor()
+	{
+		assertThrowsExactly( IllegalArgumentException.class ,() -> repository.request(null, Color.RED.toString(), Destination.EUROPE.toString()));
 	}
 
 	@Test

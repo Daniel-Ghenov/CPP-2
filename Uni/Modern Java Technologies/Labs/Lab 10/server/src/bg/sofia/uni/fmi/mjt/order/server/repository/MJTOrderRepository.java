@@ -109,7 +109,7 @@ public class MJTOrderRepository implements OrderRepository {
 
 	private <T extends Enum<?>> T validateEnum(String enumName, Class<T> enumClass) {
 		if (enumName == null) {
-			return null;
+			throw new IllegalArgumentException(enumClass.getName() +  "cannot be null");
 		}
 		return Arrays.stream(enumClass.getEnumConstants())
 				.filter(enumConstant -> enumConstant.name().equals(enumName))
