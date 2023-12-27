@@ -1,5 +1,7 @@
 package bg.sofia.uni.fmi.mjt.photoalbum;
 
+import bg.sofia.uni.fmi.mjt.photoalbum.image.Image;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -24,7 +26,7 @@ public class ImageQueue  {
             try {
                 wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
         Image img = images.poll();
