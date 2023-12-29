@@ -21,6 +21,8 @@ public class MJTOrderRepository implements OrderRepository {
 
 	private final AtomicInteger orderId = new AtomicInteger(1);
 
+	private final AtomicInteger unsuccessfulOrderId = new AtomicInteger(INVALID_ORDER_ID);
+
 	public MJTOrderRepository(Map<Integer, Order> orders) {
 		this.orders = orders;
 	}
@@ -39,14 +41,16 @@ public class MJTOrderRepository implements OrderRepository {
 	}
 
 	private Response createOrder(int orderId , String size, String color, String destination) {
-		createOrder(orderId, Size.valueOf(size), Color.valueOf(color), Destination.valueOf(destination));
+		TShirt tShirt = new TShirt(Size.valueOf(size), Color.valueOf(color));
+		Order order = new Order(orderId, tShirt, Destination.valueOf(destination));
+		orders.put(orderId, order);
 		return Response.create(orderId);
 	}
 
-	private void createOrder(int orderId , Size size, Color color, Destination destination) {
+	private void createUnsuccessfulOrder(Size size, Color color, Destination destination) {
 		TShirt tShirt = new TShirt(size, color);
-		Order order = new Order(orderId, tShirt, destination);
-		orders.put(orderId, order);
+		Order order = new Order(INVALID_ORDER_ID, tShirt, destination);
+		orders.put(unsuccessfulOrderId.getAndDecrement(), order);
 	}
 
 	private Response validateRequest(String size, String color, String destination) {
@@ -71,7 +75,7 @@ public class MJTOrderRepository implements OrderRepository {
 		}
 
 		if (!invalidArguments.isEmpty()) {
-			createOrder(INVALID_ORDER_ID, sizeEnum, colorEnum, destinationEnum);
+			createUnsuccessfulOrder(sizeEnum, colorEnum, destinationEnum);
 			return Response.decline("invalid=" + String.join(",", invalidArguments));
 		}
 		return null;
