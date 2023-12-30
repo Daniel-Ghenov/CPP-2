@@ -1,9 +1,6 @@
-#include <cmath>
-#include <cstdio>
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <queue>
 
 
 class DisjointSet {
@@ -42,7 +39,7 @@ void DisjointSet::connect(long long a, long long b) {
     long long aPredecessor = predecessor(a);
     long long bPredecessor = predecessor(b);
 
-    if(sizes[aPredecessor] < sizes[bPredecessor]) {
+    if(sizes[aPredecessor] > sizes[bPredecessor]) {
         std::swap(aPredecessor, bPredecessor);
     }
 
