@@ -9,4 +9,5 @@ add_executable(HW_12
         Dependencies/DisjointSet.cpp
         Dependencies/DisjointSet.h
         "Road Building/solution.cpp"
-        Streets/solution.cpp)
+        Streets/solution.cpp
+        "Speed Limits/solution.cpp")

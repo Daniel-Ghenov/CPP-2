@@ -19,7 +19,7 @@ void DisjointSet::connect(int a, int b) {
     int aPredecessor = predecessor(a);
     int bPredecessor = predecessor(b);
 
-    if(sizes[aPredecessor] > sizes[bPredecessor]) {
+    if(sizes[aPredecessor] < sizes[bPredecessor]) {
         std::swap(aPredecessor, bPredecessor);
     }
 

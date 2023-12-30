@@ -74,44 +74,59 @@ long long DisjointSet::predecessor(long long a) {
 }
 
 struct Edge {
-    long long index;
     long long from;
     long long to;
-    long long cost;
-    long long profit;
+    long long speed;
 
-    Edge(long long index, long long from, long long to, long long cost, long long profit) : index(index), from(from), to(to), cost(cost), profit(profit) {}
+    Edge(long long from, long long to, long long speed): from(from), to(to), speed(speed) {}
 
-    bool operator<(const Edge& other) const{
-        if(cost == other.cost) {
-            if(profit == other.profit) {
-                if(from == other.from) {
-                    return to < other.to;
-                }
-                return from < other.from;
-            }
-            return profit < other.profit;
-        }
-        return cost < other.cost;
+    bool operator<(const Edge& other) const {
+        return speed < other.speed;
     }
+    bool operator>(const Edge& other) const {
+        return speed > other.speed;
+    }
+
 };
 
-std::vector<long long> kruskal(std::vector<Edge>& edges, long long vertices) {
+std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long long vertices, long long min) {
     DisjointSet set(vertices);
-    std::sort(edges.begin(), edges.end());
-    std::vector<long long> indices;
+    long long minSpeed = edges[min].speed;
+    long long maxSpeed = 0;
+    long long currUsed = 1;
 
-    for (Edge current : edges) {
-        if(indices.size() + 1 == vertices) {
-            break;
-        }
+    for (long long i = min; i < edges.size(); ++i) {
+        Edge current = edges[i];
+
         if(set.connected(current.from, current.to)) {
             continue;
         }
         set.connect(current.from, current.to);
-        indices.push_back(current.index);
+        currUsed++;
+        if(currUsed == vertices) {
+            maxSpeed = current.speed;
+            break;
+        }
     }
-    return indices;
+    return {minSpeed, maxSpeed};
+}
+
+long long calculateDist(const std::pair<long long, long long>& pair) {
+    return pair.second - pair.first;
+}
+
+std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long long vertices) {
+    DisjointSet set(vertices);
+    std::sort(edges.begin(), edges.end());
+    std::pair<long long, long long> currMinDist = {edges.begin()->speed , edges.rbegin()->speed};
+
+    for(long long i = 0; i < edges.size() - vertices; i++) {
+        auto newMinDist = getMinMaxSpeed(edges, vertices, i);
+        if(calculateDist(newMinDist) < calculateDist(currMinDist)) {
+            currMinDist = newMinDist;
+        }
+    }
+    return currMinDist;
 }
 
 
@@ -121,18 +136,15 @@ int main() {
     std::cin>>n>>m;
     std::vector<Edge> edges;
     for (long long i = 0; i < m; ++i) {
-        long long a,b,c,p;
-        std::cin>>a>>b>>c>>p;
+        long long a,b,s;
+        std::cin>>a>>b>>s;
         a--;
         b--;
-        edges.emplace_back(i + 1,a,b,c,p);
+        edges.emplace_back(a,b,s);
     }
 
-    std::vector<long long> indices = kruskal(edges, n);
-    std::sort(indices.begin(), indices.end());
-    for (long long index : indices) {
-        std::cout<<index<<std::endl;
-    }
+    auto [minSpeed, maxSpeed] = getMinMaxSpeed(edges, n);
+    std::cout<<minSpeed<<' '<<maxSpeed;
 
     return 0;
 }
