@@ -3,9 +3,9 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="CMakePresetLoader"><![CDATA[{
-  "useNewFormat": true
-}]]></component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
   <component name="CMakeReloadState">
     <option name="reloaded" value="true" />
   </component>
@@ -20,7 +20,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90b2bfee-265c-42ed-8a9a-01f69ac46768" name="Changes" comment="" />
+    <list default="true" id="90b2bfee-265c-42ed-8a9a-01f69ac46768" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Dependencies/DisjointSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Dependencies/DisjointSet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Data Structures/Disjoint Set/DisjointSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Data Structures/Disjoint Set/DisjointSet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Data Structures/Disjoint Set/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Data Structures/Disjoint Set/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Homeworks/HW 12/Dependencies/DisjointSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Homeworks/HW 12/Dependencies/DisjointSet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Homeworks/HW 12/Road Building/solution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Homeworks/HW 12/Road Building/solution.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Homeworks/HW 12/Speed Limits/solution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Homeworks/HW 12/Speed Limits/solution.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,9 +46,9 @@
     <option name="majorVersion" value="2023" />
     <option name="minorVersion" value="2.2" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2aGKlgBHuHAX5kBzDAJAm3ogFni" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -58,7 +66,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "Adding-DSA-HW-12",
-    "last_opened_file_path": "C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Algorithms/Graphs/Kruskal/Dependencies",
+    "last_opened_file_path": "C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Algorithms/Graphs/Kruskal",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -72,11 +80,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Kruskal" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kruskal" TARGET_NAME="Kruskal" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Kruskal" RUN_TARGET_NAME="Kruskal">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -92,6 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1703939627879</updated>
       <workItem from="1703939628913" duration="4014000" />
+      <workItem from="1704024692586" duration="16000" />
     </task>
     <servers />
   </component>

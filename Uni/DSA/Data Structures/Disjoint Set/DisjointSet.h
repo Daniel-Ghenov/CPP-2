@@ -8,7 +8,7 @@ private:
 
 public:
 
-    DisjointSet(int size);
+    explicit DisjointSet(int size);
 
     void connect(int, int);
 
