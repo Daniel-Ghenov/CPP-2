@@ -1,3 +1,0 @@
-C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW 12/cmake-build-debug/CMakeFiles/HW_12.dir
-C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW 12/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/PC-Admin/Desktop/Code/CPP-2/Uni/DSA/Homeworks/HW 12/cmake-build-debug/CMakeFiles/rebuild_cache.dir
