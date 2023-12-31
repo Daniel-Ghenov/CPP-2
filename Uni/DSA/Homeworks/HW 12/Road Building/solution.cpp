@@ -87,7 +87,7 @@ struct Edge {
                 }
                 return from < other.from;
             }
-            return profit < other.profit;
+            return profit > other.profit;
         }
         return cost < other.cost;
     }
@@ -102,11 +102,10 @@ std::vector<long long> kruskal(std::vector<Edge>& edges, long long vertices) {
         if(indices.size() + 1 == vertices) {
             break;
         }
-        if(set.connected(current.from, current.to)) {
-            continue;
+        if(!set.connected(current.from, current.to)) {
+            set.connect(current.from, current.to);
+            indices.push_back(current.index);
         }
-        set.connect(current.from, current.to);
-        indices.push_back(current.index);
     }
     return indices;
 }
@@ -126,7 +125,6 @@ int main() {
     }
 
     std::vector<long long> indices = kruskal(edges, n);
-    std::sort(indices.begin(), indices.end());
     for (long long index : indices) {
         std::cout<<index<<std::endl;
     }

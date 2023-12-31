@@ -5,29 +5,29 @@
 
 class DisjointSet {
 private:
-    std::vector<long long> predecessors;
-    std::vector<long long> sizes;
+    std::vector<int> predecessors;
+    std::vector<int> sizes;
 
 public:
 
-    DisjointSet(long long size);
+    DisjointSet(int size);
 
-    void connect(long long, long long);
+    void connect(int, int);
 
-    bool connected(long long, long long);
+    bool connected(int, int);
 
 private:
-    long long predecessor(long long);
+    int predecessor(int);
 };
 
 
-DisjointSet::DisjointSet(long long size): predecessors(size), sizes(std::vector<long long>(size, 0)) {
-    for (long long i = 0; i < size; ++i) {
+DisjointSet::DisjointSet(int size): predecessors(size), sizes(std::vector<int>(size, 0)) {
+    for (int i = 0; i < size; ++i) {
         predecessors[i] = i;
     }
 }
 
-void DisjointSet::connect(long long a, long long b) {
+void DisjointSet::connect(int a, int b) {
     if(a == b) {
         return;
     }
@@ -36,8 +36,8 @@ void DisjointSet::connect(long long a, long long b) {
         throw std::out_of_range("Index out of range");
     }
 
-    long long aPredecessor = predecessor(a);
-    long long bPredecessor = predecessor(b);
+    int aPredecessor = predecessor(a);
+    int bPredecessor = predecessor(b);
 
     if(sizes[aPredecessor] > sizes[bPredecessor]) {
         std::swap(aPredecessor, bPredecessor);
@@ -49,7 +49,7 @@ void DisjointSet::connect(long long a, long long b) {
     }
 }
 
-bool DisjointSet::connected(long long a, long long b) {
+bool DisjointSet::connected(int a, int b) {
     if(a == b) {
         return true;
     }
@@ -61,21 +61,21 @@ bool DisjointSet::connected(long long a, long long b) {
     return predecessor(a) == predecessor(b);
 }
 
-long long DisjointSet::predecessor(long long a) {
+int DisjointSet::predecessor(int a) {
     if(predecessors[a] == a) {
         return a;
     }
-    long long predecess = predecessor(predecessors[a]);
+    int predecess = predecessor(predecessors[a]);
     predecessors[a] = predecess;
     return predecess;
 }
 
 struct Edge {
-    long long from;
-    long long to;
-    long long speed;
+    int from;
+    int to;
+    int speed;
 
-    Edge(long long from, long long to, long long speed): from(from), to(to), speed(speed) {}
+    Edge(int from, int to, int speed): from(from), to(to), speed(speed) {}
 
     bool operator<(const Edge& other) const {
         return speed < other.speed;
@@ -86,13 +86,13 @@ struct Edge {
 
 };
 
-std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long long vertices, long long min) {
+std::pair<int, int> getMinMaxSpeed(std::vector<Edge>& edges, int vertices, int min) {
     DisjointSet set(vertices);
-    long long minSpeed = edges[min].speed;
-    long long maxSpeed = 0;
-    long long currUsed = 1;
+    int minSpeed = edges[min].speed;
+    int maxSpeed = 0;
+    int currUsed = 1;
 
-    for (long long i = min; i < edges.size(); ++i) {
+    for (int i = min; i < edges.size(); ++i) {
         Edge current = edges[i];
 
         if(set.connected(current.from, current.to)) {
@@ -108,16 +108,16 @@ std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long lo
     return {minSpeed, maxSpeed};
 }
 
-long long calculateDist(const std::pair<long long, long long>& pair) {
+int calculateDist(const std::pair<int, int>& pair) {
     return pair.second - pair.first;
 }
 
-std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long long vertices) {
+std::pair<int, int> getMinMaxSpeed(std::vector<Edge>& edges, int vertices) {
     DisjointSet set(vertices);
     std::sort(edges.begin(), edges.end());
-    std::pair<long long, long long> currMinDist = {edges.begin()->speed , edges.rbegin()->speed};
+    std::pair<int, int> currMinDist = {edges.begin()->speed , edges.rbegin()->speed};
 
-    for(long long i = 0; i < edges.size() - vertices; i++) {
+    for(int i = 0; i < edges.size() - vertices; i++) {
         auto newMinDist = getMinMaxSpeed(edges, vertices, i);
         if(calculateDist(newMinDist) < calculateDist(currMinDist)) {
             currMinDist = newMinDist;
@@ -129,11 +129,11 @@ std::pair<long long, long long> getMinMaxSpeed(std::vector<Edge>& edges, long lo
 
 int main() {
 
-    long long n,m;
+    int n,m;
     std::cin>>n>>m;
     std::vector<Edge> edges;
-    for (long long i = 0; i < m; ++i) {
-        long long a,b,s;
+    for (int i = 0; i < m; ++i) {
+        int a,b,s;
         std::cin>>a>>b>>s;
         a--;
         b--;
