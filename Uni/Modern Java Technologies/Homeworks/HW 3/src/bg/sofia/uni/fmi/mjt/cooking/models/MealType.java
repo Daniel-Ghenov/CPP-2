@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.cooking.meal;
+package bg.sofia.uni.fmi.mjt.cooking.models;
 
 public enum MealType {
 	BREAKFAST,

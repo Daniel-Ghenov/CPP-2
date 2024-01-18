@@ -1,17 +1,16 @@
-package bg.sofia.uni.fmi.mjt.cooking.recepie;
+package bg.sofia.uni.fmi.mjt.cooking.models;
 
-import bg.sofia.uni.fmi.mjt.cooking.meal.MealType;
-
+import java.math.BigDecimal;
 import java.util.List;
 
-public record Recepie(
+public record Recipe(
 	String label,
 
 	List<String> dietLabels,
 	List<String> healthLabels,
-	Integer totalWeight,
+	BigDecimal totalWeight,
 	List<String> cuisineType,
-	List<MealType> mealType,
+	List<String> mealType,
 	List<String> dishType,
 	List<String> ingredientLines
 ){
