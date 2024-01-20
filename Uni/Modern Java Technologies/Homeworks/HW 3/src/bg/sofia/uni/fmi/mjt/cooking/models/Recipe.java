@@ -5,7 +5,6 @@ import java.util.List;
 
 public record Recipe(
 	String label,
-
 	List<String> dietLabels,
 	List<String> healthLabels,
 	BigDecimal totalWeight,
