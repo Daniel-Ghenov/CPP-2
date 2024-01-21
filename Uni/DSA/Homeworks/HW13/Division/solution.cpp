@@ -15,59 +15,42 @@ struct Query {
     Query(long long b, long long e, long long k) : begin(b), end(e), k(k) {}
 };
 
-long long answerQuery(std::unordered_map<long long, std::vector<long long>>& divisors, std::unordered_map<long long, std::vector<long long>>& divisible, const Query& q) {
-    auto divLower = std::lower_bound(divisors[q.k].begin(), divisors[q.k].end(), q.begin);
-    auto divUpper = std::upper_bound(divisors[q.k].begin(), divisors[q.k].end(), q.end);
 
-    auto diviLower = std::lower_bound(divisible[q.k].begin(), divisible[q.k].end(), q.begin);
-    auto diviUpper = std::upper_bound(divisible[q.k].begin(), divisible[q.k].end(), q.end);
+size_t answerQuery(std::unordered_map<long long, std::vector<long long>>& divisors, const Query& q) {
+    size_t divUpper = std::upper_bound(divisors[q.k].begin(), divisors[q.k].end(), q.end) - divisors[q.k].begin();
+    if (q.begin == 0) {
+        return divUpper;
+    }
+    size_t divLower = std::lower_bound(divisors[q.k].begin(), divisors[q.k].end(), q.begin) - divisors[q.k].begin();
 
-    long long divDist = std::distance(divLower, divUpper);
-    long long diviDist = std::distance(diviLower, diviUpper);
-
-    return divDist + diviDist;
+    return divUpper - divLower;
 }
 
-std::vector<long long> getDivisors(long long n, const std::vector<long long>& arr) {
-    std::vector<long long> divisors;
-    long long sqrtN = std::ceil(std::sqrt(n));
-    for(long long i = 1; i <= sqrtN; i++) {
-        if(n % i == 0) {
-            auto it = std::find(arr.begin(), arr.end(), i);
-            if (it != arr.end()) {
-                divisors.push_back(std::distance(arr.begin(), it));
+
+void addDivisors(std::unordered_map<long long, std::vector<long long>>& map, long long num, long long position) {
+    long long sqrt = std::sqrt(num);
+    for(long long i = 1; i <= sqrt; i++) {
+        if(num % i == 0) {
+            map[i].push_back(position);
+            if(i * i != num) {
+                map[num / i].push_back(position);
             }
         }
     }
-    return divisors;
 }
 
-std::unordered_map<long long, std::vector<long long>> getDivisors(const std::vector<long long>& arr, const std::set<long long>& kSet) {
-    std::unordered_map<long long, std::vector<long long>> divisors;
-
-    for(long long k: kSet) {
-        divisors[k] = getDivisors(k, arr);
+void addDivisible(std::unordered_map<long long, std::vector<long long>>& map, long long num, long long position) {
+    for(long long i = 2 * num; i <= MAX_N; i += num) {
+        map[i].push_back(position);
     }
-
-    return divisors;
 }
 
-std::vector<long long> getDivisible(long long n, const std::vector<long long>& arr, long long maxElement) {
-    std::vector<long long> divisible;
-    for(long long i = 1; i * n <= maxElement; i++) {
-        auto it = std::find(arr.begin(), arr.end(), i * n);
-        if (it != arr.end()) {
-            divisible.push_back(std::distance(arr.begin(), it));
-        }
-    }
-    return divisible;
-}
-
-std::unordered_map<long long, std::vector<long long>> getDivisible(const std::vector<long long>& arr, const std::set<long long>& kSet, long long maxElement) {
+std::unordered_map<long long, std::vector<long long>> getDivisible(const std::vector<long long>& arr) {
     std::unordered_map<long long, std::vector<long long>> divisible;
 
-    for(long long k: kSet) {
-        divisible[k] = getDivisible(k, arr, maxElement);
+    for(long long i = 0; i < arr.size(); i++) {
+        addDivisors(divisible, arr[i], i);
+        addDivisible(divisible, arr[i], i);
     }
 
     return divisible;
@@ -82,24 +65,16 @@ int main() {
     for(long long i = 0; i < n; i++) {
         std::cin >> arr[i];
     }
-    std::vector<Query> queries;
-    std::set<long long> kSet;
-    long long maxNum = *std::max_element(arr.begin(), arr.end());
+
+    std::unordered_map<long long, std::vector<long long>> divisible = getDivisible(arr);
 
     for(long long i = 0; i < q; i++) {
         long long b, e, k;
         std::cin >> b >> e >> k;
         b--;
         e--;
-        queries.emplace_back(b, e, k);
-        kSet.insert(k);
-    }
-
-    std::unordered_map<long long, std::vector<long long>> divisors = getDivisors(arr, kSet);
-    std::unordered_map<long long, std::vector<long long>> divisible = getDivisible(arr, kSet, maxNum);
-
-    for (Query q: queries) {
-        std::cout << answerQuery(divisors, divisible, q) << ' ';
+        Query query(b, e, k);
+        std::cout << answerQuery(divisible, query) << ' ';
     }
 
     return 0;
