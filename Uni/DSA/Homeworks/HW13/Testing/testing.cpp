@@ -51,6 +51,8 @@ struct std::hash<State> {
     }
 };
 
+std::vector<std::vector<long long int>> toTable(std::unordered_map<State, int> map);
+
 int findNonOverlapping(const std::vector<RoadPiece>& roads, int i) {
     auto curr = roads[i];
     int nextStart = -1;
@@ -197,6 +199,7 @@ long long getMaxQualityTableTest(std::vector<std::vector<long long>>& table, std
         previousCompatible[i] = findPreviousNonOverlapping(roads,i);
     }
 
+    int currMax = 0;
 
     for (long long i = 1; i <= k; ++i) {
         for (long long j = 1; j <= roads.size(); ++j) {
@@ -207,10 +210,14 @@ long long getMaxQualityTableTest(std::vector<std::vector<long long>>& table, std
             }
 
             long long roadNotTaken = table[i][j - 1];
-            table[i][j] = std::max(roadTaken, roadNotTaken);
+            int max = std::max(roadTaken, roadNotTaken);
+            table[i][j] = max;
+            if (max >= currMax) {
+                currMax = max;
+            }
         }
     }
-    return table[k][roads.size()];
+    return currMax;
 }
 
 long long getMaxQualityTable(std::vector<RoadPiece>& roads, long long k) {
@@ -248,8 +255,8 @@ void test() {
     std::vector<RoadPiece> roads;
     for (long long i = 0; i < n; ++i) {
         long long s, e, q;
-        s = std::rand() % 100 + 1;
-        e = std::rand() % 100 + 1;
+        s = std::rand() % 99 + 1;
+        e = s + (std::rand() % (100 - s) + 1);
         q = std::rand() % 100 + 1;
         roads.emplace_back(s, e, q);
     }
@@ -266,6 +273,17 @@ void test() {
     }
 
 }
+
+std::vector<std::vector<long long int>> toTable(std::unordered_map<State, int> map,int n,int k) {
+    std::vector<std::vector<long long>> table(k + 1, std::vector<long long>(n + 1, 0));
+    for(auto it = map.begin(); it != map.end(); it++) {
+        State state = it->first;
+        int answer = it->second;
+        table[state.roadsLeft][state.currArrStart] = answer;
+    }
+    return table;
+}
+
 void testTestCase() {
 
     long long n, k;
@@ -283,12 +301,24 @@ void testTestCase() {
     int tableSolution = getMaxQualityTableTest(table, roads, k);
     int iterativeSolution = getMaxQualityIterativeTest(memo, roads, k);
 
+    std::vector<std::vector<long long>> tableMemo = toTable(memo, n, k);
+
+//    for(int i = 0; i < table.size(); i++) {
+//        for(int j = 0; j < table[i].size(); j++) {
+//            int tableSol = table[i][j];
+//            int iterativeSol = memo[State(i,j)];
+//            if (tableSol != iterativeSol) {
+//                std::cout << "roadsLeft: " << i << " currArrStart: " << j << std::endl;
+//                std::cout << "Table: " << table[i][j] << " Iterative: " << memo[State(i,j)] << std::endl;
+//            }
+//        }
+//    }
 
     for(int i = 0; i < table.size(); i++) {
         for(int j = 0; j < table[i].size(); j++) {
             int tableSol = table[i][j];
-            int iterativeSol = memo[State(i,j)];
-            if (tableSol != iterativeSol) {
+            int iterativeSol = tableMemo[i][j];
+            if (tableSol != iterativeSol && iterativeSol != 0) {
                 std::cout << "roadsLeft: " << i << " currArrStart: " << j << std::endl;
                 std::cout << "Table: " << table[i][j] << " Iterative: " << memo[State(i,j)] << std::endl;
             }
@@ -297,10 +327,17 @@ void testTestCase() {
 
 }
 
+void testTest(int n) {
+    for (int i = 0; i < n; ++i) {
+        test();
+    }
+}
+
 int main() {
 
 //    test();
-    testTestCase();
+      testTest(1000);
+//    testTestCase();
 
     return 0;
 }
