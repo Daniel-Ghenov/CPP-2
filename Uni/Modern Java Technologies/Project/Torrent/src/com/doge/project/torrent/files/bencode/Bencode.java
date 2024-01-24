@@ -5,10 +5,11 @@ import com.doge.project.torrent.files.bencode.exception.BencodeException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class Bencode {
 
-	private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
 	static final char NUMBER = 'i';
 
@@ -45,6 +46,17 @@ public class Bencode {
 	}
 
 	public <T> T decode(byte[] bencode, BencodeType<T> type) {
+
+		if (bencode == null) {
+			throw new BencodeException("Bencode cannot be null");
+		}
+		if (type == null) {
+			throw new BencodeException("Type cannot be null");
+		}
+		if (type == BencodeType.bencodeUnknown) {
+			throw new BencodeException("Type cannot be unknown");
+		}
+
 		BencodeInputStream is = new BencodeInputStream(new ByteArrayInputStream(bencode));
 
 		try {
@@ -60,6 +72,7 @@ public class Bencode {
 		} catch (IOException e) {
 			throw new BencodeException(e);
 		}
+		throw new BencodeException("Unknown type: " + type);
 	}
 
 }
