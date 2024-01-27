@@ -1,4 +1,4 @@
-package com.doge.project.torrent.files.model;
+package com.doge.torrent.files.model;
 
 import java.util.ArrayList;
 import java.util.List;

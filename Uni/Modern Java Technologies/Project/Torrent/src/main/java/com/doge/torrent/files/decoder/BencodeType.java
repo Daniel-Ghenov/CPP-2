@@ -1,4 +1,4 @@
-package com.doge.project.torrent.files.decoder;
+package com.doge.torrent.files.decoder;
 
 import java.util.Arrays;
 import java.util.List;

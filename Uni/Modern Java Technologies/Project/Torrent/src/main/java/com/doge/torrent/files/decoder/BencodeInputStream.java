@@ -1,4 +1,4 @@
-package com.doge.project.torrent.files.decoder;
+package com.doge.torrent.files.decoder;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.doge.project.torrent.files.decoder.BencodeType.bencodeDictionary;
-import static com.doge.project.torrent.files.decoder.BencodeType.bencodeList;
-import static com.doge.project.torrent.files.decoder.BencodeType.bencodeNumber;
-import static com.doge.project.torrent.files.decoder.BencodeType.bencodeString;
+import static com.doge.torrent.files.decoder.BencodeType.bencodeDictionary;
+import static com.doge.torrent.files.decoder.BencodeType.bencodeList;
+import static com.doge.torrent.files.decoder.BencodeType.bencodeNumber;
+import static com.doge.torrent.files.decoder.BencodeType.bencodeString;
 
 public class BencodeInputStream extends FilterInputStream {
 

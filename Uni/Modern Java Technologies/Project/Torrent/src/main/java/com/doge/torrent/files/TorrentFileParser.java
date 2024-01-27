@@ -1,6 +1,6 @@
-package com.doge.project.torrent.files;
+package com.doge.torrent.files;
 
-import com.doge.project.torrent.files.model.TorrentFile;
+import com.doge.torrent.files.model.TorrentFile;
 
 public interface TorrentFileParser {
 

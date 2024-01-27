@@ -1,7 +1,7 @@
-package com.doge.project.torrent;
+package com.doge.torrent;
 
-import com.doge.project.torrent.files.TorrentFileParser;
-import com.doge.project.torrent.files.TorrentFileParserImpl;
+import com.doge.torrent.files.TorrentFileParser;
+import com.doge.torrent.files.TorrentFileParserImpl;
 
 public class Main {
 

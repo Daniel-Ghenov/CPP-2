@@ -1,4 +1,4 @@
-package com.doge.project.torrent.files.model;
+package com.doge.torrent.files.model;
 
 import java.util.List;
 import java.util.Map;

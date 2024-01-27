@@ -1,6 +1,6 @@
-package com.doge.project.torrent.files.decoder;
+package com.doge.torrent.files.decoder;
 
-import com.doge.project.torrent.files.decoder.exception.BencodeException;
+import com.doge.torrent.files.decoder.exception.BencodeException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

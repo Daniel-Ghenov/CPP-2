@@ -1,4 +1,4 @@
-package com.doge.project.torrent.files.decoder.exception;
+package com.doge.torrent.files.decoder.exception;
 
 public class BencodeException extends RuntimeException {
 

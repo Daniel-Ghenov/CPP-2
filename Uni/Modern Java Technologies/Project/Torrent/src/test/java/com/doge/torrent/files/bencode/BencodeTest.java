@@ -1,8 +1,8 @@
-package com.doge.project.torrent.files.bencode;
+package com.doge.torrent.files.bencode;
 
-import com.doge.project.torrent.files.decoder.Bencode;
-import com.doge.project.torrent.files.decoder.BencodeType;
-import com.doge.project.torrent.files.decoder.exception.BencodeException;
+import com.doge.torrent.files.decoder.Bencode;
+import com.doge.torrent.files.decoder.BencodeType;
+import com.doge.torrent.files.decoder.exception.BencodeException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

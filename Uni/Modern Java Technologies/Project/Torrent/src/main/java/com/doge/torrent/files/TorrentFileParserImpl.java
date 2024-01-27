@@ -1,15 +1,14 @@
-package com.doge.project.torrent.files;
+package com.doge.torrent.files;
 
-import com.doge.project.torrent.files.decoder.Bencode;
-import com.doge.project.torrent.files.decoder.TorrentDecoder;
-import com.doge.project.torrent.files.model.TorrentFile;
+import com.doge.torrent.files.decoder.Bencode;
+import com.doge.torrent.files.decoder.TorrentDecoder;
+import com.doge.torrent.files.model.TorrentFile;
+import com.doge.torrent.files.decoder.BencodeType;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-
-import static com.doge.project.torrent.files.decoder.BencodeType.bencodeDictionary;
 
 public class TorrentFileParserImpl implements TorrentFileParser {
 
@@ -24,7 +23,7 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 	}
 
 	@Override public TorrentFile parse(byte[] content) {
-		Map<String, Object> dict = decoder.decode(content, bencodeDictionary);
+		Map<String, Object> dict = decoder.decode(content, BencodeType.bencodeDictionary);
 		return TorrentFile.fromMap(dict);
 	}
 
