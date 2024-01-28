@@ -1,8 +1,6 @@
 package com.doge.torrent.files.bencode;
 
-import com.doge.torrent.files.decoder.Bencode;
-import com.doge.torrent.files.decoder.BencodeType;
-import com.doge.torrent.files.decoder.exception.BencodeException;
+import com.doge.torrent.files.bencode.exception.BencodeException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,8 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BencodeTest
-{
+class BencodeTest {
 
 
 	@Test
@@ -166,6 +163,62 @@ class BencodeTest
 		Map<String, Object> list = bencode.decode(input, BencodeType.bencodeDictionary);
 
 		assertEquals(Map.of("cow", "moo", "spam", "eggs"), list);
+	}
+
+	@Test
+	void testEncodeLongWhenNullShouldThrow() {
+		Bencode bencode = new Bencode();
+		assertThrows(BencodeException.class, () -> bencode.encode((Long) null));
+	}
+
+	@Test
+	void testEncodeStringWhenNullShouldThrow() {
+		Bencode bencode = new Bencode();
+		assertThrows(BencodeException.class, () -> bencode.encode((String) null));
+	}
+
+	@Test
+	void testEncodeListWhenNullShouldThrow() {
+		Bencode bencode = new Bencode();
+		assertThrows(BencodeException.class, () -> bencode.encode((List<?>) null));
+	}
+
+	@Test
+	void testEncodeMapWhenNullShouldThrow() {
+		Bencode bencode = new Bencode();
+		assertThrows(BencodeException.class, () -> bencode.encode((Map<?, ?>) null));
+	}
+
+	@Test
+	void testEncodeLong() {
+		Bencode bencode = new Bencode();
+		byte[] encoded = bencode.encode(123L);
+
+		assertEquals("i123e", new String(encoded));
+	}
+
+	@Test
+	void testEncodeString() {
+		Bencode bencode = new Bencode();
+		byte[] encoded = bencode.encode("spam");
+
+		assertEquals("4:spam", new String(encoded));
+	}
+
+	@Test
+	void testEncodeList() {
+		Bencode bencode = new Bencode();
+		byte[] encoded = bencode.encode(List.of("spam", "eggs"));
+
+		assertEquals("l4:spam4:eggse", new String(encoded));
+	}
+
+	@Test
+	void testEncodeMap() {
+		Bencode bencode = new Bencode();
+		byte[] encoded = bencode.encode(Map.of("cow", "moo", "spam", "eggs"));
+
+		assertEquals("d3:cow3:moo4:spam4:eggse", new String(encoded));
 	}
 
 }

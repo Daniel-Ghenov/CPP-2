@@ -2,7 +2,6 @@ package com.doge.torrent.files.bencode;
 
 import java.io.IOException;
 
-import com.doge.torrent.files.decoder.BencodeInputStream;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

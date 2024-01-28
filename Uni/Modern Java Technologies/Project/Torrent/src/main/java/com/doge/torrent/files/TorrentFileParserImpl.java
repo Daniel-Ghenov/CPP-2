@@ -1,9 +1,9 @@
 package com.doge.torrent.files;
 
-import com.doge.torrent.files.decoder.Bencode;
-import com.doge.torrent.files.decoder.TorrentDecoder;
+import com.doge.torrent.files.bencode.Bencode;
+import com.doge.torrent.files.bencode.TorrentDecoder;
 import com.doge.torrent.files.model.TorrentFile;
-import com.doge.torrent.files.decoder.BencodeType;
+import com.doge.torrent.files.bencode.BencodeType;
 
 import java.io.IOException;
 import java.nio.file.Files;
