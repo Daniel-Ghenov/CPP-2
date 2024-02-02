@@ -10,9 +10,7 @@ public record Peer(
 	private static final int IP_LENGTH = 4;
 	private static final int PORT_START = 4;
 	private static final int PORT_END = 5;
-
 	private static final int PORT_START_SHIFT = 8;
-	private static final int PORT_END_MASK = 0xFF;
 
 	public static Peer fromByteArr(byte[] bytes) {
 		if (bytes.length != PEER_BYTE_LENGTH) {
@@ -35,6 +33,6 @@ public record Peer(
 	}
 
 	private static Integer getPort(byte[] bytes) {
-		return (bytes[PORT_START] << PORT_START_SHIFT) | (bytes[PORT_END] & PORT_END_MASK);
+		return ((int) (bytes[PORT_START]) << PORT_START_SHIFT) | (bytes[PORT_END]);
 	}
 }

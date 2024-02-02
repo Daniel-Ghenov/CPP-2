@@ -3,7 +3,6 @@ package com.doge.torrent.announce;
 import com.doge.torrent.announce.model.AnnounceRequest;
 import com.doge.torrent.announce.model.AnnounceResponse;
 import com.doge.torrent.files.bencode.Bencode;
-import com.doge.torrent.files.bencode.BencodeType;
 import com.doge.torrent.files.bencode.TorrentDecoder;
 import com.doge.torrent.utils.URIBuilder;
 
@@ -48,7 +47,8 @@ public class AnnouncerImpl implements Announcer {
 
 	private AnnounceResponse getAnnounceResponse(HttpRequest httpRequest) {
 		try {
-			HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = httpClient.send(httpRequest,
+									HttpResponse.BodyHandlers.ofString());
 		    if (response.statusCode() < MIN_SUCCESS_STATUS_CODE ||
 				response.statusCode() > MAX_SUCCESS_STATUS_CODE) {
 				throw new RuntimeException("Invalid status code: " + response.statusCode());
