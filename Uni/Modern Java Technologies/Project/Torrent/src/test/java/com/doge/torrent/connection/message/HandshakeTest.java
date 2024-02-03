@@ -37,7 +37,7 @@ class HandshakeTest
 	{
 		Handshake handshake = new Handshake(INFO_HASH, PEER_ID);
 		Handshake clientHandshake = new Handshake("otherInfoHash------", PEER_ID);
-		assertThrows(HandshakeException.class, () -> handshake.validateClientHandshake(clientHandshake), "Should throw HandshakeException");
+		assertThrows(HandshakeException.class, () -> handshake.validatePeerHandshake(clientHandshake), "Should throw HandshakeException");
 	}
 
 	@Test
@@ -45,7 +45,7 @@ class HandshakeTest
 	{
 		Handshake handshake = new Handshake(INFO_HASH, PEER_ID);
 		Handshake clientHandshake = new Handshake(INFO_HASH, PEER_ID);
-		assertDoesNotThrow(() -> handshake.validateClientHandshake(clientHandshake), "Should not throw HandshakeException");
+		assertDoesNotThrow(() -> handshake.validatePeerHandshake(clientHandshake), "Should not throw HandshakeException");
 	}
 
 }

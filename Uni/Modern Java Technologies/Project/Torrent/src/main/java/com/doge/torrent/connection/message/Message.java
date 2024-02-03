@@ -10,6 +10,12 @@ public record Message(
 ) {
 	private static final int MESSAGE_LENGTH_SIZE = 4;
 	private static final int MESSAGE_ID_SIZE = 1;
+	private static final int REQUEST_PAYLOAD_SIZE = 12;
+
+	public static final Message CHOKE = new Message(MessageId.CHOKE, new byte[0]);
+	public static final Message UNCHOKE = new Message(MessageId.UNCHOKE, new byte[0]);
+	public static final Message INTERESTED = new Message(MessageId.INTERESTED, new byte[0]);
+	public static final Message NOT_INTERESTED = new Message(MessageId.NOT_INTERESTED, new byte[0]);
 
 	public byte[] toBytes() {
 		int length = payload.length + MESSAGE_ID_SIZE;
@@ -34,8 +40,17 @@ public record Message(
 		return new Message(MessageId.fromId(id), payload);
 	}
 
+	public static Message request(int index, int begin, int length) {
+		byte[] payload = new byte[REQUEST_PAYLOAD_SIZE];
+		ByteBuffer.wrap(payload).putInt(index).putInt(begin).putInt(length);
+		return new Message(MessageId.REQUEST, payload);
+	}
+
 	public boolean isKeepAlive() {
 		return id == MessageId.KEEP_ALIVE;
 	}
 
+	public boolean isPiece() {
+		return id == MessageId.PIECE;
+	}
 }

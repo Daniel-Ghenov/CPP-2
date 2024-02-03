@@ -54,7 +54,7 @@ public record Handshake(
 		return new Handshake(infoHash, peerId);
 	}
 
-	public void validateClientHandshake(Handshake clientHandshake) {
+	public void validatePeerHandshake(Handshake clientHandshake) {
 		if (!infoHash.equals(clientHandshake.infoHash())) {
 			throw new HandshakeException("Info hash does not match");
 		}

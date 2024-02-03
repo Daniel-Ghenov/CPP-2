@@ -19,7 +19,7 @@ public record TorrentInfo(
 		Long length = (Long) map.get("length");
 		String name = (String) map.get("name");
 		Long pieceLength = (Long) map.get("piece length");
-		List<TorrentPiece> pieces = getPieces((String) map.get("pieces"));
+		List<TorrentPiece> pieces = getPieces((String) map.get("pieces"), pieceLength);
 		List<Map<String, Object>> filesObjects = (List<Map<String, Object>>) map.get("files");
 		List<SourceFile> files = null;
 
@@ -31,11 +31,14 @@ public record TorrentInfo(
 		return new TorrentInfo(length, name, pieceLength, files, pieces);
 	}
 
-	private static List<TorrentPiece> getPieces(String pieces) {
-		List<String> chunks = new ArrayList<>();
+	private static List<TorrentPiece> getPieces(String pieces, Long pieceLength) {
+		List<TorrentPiece> chunks = new ArrayList<>();
 		for (int i = 0; i < pieces.length(); i += PIECE_BYTE_LENGTH) {
-			chunks.add(pieces.substring(i, Math.min(pieces.length(), i + PIECE_BYTE_LENGTH)));
+			TorrentPiece piece = new TorrentPiece(
+				pieces.substring(i, Math.min(pieces.length(), i + PIECE_BYTE_LENGTH)).getBytes(),
+				i / PIECE_BYTE_LENGTH, pieceLength);
+			chunks.add(piece);
 		}
-		return chunks.stream().map(str -> new TorrentPiece(str.getBytes())).toList();
+		return chunks;
 	}
 }

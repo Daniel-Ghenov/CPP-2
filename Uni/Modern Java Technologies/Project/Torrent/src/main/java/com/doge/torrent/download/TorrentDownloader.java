@@ -1,6 +1,5 @@
 package com.doge.torrent.download;
 
-public class TorrentDownloader
-{
+public class TorrentDownloader {
 
 }

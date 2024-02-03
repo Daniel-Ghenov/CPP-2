@@ -2,6 +2,7 @@ package com.doge.torrent.connection;
 
 import com.doge.torrent.announce.model.Peer;
 import com.doge.torrent.connection.message.Message;
+import com.doge.torrent.connection.piece.PieceProgress;
 import com.doge.torrent.files.model.TorrentPiece;
 
 public interface ClientConnector {
@@ -10,7 +11,9 @@ public interface ClientConnector {
 
 	void disconnect();
 
-	Message downloadPiece(TorrentPiece piece);
+	PieceProgress downloadPiece(TorrentPiece piece);
 
+	void sendMessages(Message message);
 
+	boolean hasPiece(TorrentPiece piece);
 }
