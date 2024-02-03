@@ -8,13 +8,13 @@ import com.doge.torrent.connection.message.Message;
 import com.doge.torrent.connection.piece.PieceProgress;
 import com.doge.torrent.files.model.TorrentPiece;
 import com.doge.torrent.logging.TorrentLoggerFactory;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hash;
 
@@ -59,7 +59,7 @@ public class TCPClientConnector implements ClientConnector {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			LOGGER.warning("Failed to close socket");
+			LOGGER.error("Failed to close socket");
 		}
 	}
 
@@ -89,7 +89,7 @@ public class TCPClientConnector implements ClientConnector {
 	private boolean validatePiece(PieceProgress progress) {
 		byte[] hash = hash(progress.data()).getBytes();
 		if (!Arrays.equals(progress.hash(), hash)) {
-			LOGGER.warning("Piece hash does not match");
+			LOGGER.error("Piece hash does not match");
 			return false;
 		}
 		return true;

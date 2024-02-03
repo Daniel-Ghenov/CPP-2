@@ -1,6 +1,8 @@
 package com.doge.torrent.utils;
 
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class URIBuilder {
 
@@ -27,7 +29,9 @@ public class URIBuilder {
 		} else {
 			builder.append("&");
 		}
-		builder.append(key).append("=").append(value);
+		String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+		String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+		builder.append(encodedKey).append("=").append(encodedValue);
 		return this;
 	}
 

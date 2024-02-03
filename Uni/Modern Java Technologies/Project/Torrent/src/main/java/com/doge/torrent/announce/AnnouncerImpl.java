@@ -4,7 +4,9 @@ import com.doge.torrent.announce.model.AnnounceRequest;
 import com.doge.torrent.announce.model.AnnounceResponse;
 import com.doge.torrent.files.bencode.Bencode;
 import com.doge.torrent.files.bencode.TorrentDecoder;
+import com.doge.torrent.logging.TorrentLoggerFactory;
 import com.doge.torrent.utils.URIBuilder;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +18,8 @@ import java.util.Map;
 import static com.doge.torrent.files.bencode.BencodeType.bencodeDictionary;
 
 public class AnnouncerImpl implements Announcer {
+
+	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(AnnouncerImpl.class);
 
 	public static final Integer DEFAULT_PORT = 6881;
 
@@ -46,6 +50,7 @@ public class AnnouncerImpl implements Announcer {
 	}
 
 	private AnnounceResponse getAnnounceResponse(HttpRequest httpRequest) {
+		LOGGER.debug("Sending request: " + httpRequest);
 		try {
 			HttpResponse<String> response = httpClient.send(httpRequest,
 									HttpResponse.BodyHandlers.ofString());
@@ -63,10 +68,15 @@ public class AnnouncerImpl implements Announcer {
 	private AnnounceResponse parseResponse(String body) {
 
 		Map<String, Object> decoded = torrentDecoder.decode(body, bencodeDictionary);
+		LOGGER.debug("Decoded response: " + decoded);
+		if (decoded.containsKey("failure reason")) {
+			throw new RuntimeException("Failure reason: " + decoded.get("failure reason"));
+		}
 		return AnnounceResponse.fromMap(decoded);
 	}
 
 	private URI buildUri(AnnounceRequest request) {
+		LOGGER.info("Building URI for request: " + request);
 		return URIBuilder.fromURL(request.trackerAnnounceUrl())
 						 .queryParam("info_hash", request.infoHash())
 						 .queryParam("peer_id", request.peerId())
