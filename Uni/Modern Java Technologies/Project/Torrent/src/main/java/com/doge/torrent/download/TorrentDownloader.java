@@ -55,6 +55,7 @@ public class TorrentDownloader {
 		AnnounceRequest request = AnnounceRequestBuilder.fromUrl(file.getAnnounceUrl())
 			.infoHash(file.infoHash())
 			.peerId(peerId)
+			.left(file.info().length())
 			.build();
 
 		AnnounceResponse response = announcer.announce(request);

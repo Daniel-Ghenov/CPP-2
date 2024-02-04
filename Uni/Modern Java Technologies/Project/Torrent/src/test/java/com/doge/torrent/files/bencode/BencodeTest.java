@@ -1,8 +1,13 @@
 package com.doge.torrent.files.bencode;
 
 import com.doge.torrent.files.bencode.exception.BencodeException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -10,12 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BencodeTest {
 
+	private Bencode bencode = new Bencode();
+
+	@BeforeEach
+	void setUp() {
+		bencode = new Bencode();
+	}
+
 
 	@Test
 	void testGetTypeWhenNextTypeNumber() {
 		String input = "i123e";
 
-		Bencode bencode = new Bencode();
 		BencodeType<?> type = bencode.getType(input.getBytes());
 
 		assertEquals(BencodeType.bencodeNumber, type);
@@ -25,7 +36,6 @@ class BencodeTest {
 	void testGetTypeWhenNextTypeString() {
 		String input = "4:spam";
 
-		Bencode bencode = new Bencode();
 		BencodeType<?> type = bencode.getType(input.getBytes());
 
 		assertEquals(BencodeType.bencodeString, type);
@@ -35,7 +45,6 @@ class BencodeTest {
 	void testGetTypeWhenNextTypeList() {
 		String input = "l4:spam4:eggse";
 
-		Bencode bencode = new Bencode();
 		BencodeType<?> type = bencode.getType(input.getBytes());
 
 		assertEquals(BencodeType.bencodeList, type);
@@ -45,7 +54,6 @@ class BencodeTest {
 	void testGetTypeWhenNextTypeDictionary() {
 		String input = "d3:cow3:moo4:spam4:eggse";
 
-		Bencode bencode = new Bencode();
 		BencodeType<?> type = bencode.getType(input.getBytes());
 
 		assertEquals(BencodeType.bencodeDictionary, type);
@@ -55,7 +63,6 @@ class BencodeTest {
 	void testGetTypeWhenNextTypeUnknown() {
 		String input = "x";
 
-		Bencode bencode = new Bencode();
 		BencodeType<?> type = bencode.getType(input.getBytes());
 
 		assertEquals(BencodeType.bencodeUnknown, type);
@@ -65,7 +72,6 @@ class BencodeTest {
 	void testDecodeWhenTypeNullShouldThrow() {
 		String input = "i123e";
 
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode(input, null));
 	}
 
@@ -73,13 +79,11 @@ class BencodeTest {
 	void testDecodeWhenTypeUnknownShouldThrow() {
 		String input = "i123e";
 
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode(input, BencodeType.bencodeUnknown));
 	}
 
 	@Test
 	void testDecodeWhenBencodeNullShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode((String) null, BencodeType.bencodeNumber));
 	}
 
@@ -87,7 +91,6 @@ class BencodeTest {
 	void testDecodeWhenTypeNullAndByteArrShouldThrow() {
 		byte[] input = "i123e".getBytes();
 
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode(input, null));
 	}
 
@@ -95,13 +98,11 @@ class BencodeTest {
 	void testDecodeWhenTypeUnknownAndByteArrShouldThrow() {
 		byte[] input = "i123e".getBytes();
 
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode(input, BencodeType.bencodeUnknown));
 	}
 
 	@Test
 	void testDecodeWhenBencodeNullAndByteArrShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.decode((byte[]) null, BencodeType.bencodeNumber));
 	}
 
@@ -109,7 +110,6 @@ class BencodeTest {
 	void testDecodeWhenTypeNumberAndPositive() {
 		String input = "i123e";
 
-		Bencode bencode = new Bencode();
 		Long num = bencode.decode(input, BencodeType.bencodeNumber);
 
 		assertEquals(123L, num);
@@ -119,7 +119,6 @@ class BencodeTest {
 	void testDecodeWhenTypeNumberAndZero() {
 		String input = "i0e";
 
-		Bencode bencode = new Bencode();
 		Long num = bencode.decode(input, BencodeType.bencodeNumber);
 
 		assertEquals(0L, num);
@@ -129,7 +128,6 @@ class BencodeTest {
 	void testDecodeWhenTypeNumberAndNegative() {
 		String input = "i-250e";
 
-		Bencode bencode = new Bencode();
 		Long num = bencode.decode(input, BencodeType.bencodeNumber);
 
 		assertEquals(-250L, num);
@@ -139,7 +137,6 @@ class BencodeTest {
 	void testDecodeWhenTypeString() {
 		String input = "4:spam";
 
-		Bencode bencode = new Bencode();
 		String str = bencode.decode(input, BencodeType.bencodeString);
 
 		assertEquals("spam", str);
@@ -149,7 +146,6 @@ class BencodeTest {
 	void testDecodeWhenTypeList() {
 		String input = "l4:spam4:eggse";
 
-		Bencode bencode = new Bencode();
 		List<Object> list = bencode.decode(input, BencodeType.bencodeList);
 
 		assertIterableEquals(List.of("spam", "eggs"), list);
@@ -159,7 +155,6 @@ class BencodeTest {
 	void testDecodeWhenTypeDictionary() {
 		String input = "d3:cow3:moo4:spam4:eggse";
 
-		Bencode bencode = new Bencode();
 		Map<String, Object> list = bencode.decode(input, BencodeType.bencodeDictionary);
 
 		assertEquals(Map.of("cow", "moo", "spam", "eggs"), list);
@@ -167,31 +162,26 @@ class BencodeTest {
 
 	@Test
 	void testEncodeLongWhenNullShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.encode((Long) null));
 	}
 
 	@Test
 	void testEncodeStringWhenNullShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.encode((String) null));
 	}
 
 	@Test
 	void testEncodeListWhenNullShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.encode((List<?>) null));
 	}
 
 	@Test
 	void testEncodeMapWhenNullShouldThrow() {
-		Bencode bencode = new Bencode();
 		assertThrows(BencodeException.class, () -> bencode.encode((Map<?, ?>) null));
 	}
 
 	@Test
 	void testEncodeLong() {
-		Bencode bencode = new Bencode();
 		byte[] encoded = bencode.encode(123L);
 
 		assertEquals("i123e", new String(encoded));
@@ -199,7 +189,6 @@ class BencodeTest {
 
 	@Test
 	void testEncodeString() {
-		Bencode bencode = new Bencode();
 		byte[] encoded = bencode.encode("spam");
 
 		assertEquals("4:spam", new String(encoded));
@@ -207,7 +196,6 @@ class BencodeTest {
 
 	@Test
 	void testEncodeList() {
-		Bencode bencode = new Bencode();
 		byte[] encoded = bencode.encode(List.of("spam", "eggs"));
 
 		assertEquals("l4:spam4:eggse", new String(encoded));
@@ -215,10 +203,24 @@ class BencodeTest {
 
 	@Test
 	void testEncodeMap() {
-		Bencode bencode = new Bencode();
 		byte[] encoded = bencode.encode(Map.of("cow", "moo", "spam", "eggs"));
 
 		assertEquals("d3:cow3:moo4:spam4:eggse", new String(encoded));
+	}
+
+	@Test
+	void testBencodeDecodingFromFile() {
+		String path = "src/test/resources/bencode_response.txt";
+		try
+		{
+			byte[] content = Files.readAllBytes(Paths.get(path));
+			Map<String, Object> decoded = bencode.decode(content, BencodeType.bencodeDictionary);
+			System.out.println(decoded);
+		}
+		catch (IOException e)
+		{
+			fail("Unexpected exception: " + e.getMessage());
+		}
 	}
 
 }

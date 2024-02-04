@@ -7,7 +7,8 @@ public record AnnounceRequest(
 		Long downloaded,
 		Long uploaded,
 		Long left,
-		Boolean compact
+		Boolean compact,
+		Event event
 ) {
 
 }

@@ -8,13 +8,14 @@ public class AnnounceRequestBuilder {
 	private Long uploaded;
 	private Long left;
 	private Boolean compact;
+	private Event event;
 
 	private AnnounceRequestBuilder(String trackerAnnounceUrl) {
 		this.trackerAnnounceUrl = trackerAnnounceUrl;
 		downloaded = 0L;
 		uploaded = 0L;
-		left = 0L;
 		compact = true;
+		event = Event.STARTED;
 	}
 
 	public static AnnounceRequestBuilder fromUrl(String trackerAnnounceUrl) {
@@ -51,8 +52,20 @@ public class AnnounceRequestBuilder {
 		return this;
 	}
 
+	public AnnounceRequestBuilder event(Event event) {
+		this.event = event;
+		return this;
+	}
+
 	public AnnounceRequest build() {
-		return new AnnounceRequest(trackerAnnounceUrl, infoHash, peerId, downloaded, uploaded, left, compact);
+		return new AnnounceRequest(trackerAnnounceUrl,
+								   infoHash,
+								   peerId,
+								   downloaded,
+								   uploaded,
+								   left,
+								   compact,
+								   event);
 	}
 
 }

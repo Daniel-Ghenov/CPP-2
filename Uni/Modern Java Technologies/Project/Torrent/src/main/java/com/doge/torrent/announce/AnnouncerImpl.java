@@ -88,6 +88,7 @@ public class AnnouncerImpl implements Announcer {
 						 .queryParam("left", request.left())
 						 .queryParam("compact", request.compact())
 						 .queryParam("port", DEFAULT_PORT)
+						 .queryParam("event", request.event().value())
 						 .buildURI();
 	}
 }

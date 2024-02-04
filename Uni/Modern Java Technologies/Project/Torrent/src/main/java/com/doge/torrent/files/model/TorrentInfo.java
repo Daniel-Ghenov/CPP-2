@@ -1,8 +1,6 @@
 package com.doge.torrent.files.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public record TorrentInfo(
 		Long length,
@@ -12,33 +10,12 @@ public record TorrentInfo(
 		List<TorrentPiece> pieces
 ) {
 
+	public TorrentInfo {
+		if (length == null) {
+			length = files.stream().mapToLong(SourceFile::length).sum();
+		}
+	}
+
 	public static final int PIECE_BYTE_LENGTH = 20;
 
-	@SuppressWarnings("unchecked")
-	public static TorrentInfo fromMap(Map<String, Object> map) {
-		Long length = (Long) map.get("length");
-		String name = (String) map.get("name");
-		Long pieceLength = (Long) map.get("piece length");
-		List<TorrentPiece> pieces = getPieces((String) map.get("pieces"), pieceLength);
-		List<Map<String, Object>> filesObjects = (List<Map<String, Object>>) map.get("files");
-		List<SourceFile> files = null;
-
-		if (filesObjects == null) {
-			files = new ArrayList<>();
-		} else {
-			files = filesObjects.stream().map(SourceFile::fromMap).toList();
-		}
-		return new TorrentInfo(length, name, pieceLength, files, pieces);
-	}
-
-	private static List<TorrentPiece> getPieces(String pieces, Long pieceLength) {
-		List<TorrentPiece> chunks = new ArrayList<>();
-		for (int i = 0; i < pieces.length(); i += PIECE_BYTE_LENGTH) {
-			TorrentPiece piece = new TorrentPiece(
-				pieces.substring(i, Math.min(pieces.length(), i + PIECE_BYTE_LENGTH)).getBytes(),
-				i / PIECE_BYTE_LENGTH, pieceLength);
-			chunks.add(piece);
-		}
-		return chunks;
-	}
 }
