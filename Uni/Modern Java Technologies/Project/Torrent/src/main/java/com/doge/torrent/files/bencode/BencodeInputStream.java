@@ -4,6 +4,8 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,8 @@ import static com.doge.torrent.files.bencode.BencodeType.bencodeNumber;
 import static com.doge.torrent.files.bencode.BencodeType.bencodeString;
 
 public class BencodeInputStream extends FilterInputStream {
+
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
 
 	private final PushbackInputStream in ;
 
@@ -72,7 +76,7 @@ public class BencodeInputStream extends FilterInputStream {
 		Long length = Long.parseLong(sb.toString());
 		byte[] bytes = new byte[length.intValue()];
 		in.read(bytes);
-		return new String(bytes);
+		return new String(bytes, DEFAULT_CHARSET);
 	}
 
 	public List<Object> readList() throws IOException {

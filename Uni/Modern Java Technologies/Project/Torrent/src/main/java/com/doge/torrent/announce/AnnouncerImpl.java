@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.doge.torrent.files.bencode.BencodeType.bencodeDictionary;
@@ -21,7 +22,7 @@ public class AnnouncerImpl implements Announcer {
 
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(AnnouncerImpl.class);
 
-	public static final Integer DEFAULT_PORT = 6881;
+	public static final Integer DEFAULT_PORT = 50420;
 
 	private static final int MIN_SUCCESS_STATUS_CODE = 200;
 	private static final int MAX_SUCCESS_STATUS_CODE = 299;
@@ -78,12 +79,15 @@ public class AnnouncerImpl implements Announcer {
 	private URI buildUri(AnnounceRequest request) {
 		LOGGER.info("Building URI for request: " + request);
 		return URIBuilder.fromURL(request.trackerAnnounceUrl())
-						 .queryParam("info_hash", request.infoHash())
-						 .queryParam("peer_id", request.peerId())
+						 .queryParam("info_hash", request.infoHash(),
+									 StandardCharsets.ISO_8859_1)
+						 .queryParam("peer_id", request.peerId(),
+									 StandardCharsets.ISO_8859_1)
 						 .queryParam("downloaded", request.downloaded())
 						 .queryParam("uploaded", request.uploaded())
 						 .queryParam("left", request.left())
 						 .queryParam("compact", request.compact())
+						 .queryParam("port", DEFAULT_PORT)
 						 .buildURI();
 	}
 }

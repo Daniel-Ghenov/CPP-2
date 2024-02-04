@@ -29,8 +29,8 @@ public class TorrentDownloader {
 
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TorrentDownloader.class);
 	private static final String DEFAULT_PEER_ID = "DOGE-TORRENT";
-	private static final int PEER_ID_INT_MIN_NUMBER = 100_000_000;
-	private static final int PEER_ID_INT_MAX_NUMBER = 999_999_999;
+	private static final int PEER_ID_INT_MIN_NUMBER = 1_000_000;
+	private static final int PEER_ID_INT_MAX_NUMBER = 9_999_999;
 	private final TorrentFileParser parser;
 	private final ExecutorService executorService;
 	private final Announcer announcer;
@@ -53,7 +53,7 @@ public class TorrentDownloader {
 
 	public void download(String path) {
 		TorrentFile file = parser.parseFromPath(path);
-		AnnounceRequest request = AnnounceRequestBuilder.fromUrl(file.announce())
+		AnnounceRequest request = AnnounceRequestBuilder.fromUrl(file.getAnnounceUrl())
 			.infoHash(file.infoHash())
 			.peerId(peerId)
 			.build();

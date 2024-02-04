@@ -4,18 +4,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class BencodeOutputStream extends FilterOutputStream {
 
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
+
+
 	public BencodeOutputStream(OutputStream out) {
 		super(out);
 	}
 
 	private byte[] encode(String s) throws IOException {
-		return encode(s.getBytes());
+		return encode(s.getBytes(DEFAULT_CHARSET));
 	}
 
 	public void writeString(String s) throws IOException {

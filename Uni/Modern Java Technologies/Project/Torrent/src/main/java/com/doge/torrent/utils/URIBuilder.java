@@ -2,6 +2,7 @@ package com.doge.torrent.utils;
 
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class URIBuilder {
@@ -23,16 +24,24 @@ public class URIBuilder {
 		return this;
 	}
 
-	public URIBuilder queryParam(String key, Object value) {
+	public URIBuilder queryParam(String key, Object value, Charset charset) {
+		if (value == null) {
+			return this;
+		}
+
 		if (builder.indexOf("?") == -1) {
 			builder.append("?");
 		} else {
 			builder.append("&");
 		}
-		String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
-		String encodedValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+		String encodedKey = URLEncoder.encode(key, charset);
+		String encodedValue = URLEncoder.encode(value.toString(), charset);
 		builder.append(encodedKey).append("=").append(encodedValue);
 		return this;
+	}
+
+	public URIBuilder queryParam(String key, Object value) {
+		return queryParam(key, value, StandardCharsets.UTF_8);
 	}
 
 	public String build() {
