@@ -1,10 +1,10 @@
 package com.doge.torrent.download.files;
 
+import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.slf4j.Logger;
 
 public class FileTorrentSaver implements TorrentSaver {
 

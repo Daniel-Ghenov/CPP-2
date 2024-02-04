@@ -4,9 +4,9 @@ import com.doge.torrent.announce.model.AnnounceRequest;
 import com.doge.torrent.announce.model.AnnounceResponse;
 import com.doge.torrent.files.bencode.Bencode;
 import com.doge.torrent.files.bencode.TorrentDecoder;
+import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
 import com.doge.torrent.utils.URIBuilder;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;

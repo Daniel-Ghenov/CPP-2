@@ -1,20 +1,31 @@
 package com.doge.torrent.logging;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.logging.Level;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TorrentLoggerFactory {
 
 	private static String staticLoggersName = null;
-	private static Level level = Level.ALL;
+	private static Level level = Level.TRACE;
+
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
 
 	public static Logger getLogger(Class<?> clazz) {
-		String name = Optional.ofNullable(staticLoggersName).orElse(clazz.getName());
+		String name = Optional.ofNullable(staticLoggersName).orElse(clazz.getSimpleName());
 
-		Logger logger = LoggerFactory.getLogger(name);
-		return logger;
+		return new ConsoleLogger(level, name);
+	}
+
+	public static void setStaticLoggersName(String staticLoggersName) {
+		TorrentLoggerFactory.staticLoggersName = staticLoggersName;
+	}
+
+	public static void setLevel(Level level) {
+		TorrentLoggerFactory.level = level;
+	}
+
+	public static void setFormatter(DateTimeFormatter formatter) {
+		TorrentLoggerFactory.formatter = formatter;
 	}
 
 }

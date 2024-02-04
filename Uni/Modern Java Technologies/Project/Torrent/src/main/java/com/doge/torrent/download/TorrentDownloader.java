@@ -21,9 +21,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
-import org.slf4j.Logger;
 
 public class TorrentDownloader {
 

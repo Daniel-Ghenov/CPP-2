@@ -3,8 +3,8 @@ package com.doge.torrent.files.hasher;
 import com.doge.torrent.files.bencode.Bencode;
 import com.doge.torrent.files.bencode.TorrentEncoder;
 import com.doge.torrent.files.hasher.exception.HashingException;
+import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
-import org.slf4j.Logger;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +34,6 @@ public class TorrentHasher {
 
 	public static String hash(byte[] bytes, Charset charset) {
 		try {
-			LOGGER.debug("Hashing bytes: " + new String(bytes, charset));
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			byte[] hashedBytes = digest.digest(bytes);
 			String hashedString = new String(hashedBytes, charset);

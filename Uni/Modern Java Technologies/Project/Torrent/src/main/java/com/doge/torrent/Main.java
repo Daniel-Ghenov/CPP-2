@@ -12,9 +12,6 @@ import org.apache.log4j.PatternLayout;
 public class Main {
 
 	public static void main(String[] args) {
-		BasicConfigurator.configure(new ConsoleAppender(
-				new PatternLayout("%d [%-4t] %-5p: %m%n")));
-
 		TorrentFileParser parser = new TorrentFileParserImpl();
 
 		String path = "C:\\Users\\PC-Admin\\Desktop\\Torrent\\test2.torrent";

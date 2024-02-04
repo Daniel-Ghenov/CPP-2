@@ -7,8 +7,8 @@ import com.doge.torrent.connection.message.Handshake;
 import com.doge.torrent.connection.message.Message;
 import com.doge.torrent.connection.piece.PieceProgress;
 import com.doge.torrent.files.model.TorrentPiece;
+import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
-import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
