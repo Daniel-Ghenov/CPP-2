@@ -1,9 +1,6 @@
 package com.doge.torrent.files.model;
 
 import java.util.List;
-import java.util.Map;
-
-import static com.doge.torrent.files.hasher.TorrentHasher.hashEncodedMap;
 
 public record TorrentFile(
 	String announce,

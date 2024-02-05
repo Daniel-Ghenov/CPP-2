@@ -3,7 +3,8 @@ package com.doge.torrent.announce.model;
 import java.net.InetSocketAddress;
 
 public record Peer(
-		InetSocketAddress address
+		InetSocketAddress address,
+		String peerId
 ) {
 
 	public static final int PEER_BYTE_LENGTH = 6;
@@ -12,13 +13,17 @@ public record Peer(
 	private static final int PORT_END = 5;
 	private static final int PORT_START_SHIFT = 8;
 
+	public Peer(String ip, Integer port, String peerId) {
+		this(new InetSocketAddress(ip, port), peerId);
+	}
+
 	public static Peer fromByteArr(byte[] bytes) {
 		if (bytes.length != PEER_BYTE_LENGTH) {
 			throw new IllegalArgumentException("Peer byte array must be 6 bytes long");
 		}
 		String ip = getIp(bytes);
 		Integer port = getPort(bytes);
-		return new Peer(new InetSocketAddress(ip, port));
+		return new Peer(new InetSocketAddress(ip, port), null);
 	}
 
 	private static String getIp(byte[] bytes) {

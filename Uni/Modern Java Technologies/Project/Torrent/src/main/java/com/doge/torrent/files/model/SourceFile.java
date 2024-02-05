@@ -10,9 +10,13 @@ public record SourceFile(
 
 	@SuppressWarnings("unchecked")
 	public static SourceFile fromMap(Map<String, Object> map) {
-		List<String> path = (List<String>) map.get("path");
-		Long length = (Long) map.get("length");
-		return new SourceFile(path, length);
+		try {
+			List<String> path = (List<String>) map.get("path");
+			Long length = (Long) map.get("length");
+			return new SourceFile(path, length);
+		} catch (ClassCastException e) {
+			throw new IllegalArgumentException("Invalid map: " + map);
+		}
 	}
 
 }

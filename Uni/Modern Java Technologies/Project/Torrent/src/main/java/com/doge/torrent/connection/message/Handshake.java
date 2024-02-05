@@ -1,5 +1,8 @@
 package com.doge.torrent.connection.message;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import static com.doge.torrent.utils.ByteUtils.toByte;
 
 public record Handshake(
@@ -14,6 +17,7 @@ public record Handshake(
 	private static final int PEER_ID_LENGTH = 20;
 	private static final byte[] RESERVED_BYTES = new byte[RESERVED_BYTES_LENGTH];
 	private static final byte[] PROTOCOL_IDENTIFIER = "BitTorrent protocol".getBytes();
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
 
 	public byte[] toMessage() {
 		byte[] message = new byte[HANDSHAKE_LENGTH];
@@ -26,11 +30,11 @@ public record Handshake(
 						 PROTOCOL_IDENTIFIER_LENGTH,
 						 RESERVED_BYTES_LENGTH);
 
-		System.arraycopy(infoHash.getBytes(), 0, message,
+		System.arraycopy(infoHash.getBytes(DEFAULT_CHARSET), 0, message,
 						 PROTOCOL_IDENTIFIER_LENGTH +
 						 RESERVED_BYTES_LENGTH + PROTOCOL_ID_LENGTH_SIZE, INFO_HASH_LENGTH);
 
-		System.arraycopy(peerId.getBytes(), 0, message,
+		System.arraycopy(peerId.getBytes(DEFAULT_CHARSET), 0, message,
 						 PROTOCOL_IDENTIFIER_LENGTH +
 						 RESERVED_BYTES_LENGTH + INFO_HASH_LENGTH +
 						 PROTOCOL_ID_LENGTH_SIZE,
@@ -43,13 +47,15 @@ public record Handshake(
 		String infoHash = new String(message,
 									 PROTOCOL_IDENTIFIER_LENGTH +
 									 PROTOCOL_ID_LENGTH_SIZE +
-									 RESERVED_BYTES_LENGTH, INFO_HASH_LENGTH);
+									 RESERVED_BYTES_LENGTH, INFO_HASH_LENGTH,
+									 DEFAULT_CHARSET);
 
 		String peerId = new String(message,
 								   PROTOCOL_IDENTIFIER_LENGTH +
 								   PROTOCOL_ID_LENGTH_SIZE +
 								   RESERVED_BYTES_LENGTH + INFO_HASH_LENGTH,
-								   INFO_HASH_LENGTH);
+								   INFO_HASH_LENGTH,
+								   DEFAULT_CHARSET);
 
 		return new Handshake(infoHash, peerId);
 	}

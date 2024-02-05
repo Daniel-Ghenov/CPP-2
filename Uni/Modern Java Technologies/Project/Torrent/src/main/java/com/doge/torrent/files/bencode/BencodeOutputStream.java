@@ -14,7 +14,6 @@ public class BencodeOutputStream extends FilterOutputStream {
 
 	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
 
-
 	public BencodeOutputStream(OutputStream out) {
 		super(out);
 	}

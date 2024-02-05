@@ -4,6 +4,7 @@ import com.doge.torrent.announce.Announcer;
 import com.doge.torrent.announce.model.AnnounceRequest;
 import com.doge.torrent.announce.model.AnnounceRequestBuilder;
 import com.doge.torrent.announce.model.AnnounceResponse;
+import com.doge.torrent.announce.model.Event;
 import com.doge.torrent.announce.model.Peer;
 import com.doge.torrent.connection.ClientConnector;
 import com.doge.torrent.connection.ClientWorker;
@@ -56,6 +57,7 @@ public class TorrentDownloader {
 			.infoHash(file.infoHash())
 			.peerId(peerId)
 			.left(file.info().length())
+			.event(Event.STARTED)
 			.build();
 
 		AnnounceResponse response = announcer.announce(request);
@@ -71,6 +73,12 @@ public class TorrentDownloader {
 
 		peers.forEach(peer -> runDownloadForPeer(finishedQueue, pieceQueue, file, peer));
 		runDownloadedWorker(finishedQueue, saver, file, file.info().pieces().size());
+		while (true) {
+			if (finishedQueue.size() == file.info().pieces().size()) {
+				executorService.shutdown();
+				break;
+			}
+		}
 	}
 
 	private void runDownloadedWorker(BlockingQueue<PieceProgress> finishedQueue,
@@ -89,11 +97,13 @@ public class TorrentDownloader {
 									BlockingQueue<TorrentPiece> pieceQueue,
 									TorrentFile file,
 									Peer peer) {
-
+		//TODO: remove this temporary check
+		if (peer.peerId().contains("DOGE")) {
+			return;
+		}
 		ClientConnector connector = new TCPClientConnector(file.infoHash(), peerId);
 		ClientWorker worker = new ClientWorker(pieceQueue, finishedQueue, connector, peer);
 		executorService.submit(worker);
-		LOGGER.info("Started download for peer: " + peer);
 
 	}
 }

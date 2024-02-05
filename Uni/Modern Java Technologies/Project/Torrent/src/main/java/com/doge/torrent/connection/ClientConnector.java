@@ -13,7 +13,9 @@ public interface ClientConnector {
 
 	PieceProgress downloadPiece(TorrentPiece piece);
 
-	void sendMessages(Message message);
+	void sendMessage(Message message);
 
 	boolean hasPiece(TorrentPiece piece);
+
+	Message readMessage();
 }

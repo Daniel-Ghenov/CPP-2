@@ -15,7 +15,18 @@ public class AnnounceRequestBuilder {
 		downloaded = 0L;
 		uploaded = 0L;
 		compact = true;
-		event = Event.STARTED;
+		event = Event.NONE;
+	}
+
+	public static AnnounceRequestBuilder fromAnnouncementRequest(AnnounceRequest request) {
+		return new AnnounceRequestBuilder(request.trackerAnnounceUrl())
+				.infoHash(request.infoHash())
+				.peerId(request.peerId())
+				.downloaded(request.downloaded())
+				.uploaded(request.uploaded())
+				.left(request.left())
+				.compact(request.compact())
+				.event(request.event());
 	}
 
 	public static AnnounceRequestBuilder fromUrl(String trackerAnnounceUrl) {

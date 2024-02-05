@@ -4,7 +4,8 @@ public enum Event {
 
 	STARTED("started"),
 	STOPPED("stopped"),
-	COMPLETED("completed");
+	COMPLETED("completed"),
+	NONE(null);
 
 	private final String value;
 

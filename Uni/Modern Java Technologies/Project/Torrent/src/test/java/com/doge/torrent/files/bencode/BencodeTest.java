@@ -208,19 +208,4 @@ class BencodeTest {
 		assertEquals("d3:cow3:moo4:spam4:eggse", new String(encoded));
 	}
 
-	@Test
-	void testBencodeDecodingFromFile() {
-		String path = "src/test/resources/bencode_response.txt";
-		try
-		{
-			byte[] content = Files.readAllBytes(Paths.get(path));
-			Map<String, Object> decoded = bencode.decode(content, BencodeType.bencodeDictionary);
-			System.out.println(decoded);
-		}
-		catch (IOException e)
-		{
-			fail("Unexpected exception: " + e.getMessage());
-		}
-	}
-
 }

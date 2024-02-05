@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hash;
@@ -21,6 +23,7 @@ import static com.doge.torrent.files.hasher.TorrentHasher.hash;
 public class TCPClientConnector implements ClientConnector {
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TCPClientConnector.class);
 	private static final int MAX_BLOCK_SIZE = 16384;
+	private static final int INT_SIZE = 4;
 	private Peer peer;
 	private final String infoHash;
 	private final String peerId;
@@ -37,16 +40,26 @@ public class TCPClientConnector implements ClientConnector {
 	@Override
 	public void connect(Peer peer) {
 		this.peer = peer;
-		try (Socket socket = new Socket(peer.address().getAddress(), peer.address().getPort())) {
+		try  {
+			Socket socket = new Socket(peer.address().getAddress(), peer.address().getPort());
 			this.socket = socket;
 			this.in = socket.getInputStream();
 			this.out = socket.getOutputStream();
 
 			Handshake handshake = new Handshake(infoHash, peerId);
-			out.write(handshake.toMessage());
+			byte[] message = handshake.toMessage();
+			LOGGER.debug("Sending handshake to peer: " + peer + "Handshake: " +
+						new String(message, StandardCharsets.ISO_8859_1));
+			out.write(message);
 			byte[] response = new byte[Handshake.HANDSHAKE_LENGTH];
-			in.read(response);
+			int bytesRead = in.read(response);
+
+			if (bytesRead != Handshake.HANDSHAKE_LENGTH) {
+				throw new ClientConnectionException("Invalid handshake length: " + bytesRead);
+			}
+			LOGGER.debug("Received bytes: " + new String(response, StandardCharsets.ISO_8859_1));
 			Handshake responseHandshake = Handshake.fromMessage(response);
+			LOGGER.debug("Received handshake from peer: " + peer + "Handshake: " + responseHandshake);
 			responseHandshake.validatePeerHandshake(handshake);
 
 		} catch (IOException e) {
@@ -74,8 +87,8 @@ public class TCPClientConnector implements ClientConnector {
 		PieceProgress progress = new PieceProgress(piece);
 		while (!progress.isComplete()) {
 			Message message = Message.request(piece.index(), progress.requested(), MAX_BLOCK_SIZE);
-			sendMessages(message);
-			Message response = Message.fromBytes(readMessage());
+			sendMessage(message);
+			Message response = readMessage();
 			if (response.isPiece()) {
 				progress.addBlock(response);
 			}
@@ -95,7 +108,8 @@ public class TCPClientConnector implements ClientConnector {
 		return true;
 	}
 
-	private byte[] readMessage() {
+	@Override
+	public Message readMessage() {
 		try {
 			int length = in.read();
 			if (length == -1) {
@@ -103,14 +117,18 @@ public class TCPClientConnector implements ClientConnector {
 			}
 			byte[] bytes = new byte[length];
 			in.read(bytes);
-			return bytes;
+			byte[] messageBytes = new byte[length + INT_SIZE];
+			ByteBuffer buffer = ByteBuffer.wrap(messageBytes);
+			buffer.putInt(length);
+			buffer.put(bytes);
+			return Message.fromBytes(messageBytes);
 		} catch (IOException e) {
 			throw new ClientConnectionException(e);
 		}
 	}
 
 	@Override
-	public void sendMessages(Message message) {
+	public void sendMessage(Message message) {
 		try {
 			out.write(message.toBytes());
 		} catch (IOException e) {

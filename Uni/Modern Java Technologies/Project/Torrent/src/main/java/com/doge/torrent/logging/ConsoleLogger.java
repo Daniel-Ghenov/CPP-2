@@ -99,7 +99,11 @@ public class ConsoleLogger implements Logger {
 
 	private void log(String message, Level level) {
 		LocalDateTime now = LocalDateTime.now();
-		String newMessage = String.format(messageFormat, now.format(timeFormatter), name, level.name(), message);
+		String newMessage = String.format(messageFormat,
+										  now.format(timeFormatter),
+										  name,
+										  level.name(),
+										  message);
 		System.out.println(newMessage);
 	}
 
