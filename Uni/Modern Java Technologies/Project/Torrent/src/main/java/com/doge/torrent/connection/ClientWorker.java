@@ -9,7 +9,10 @@ import com.doge.torrent.files.model.TorrentPiece;
 import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
+
+import static java.lang.Thread.sleep;
 
 public class ClientWorker implements Runnable {
 
@@ -19,6 +22,7 @@ public class ClientWorker implements Runnable {
 	private final Peer peer;
 	private BitField bitField;
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(ClientWorker.class);
+	private static final int SECOND_IN_MILLIS = 1000;
 	public ClientWorker(
 			BlockingQueue<TorrentPiece> pieceQueue,
 			BlockingQueue<PieceProgress> finishedQueue,
@@ -38,35 +42,52 @@ public class ClientWorker implements Runnable {
 			connector.sendMessage(Message.UNCHOKE);
 			LOGGER.info("Sent unchoke to peer: " + peer);
 			connector.sendMessage(Message.INTERESTED);
-			connector.readMessage();
 			LOGGER.info("Sent interested to peer: " + peer);
+			while (!Thread.currentThread().isInterrupted() &&
+				   	bitField == null) {
+				readMessage();
+				sleep(SECOND_IN_MILLIS);
+			}
 		} catch (Exception e) {
-			LOGGER.error("Error while connecting to peer: " + peer, e);
+//			LOGGER.error("Error while connecting to peer: " + peer, e);
+			connector.disconnect();
 			return;
 		}
-		while (!Thread.currentThread().isInterrupted() && !pieceQueue.isEmpty()) {
-			try {
-				TorrentPiece piece = pieceQueue.take();
-				if (connector.hasPiece(piece)) {
-					LOGGER.info("Peer: " + peer + " has piece: " + piece + "starting download");
-					PieceProgress downloaded = connector.downloadPiece(piece);
-					if (downloaded.isComplete()) {
-						finishedQueue.put(downloaded);
-					} else {
-						pieceQueue.put(piece);
-					}
+		//TODO: add !Thread.currentThread().isInterrupted() && !finishedQueue.isEmpty()
+		while ( !pieceQueue.isEmpty()) {
+			tryToDownloadPiece();
+		}
+	}
+
+	private void tryToDownloadPiece() {
+		try {
+			TorrentPiece piece = pieceQueue.take();
+			LOGGER.info("Checking piece: " + piece + " for peer: " + peer);
+			if (bitField.hasPiece(piece.index())) {
+				LOGGER.info("Peer: " + peer + " has piece: " + piece + "starting download");
+				PieceProgress downloaded = connector.downloadPiece(piece);
+				if (downloaded.isComplete()) {
+					finishedQueue.put(downloaded);
+				} else {
+					pieceQueue.put(piece);
 				}
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
 			}
+		} catch (InterruptedException e) {
+			LOGGER.error("Error while downloading piece from peer: " + peer, e);
+			Thread.currentThread().interrupt();
+			connector.disconnect();
 		}
 	}
 
 	private void readMessage() {
 		Message message = connector.readMessage();
 		if (isValidMessage(message)) {
-			LOGGER.debug("Received message from peer: " + peer + "Message: " + message);
+			LOGGER.debug("Received message from peer: " + peer + "id: " + message.id()
+					+ " payload: " + new String(message.payload(), StandardCharsets.ISO_8859_1));
 			if (message.id() == MessageId.BITFIELD) {
+				LOGGER.info("Received bitfield " +
+							new String(message.payload(), StandardCharsets.ISO_8859_1) +
+							" from peer: " + peer);
 				bitField = new BitField(message.payload());
 			}
 		}

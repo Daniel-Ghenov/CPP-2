@@ -57,7 +57,6 @@ public class TCPClientConnector implements ClientConnector {
 			if (bytesRead != Handshake.HANDSHAKE_LENGTH) {
 				throw new ClientConnectionException("Invalid handshake length: " + bytesRead);
 			}
-			LOGGER.debug("Received bytes: " + new String(response, StandardCharsets.ISO_8859_1));
 			Handshake responseHandshake = Handshake.fromMessage(response);
 			LOGGER.debug("Received handshake from peer: " + peer + "Handshake: " + responseHandshake);
 			responseHandshake.validatePeerHandshake(handshake);
@@ -71,6 +70,9 @@ public class TCPClientConnector implements ClientConnector {
 	public void disconnect() {
 		try {
 			socket.close();
+			in.close();
+			out.close();
+			LOGGER.info("Disconnected from peer: " + peer);
 		} catch (IOException e) {
 			LOGGER.error("Failed to close socket");
 		}
@@ -117,6 +119,10 @@ public class TCPClientConnector implements ClientConnector {
 			}
 			byte[] bytes = new byte[length];
 			in.read(bytes);
+			if (length == 0) {
+				return Message.KEEP_ALIVE;
+			}
+			LOGGER.debug("Received " + length + " bytes" + new String(bytes, StandardCharsets.ISO_8859_1));
 			byte[] messageBytes = new byte[length + INT_SIZE];
 			ByteBuffer buffer = ByteBuffer.wrap(messageBytes);
 			buffer.putInt(length);

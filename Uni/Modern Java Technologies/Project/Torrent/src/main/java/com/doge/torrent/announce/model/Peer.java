@@ -1,13 +1,16 @@
 package com.doge.torrent.announce.model;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public record Peer(
 		InetSocketAddress address,
 		String peerId
 ) {
-
-	public static final int PEER_BYTE_LENGTH = 6;
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
+	public static final int PEER_BYTE_LENGTH_NO_ID = 6;
+	public static final int PEER_BYTE_LENGTH_WITH_ID = 10;
 	private static final int IP_LENGTH = 4;
 	private static final int PORT_START = 4;
 	private static final int PORT_END = 5;
@@ -18,12 +21,17 @@ public record Peer(
 	}
 
 	public static Peer fromByteArr(byte[] bytes) {
-		if (bytes.length != PEER_BYTE_LENGTH) {
-			throw new IllegalArgumentException("Peer byte array must be 6 bytes long");
-		}
 		String ip = getIp(bytes);
 		Integer port = getPort(bytes);
+		String peerId = getPeerId(bytes);
 		return new Peer(new InetSocketAddress(ip, port), null);
+	}
+
+	private static String getPeerId(byte[] bytes) {
+		if (bytes.length < PEER_BYTE_LENGTH_WITH_ID) {
+			return null;
+		}
+		return new String(bytes, PEER_BYTE_LENGTH_NO_ID, PEER_BYTE_LENGTH_WITH_ID, DEFAULT_CHARSET);
 	}
 
 	private static String getIp(byte[] bytes) {

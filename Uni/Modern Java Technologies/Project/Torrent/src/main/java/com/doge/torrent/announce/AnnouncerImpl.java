@@ -132,9 +132,20 @@ public class AnnouncerImpl implements Announcer {
 	}
 
 	private static List<Peer> getPeersFromString(String peersString) {
+		try {
+			return getPeersWithByteLength(peersString, Peer.PEER_BYTE_LENGTH_WITH_ID);
+		} catch (IllegalArgumentException e) {
+			return getPeersWithByteLength(peersString, Peer.PEER_BYTE_LENGTH_NO_ID);
+		}
+	}
+
+	private static List<Peer> getPeersWithByteLength(String peersString, int peerByteLengthWithId) {
+		if (peersString.length() % peerByteLengthWithId != 0) {
+			throw new IllegalArgumentException("Invalid peer string length: " + peersString.length());
+		}
 		List<Peer> peers = new ArrayList<>();
-		for (int i = 0; i < peersString.length(); i += Peer.PEER_BYTE_LENGTH) {
-			int end = Math.min(peersString.length(), i + Peer.PEER_BYTE_LENGTH);
+		for (int i = 0; i < peersString.length(); i += peerByteLengthWithId) {
+			int end = Math.min(peersString.length(), i + peerByteLengthWithId);
 			peers.add(Peer.fromByteArr(peersString.substring(i, end).getBytes()));
 		}
 		return peers;

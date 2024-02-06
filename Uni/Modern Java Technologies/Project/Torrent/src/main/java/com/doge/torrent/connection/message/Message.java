@@ -16,6 +16,7 @@ public record Message(
 	public static final Message UNCHOKE = new Message(MessageId.UNCHOKE, new byte[0]);
 	public static final Message INTERESTED = new Message(MessageId.INTERESTED, new byte[0]);
 	public static final Message NOT_INTERESTED = new Message(MessageId.NOT_INTERESTED, new byte[0]);
+	public static final Message KEEP_ALIVE = new Message(MessageId.KEEP_ALIVE, new byte[0]);
 
 	public byte[] toBytes() {
 		int length = payload.length + MESSAGE_ID_SIZE;
