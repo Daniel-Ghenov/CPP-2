@@ -39,7 +39,7 @@ public final class PieceProgress {
 	}
 
 	public boolean isComplete() {
-		return downloaded == pieceLength;
+		return downloaded >= pieceLength;
 	}
 
 	public void addBlock(Message response) {

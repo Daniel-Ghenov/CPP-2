@@ -82,16 +82,22 @@ public class TCPClientConnector implements ClientConnector {
 	@Override
 	public PieceProgress downloadPiece(TorrentPiece piece) {
 		PieceProgress progress = new PieceProgress(piece);
+		Message response = readMessage();
+		while (response.isKeepAlive()) {
+			response = readMessage();
+		}
+		boolean requestedPiece = false;
 		while (!progress.isComplete()) {
-			Message message = Message.request(piece.index(), progress.requested(), MAX_BLOCK_SIZE);
-			Message response = readMessage();
-			while (response.isKeepAlive()) {
-				response = readMessage();
+			Message message = Message.request(piece.index(), progress.requested(),
+				  Math.min(MAX_BLOCK_SIZE, (int) piece.pieceLength() - progress.requested()));
+			if (!requestedPiece) {
+				sendMessage(message);
+				requestedPiece = true;
 			}
-			sendMessage(message);
 			response = readMessage();
 			if (response.isPiece()) {
 				progress.addBlock(response);
+				requestedPiece = false;
 			}
 		}
 		if (!validatePiece(progress)) {
@@ -112,7 +118,9 @@ public class TCPClientConnector implements ClientConnector {
 	@Override
 	public Message readMessage() {
 		try {
-			int length = in.read();
+			byte[] lengthBytes = new byte[INT_BYTE_SIZE];
+			int bytesRead = in.read(lengthBytes);
+			int length = ByteBuffer.wrap(lengthBytes).getInt();
 			if (length == -1) {
 				throw new ClientConnectionException("Connection closed");
 			}

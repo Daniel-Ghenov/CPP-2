@@ -47,7 +47,7 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 		Long length = (Long) map.get("length");
 		String name = (String) map.get("name");
 		Long pieceLength = (Long) map.get("piece length");
-		List<TorrentPiece> pieces = getPieces((String) map.get("pieces"), pieceLength);
+		List<TorrentPiece> pieces = getPieces((String) map.get("pieces"), pieceLength, length);
 		List<Map<String, Object>> filesObjects = (List<Map<String, Object>>) map.get("files");
 		List<SourceFile> files = null;
 
@@ -59,7 +59,7 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 		return new TorrentInfo(length, name, pieceLength, files, pieces);
 	}
 
-	private static List<TorrentPiece> getPieces(String pieces, Long pieceLength) {
+	private static List<TorrentPiece> getPieces(String pieces, Long pieceLength, Long totalLength) {
 		List<TorrentPiece> chunks = new ArrayList<>();
 		for (int i = 0; i < pieces.length(); i += TorrentInfo.PIECE_BYTE_LENGTH) {
 			String hash = pieces.substring(i, Math.min(pieces.length(), i + TorrentInfo.PIECE_BYTE_LENGTH));
@@ -67,6 +67,11 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 									  i / TorrentInfo.PIECE_BYTE_LENGTH,
 									  pieceLength);
 			chunks.add(piece);
+		}
+		if (totalLength % pieceLength != 0) {
+			TorrentPiece lastPiece = chunks.getLast();
+			chunks.remove(chunks.size() - 1);
+			chunks.add(new TorrentPiece(lastPiece.hash(), lastPiece.index(), totalLength % pieceLength));
 		}
 		return chunks;
 	}

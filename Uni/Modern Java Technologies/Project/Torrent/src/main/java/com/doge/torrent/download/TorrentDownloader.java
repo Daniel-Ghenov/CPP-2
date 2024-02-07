@@ -53,18 +53,19 @@ public class TorrentDownloader {
 
 	public void download(String path) {
 		TorrentFile file = parser.parseFromPath(path);
-		AnnounceRequest request = AnnounceRequestBuilder.fromUrl(file.getAnnounceUrl())
-			.infoHash(file.infoHash())
-			.peerId(peerId)
-			.left(file.info().length())
-			.event(Event.STARTED)
-			.build();
-
-		AnnounceResponse response = announcer.announce(request);
-		LOGGER.info("Announce response: " + response);
-
-		peers = response.peers();
-		LOGGER.info("Peers: " + peers);
+//		AnnounceRequest request = AnnounceRequestBuilder.fromUrl(file.getAnnounceUrl())
+//			.infoHash(file.infoHash())
+//			.peerId(peerId)
+//			.left(file.info().length())
+//			.event(Event.STARTED)
+//			.build();
+//
+//		AnnounceResponse response = announcer.announce(request);
+//		LOGGER.info("Announce response: " + response);
+//
+//		peers = response.peers();
+//		LOGGER.info("Peers: " + peers);
+		peers = List.of(new Peer("127.0.0.1", 37051, "qBTEST1234567890"));
 
 		BlockingQueue<PieceProgress> finishedQueue = new LinkedBlockingQueue<>();
 		BlockingQueue<TorrentPiece> pieceQueue = new LinkedBlockingQueue<>(file.info().pieces());
