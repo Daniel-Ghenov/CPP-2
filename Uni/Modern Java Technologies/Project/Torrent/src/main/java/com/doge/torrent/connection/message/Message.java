@@ -54,4 +54,5 @@ public record Message(
 	public boolean isPiece() {
 		return id == MessageId.PIECE;
 	}
+
 }

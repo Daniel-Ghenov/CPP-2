@@ -2,7 +2,6 @@ package com.doge.torrent.connection;
 
 import com.doge.torrent.announce.model.Peer;
 import com.doge.torrent.connection.exception.ClientConnectionException;
-import com.doge.torrent.connection.message.BitField;
 import com.doge.torrent.connection.message.Handshake;
 import com.doge.torrent.connection.message.Message;
 import com.doge.torrent.connection.piece.PieceProgress;
@@ -19,19 +18,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hash;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public class TCPClientConnector implements ClientConnector {
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TCPClientConnector.class);
 	private static final int MAX_BLOCK_SIZE = 16384;
-	private static final int INT_SIZE = 4;
+	private static final int INT_BYTE_SIZE = 4;
 	private Peer peer;
 	private final String infoHash;
 	private final String peerId;
 	private Socket socket;
 	private InputStream in;
 	private OutputStream out;
-	private BitField bitField;
-
 	public TCPClientConnector(String infoHash, String peerId) {
 		this.infoHash = infoHash;
 		this.peerId = peerId;
@@ -68,6 +66,9 @@ public class TCPClientConnector implements ClientConnector {
 
 	@Override
 	public void disconnect() {
+		if (socket == null) {
+			return;
+		}
 		try {
 			socket.close();
 			in.close();
@@ -80,17 +81,15 @@ public class TCPClientConnector implements ClientConnector {
 
 	@Override
 	public PieceProgress downloadPiece(TorrentPiece piece) {
-		if (bitField == null) {
-			throw new ClientConnectionException("Bitfield not set");
-		}
-		if (!bitField.hasPiece(piece.index())) {
-			return null;
-		}
 		PieceProgress progress = new PieceProgress(piece);
 		while (!progress.isComplete()) {
 			Message message = Message.request(piece.index(), progress.requested(), MAX_BLOCK_SIZE);
-			sendMessage(message);
 			Message response = readMessage();
+			while (response.isKeepAlive()) {
+				response = readMessage();
+			}
+			sendMessage(message);
+			response = readMessage();
 			if (response.isPiece()) {
 				progress.addBlock(response);
 			}
@@ -102,7 +101,7 @@ public class TCPClientConnector implements ClientConnector {
 	}
 
 	private boolean validatePiece(PieceProgress progress) {
-		byte[] hash = hash(progress.data()).getBytes();
+		byte[] hash = hash(progress.data()).getBytes(DEFAULT_CHARSET);
 		if (!Arrays.equals(progress.hash(), hash)) {
 			LOGGER.error("Piece hash does not match");
 			return false;
@@ -122,8 +121,9 @@ public class TCPClientConnector implements ClientConnector {
 			if (length == 0) {
 				return Message.KEEP_ALIVE;
 			}
-			LOGGER.debug("Received " + length + " bytes" + new String(bytes, StandardCharsets.ISO_8859_1));
-			byte[] messageBytes = new byte[length + INT_SIZE];
+			LOGGER.debug("Received " + length + " bytes" +
+				 new String(bytes, StandardCharsets.ISO_8859_1) + " from peer: " + peer);
+			byte[] messageBytes = new byte[length + INT_BYTE_SIZE];
 			ByteBuffer buffer = ByteBuffer.wrap(messageBytes);
 			buffer.putInt(length);
 			buffer.put(bytes);
@@ -140,10 +140,5 @@ public class TCPClientConnector implements ClientConnector {
 		} catch (IOException e) {
 			throw new ClientConnectionException(e);
 		}
-	}
-
-	@Override
-	public boolean hasPiece(TorrentPiece piece) {
-		return bitField.hasPiece(piece.index());
 	}
 }

@@ -12,8 +12,6 @@ import com.doge.torrent.logging.TorrentLoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 
-import static java.lang.Thread.sleep;
-
 public class ClientWorker implements Runnable {
 
 	private final BlockingQueue<TorrentPiece> pieceQueue;
@@ -39,22 +37,18 @@ public class ClientWorker implements Runnable {
 		try {
 			LOGGER.info("Started download for peer: " + peer);
 			connector.connect(peer);
-			connector.sendMessage(Message.UNCHOKE);
-			LOGGER.info("Sent unchoke to peer: " + peer);
 			connector.sendMessage(Message.INTERESTED);
 			LOGGER.info("Sent interested to peer: " + peer);
 			while (!Thread.currentThread().isInterrupted() &&
 				   	bitField == null) {
 				readMessage();
-				sleep(SECOND_IN_MILLIS);
 			}
 		} catch (Exception e) {
-//			LOGGER.error("Error while connecting to peer: " + peer, e);
+			LOGGER.error("Error while connecting to peer: " + peer, e);
 			connector.disconnect();
 			return;
 		}
-		//TODO: add !Thread.currentThread().isInterrupted() && !finishedQueue.isEmpty()
-		while ( !pieceQueue.isEmpty()) {
+		while (!Thread.currentThread().isInterrupted() && !pieceQueue.isEmpty()) {
 			tryToDownloadPiece();
 		}
 	}
@@ -71,10 +65,16 @@ public class ClientWorker implements Runnable {
 				} else {
 					pieceQueue.put(piece);
 				}
+			} else {
+				LOGGER.info("Peer: " + peer + " does not have piece: " + piece);
+				pieceQueue.put(piece);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error("Error while downloading piece from peer: " + peer, e);
 			Thread.currentThread().interrupt();
+			connector.disconnect();
+		} catch (Exception e) {
+			LOGGER.error("Error while downloading piece from peer: " + peer, e);
 			connector.disconnect();
 		}
 	}
@@ -89,6 +89,11 @@ public class ClientWorker implements Runnable {
 							new String(message.payload(), StandardCharsets.ISO_8859_1) +
 							" from peer: " + peer);
 				bitField = new BitField(message.payload());
+				if (bitField.isEmpty()) {
+					LOGGER.info("Peer: " + peer + " does not have any pieces");
+					connector.disconnect();
+					Thread.currentThread().interrupt();
+				}
 			}
 		}
 	}

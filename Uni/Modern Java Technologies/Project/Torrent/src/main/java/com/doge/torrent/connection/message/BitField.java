@@ -7,9 +7,14 @@ public record BitField(
 	public static final int BYTE_LENGTH = 8;
 
 	public boolean hasPiece(int piece) {
+		if (piece >= bitField.length * BYTE_LENGTH
+				|| piece < 0) {
+			return false;
+		}
+
 		int bytePos = piece / BYTE_LENGTH;
 		int bitPos = piece % BYTE_LENGTH;
-		return (bitField[bytePos] & (1 << bitPos)) > 0;
+		return (bitField[bytePos] & (1 << BYTE_LENGTH - bitPos - 1)) > 0;
 	}
 
 	public void setPiece(int piece) {
@@ -26,4 +31,12 @@ public record BitField(
 		return new BitField(message.payload());
 	}
 
+	public boolean isEmpty() {
+		for (byte b : bitField) {
+			if (b != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

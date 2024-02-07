@@ -8,4 +8,8 @@ public class ByteUtils {
 		return (byte) (i & BYTE_MASK);
 	}
 
+	public static int toUnsignedByte(byte b) {
+		return b & BYTE_MASK;
+	}
+
 }

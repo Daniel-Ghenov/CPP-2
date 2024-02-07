@@ -15,7 +15,5 @@ public interface ClientConnector {
 
 	void sendMessage(Message message);
 
-	boolean hasPiece(TorrentPiece piece);
-
 	Message readMessage();
 }

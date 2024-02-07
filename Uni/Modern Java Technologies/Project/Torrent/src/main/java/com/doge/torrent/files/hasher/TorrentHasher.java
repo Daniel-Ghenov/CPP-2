@@ -7,15 +7,16 @@ import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
+
 public class TorrentHasher {
 
 	private static final String HASH_ALGORITHM = "SHA-1";
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
+
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TorrentHasher.class);
 
 	private static final TorrentEncoder ENCODER = new Bencode();

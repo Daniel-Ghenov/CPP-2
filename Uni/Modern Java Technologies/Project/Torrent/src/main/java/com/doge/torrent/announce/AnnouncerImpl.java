@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.doge.torrent.files.bencode.BencodeType.bencodeDictionary;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public class AnnouncerImpl implements Announcer {
 
@@ -126,6 +127,10 @@ public class AnnouncerImpl implements Announcer {
 
 	private static Peer getPeerFromMap(Map<String, Object> map) {
 		String ip = (String) map.get("ip");
+		//TODO: remove this temporary check
+		if (ip.equals("92.247.249.116")) {
+			ip = "127.0.0.1";
+		}
 		Integer port = ((Long) map.get("port")).intValue();
 		String peerId = (String) map.get("peer id");
 		return new Peer(ip, port, peerId);
@@ -139,14 +144,14 @@ public class AnnouncerImpl implements Announcer {
 		}
 	}
 
-	private static List<Peer> getPeersWithByteLength(String peersString, int peerByteLengthWithId) {
-		if (peersString.length() % peerByteLengthWithId != 0) {
+	private static List<Peer> getPeersWithByteLength(String peersString, int byteLength) {
+		if (peersString.length() % byteLength != 0) {
 			throw new IllegalArgumentException("Invalid peer string length: " + peersString.length());
 		}
 		List<Peer> peers = new ArrayList<>();
-		for (int i = 0; i < peersString.length(); i += peerByteLengthWithId) {
-			int end = Math.min(peersString.length(), i + peerByteLengthWithId);
-			peers.add(Peer.fromByteArr(peersString.substring(i, end).getBytes()));
+		for (int i = 0; i < peersString.length(); i += byteLength) {
+			int end = Math.min(peersString.length(), i + byteLength);
+			peers.add(Peer.fromByteArr(peersString.substring(i, end).getBytes(DEFAULT_CHARSET)));
 		}
 		return peers;
 	}

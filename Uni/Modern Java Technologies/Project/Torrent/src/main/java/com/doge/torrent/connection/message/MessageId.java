@@ -11,7 +11,8 @@ public enum MessageId {
 	BITFIELD(5),
 	REQUEST(6),
 	PIECE(7),
-	CHANNEL(8),
+	CANCEL(8),
+	LISTEN_PORT(9),
 	KEEP_ALIVE(-1);
 
 	private final int id;

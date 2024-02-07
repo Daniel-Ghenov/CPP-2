@@ -1,14 +1,15 @@
 package com.doge.torrent.announce.model;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import static com.doge.torrent.utils.ByteUtils.toUnsignedByte;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public record Peer(
 		InetSocketAddress address,
 		String peerId
 ) {
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
+
 	public static final int PEER_BYTE_LENGTH_NO_ID = 6;
 	public static final int PEER_BYTE_LENGTH_WITH_ID = 10;
 	private static final int IP_LENGTH = 4;
@@ -31,21 +32,28 @@ public record Peer(
 		if (bytes.length < PEER_BYTE_LENGTH_WITH_ID) {
 			return null;
 		}
-		return new String(bytes, PEER_BYTE_LENGTH_NO_ID, PEER_BYTE_LENGTH_WITH_ID, DEFAULT_CHARSET);
+		return new String(bytes, PEER_BYTE_LENGTH_NO_ID - 1,
+						  PEER_BYTE_LENGTH_WITH_ID - PEER_BYTE_LENGTH_NO_ID - 1,
+						  DEFAULT_CHARSET);
 	}
 
 	private static String getIp(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < IP_LENGTH; i++) {
-			sb.append(bytes[i]);
+			sb.append(toUnsignedByte(bytes[i]));
 			if (i != IP_LENGTH - 1) {
 				sb.append(".");
 			}
 		}
-		return sb.toString();
+		//TODO: remove this check
+		String ip =  sb.toString();
+		if (ip.equals("92.247.249.116")) {
+			return "127.0.0.1";
+		}
+		return ip;
 	}
 
 	private static Integer getPort(byte[] bytes) {
-		return ((int) (bytes[PORT_START]) << PORT_START_SHIFT) | (bytes[PORT_END]);
+		return (toUnsignedByte(bytes[PORT_START]) << PORT_START_SHIFT) | toUnsignedByte(bytes[PORT_END]);
 	}
 }

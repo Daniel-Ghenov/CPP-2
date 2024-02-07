@@ -1,9 +1,7 @@
 package com.doge.torrent.connection.message;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 import static com.doge.torrent.utils.ByteUtils.toByte;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public record Handshake(
 		String infoHash,
@@ -17,7 +15,6 @@ public record Handshake(
 	private static final int PEER_ID_LENGTH = 20;
 	private static final byte[] RESERVED_BYTES = new byte[RESERVED_BYTES_LENGTH];
 	private static final byte[] PROTOCOL_IDENTIFIER = "BitTorrent protocol".getBytes();
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
 
 	public byte[] toMessage() {
 		byte[] message = new byte[HANDSHAKE_LENGTH];
