@@ -9,6 +9,7 @@ import com.doge.torrent.files.model.TorrentInfo;
 import com.doge.torrent.files.model.TorrentPiece;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hashEncodedMap;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public class TorrentFileParserImpl implements TorrentFileParser {
 
@@ -63,9 +65,13 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 		List<TorrentPiece> chunks = new ArrayList<>();
 		for (int i = 0; i < pieces.length(); i += TorrentInfo.PIECE_BYTE_LENGTH) {
 			String hash = pieces.substring(i, Math.min(pieces.length(), i + TorrentInfo.PIECE_BYTE_LENGTH));
-			TorrentPiece piece = new TorrentPiece(hash.getBytes(),
+			TorrentPiece piece = new TorrentPiece(hash.getBytes(DEFAULT_CHARSET),
 									  i / TorrentInfo.PIECE_BYTE_LENGTH,
 									  pieceLength);
+			StringBuilder hexString = new StringBuilder();
+			for (byte b : piece.hash()) {
+				hexString.append(String.format("%02x", b));
+			}
 			chunks.add(piece);
 		}
 		if (totalLength % pieceLength != 0) {

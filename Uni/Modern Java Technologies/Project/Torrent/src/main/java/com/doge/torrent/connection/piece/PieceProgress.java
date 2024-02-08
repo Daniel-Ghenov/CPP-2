@@ -54,7 +54,7 @@ public final class PieceProgress {
 		downloaded += length;
 		requested += length;
 
-		data = ByteBuffer.wrap(data).put(payload, PIECE_BEGIN_IDX, length).array();
+		data = ByteBuffer.wrap(data).position(begin).put(payload, PIECE_BEGIN_IDX, length).array();
 	}
 
 	public int pieceIndex() {

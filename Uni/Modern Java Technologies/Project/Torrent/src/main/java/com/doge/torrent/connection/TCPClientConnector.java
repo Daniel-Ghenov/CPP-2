@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hash;
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public class TCPClientConnector implements ClientConnector {
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TCPClientConnector.class);
@@ -104,7 +105,7 @@ public class TCPClientConnector implements ClientConnector {
 	}
 
 	private boolean validatePiece(PieceProgress progress) {
-		byte[] hash = hash(progress.data()).getBytes(StandardCharsets.UTF_8);
+		byte[] hash = hash(progress.data()).getBytes(DEFAULT_CHARSET);
 		if (!Arrays.equals(progress.hash(), hash)) {
 			LOGGER.error("Piece hash does not match");
 			return false;
