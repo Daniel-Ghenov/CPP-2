@@ -22,6 +22,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
 
@@ -31,6 +33,7 @@ public class TorrentDownloader {
 	private static final String DEFAULT_PEER_ID = "DOGE-TORRENT";
 	private static final int PEER_ID_INT_MIN_NUMBER = 1_000_000;
 	private static final int PEER_ID_INT_MAX_NUMBER = 9_999_999;
+	private static final int WAIT_TIME = 100;
 	private final TorrentFileParser parser;
 	private final ExecutorService executorService;
 	private final Announcer announcer;
@@ -73,22 +76,26 @@ public class TorrentDownloader {
 		TorrentSaver saver = new FileTorrentSaver(path + file.info().name());
 
 		peers.forEach(peer -> runDownloadForPeer(finishedQueue, pieceQueue, file, peer));
-		runDownloadedWorker(finishedQueue, saver, file, file.info().pieces().size());
-		while (true) {
-			if (finishedQueue.size() == file.info().pieces().size()) {
-				executorService.shutdown();
-				break;
+		AtomicBoolean hasFinished = new AtomicBoolean(false);
+		runDownloadedWorker(finishedQueue, hasFinished, saver, file, file.info().pieces().size());
+		while (!hasFinished.get()) {
+			try {
+				Thread.sleep(WAIT_TIME);
+			} catch (InterruptedException e) {
+				LOGGER.error("Error while waiting for download to finish", e);
 			}
 		}
 	}
 
 	private void runDownloadedWorker(BlockingQueue<PieceProgress> finishedQueue,
+									 AtomicBoolean hasFinished,
 									 TorrentSaver saver,
 									 TorrentFile file,
 									 int pieceCount) {
 
 		DownloadedWorker worker = new DownloadedWorker(finishedQueue,
-									saver, file.info().pieceLength(), pieceCount);
+									hasFinished,
+									saver, file.info().length(), pieceCount);
 		executorService.submit(worker);
 		LOGGER.info("Started downloaded worker");
 

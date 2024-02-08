@@ -16,4 +16,6 @@ public interface ClientConnector {
 	void sendMessage(Message message);
 
 	Message readMessage();
+
+	boolean isDisconnected();
 }

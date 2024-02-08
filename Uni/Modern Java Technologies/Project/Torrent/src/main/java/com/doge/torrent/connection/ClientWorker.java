@@ -37,18 +37,24 @@ public class ClientWorker implements Runnable {
 		try {
 			LOGGER.info("Started download for peer: " + peer);
 			connector.connect(peer);
-			connector.sendMessage(Message.INTERESTED);
 			LOGGER.info("Sent interested to peer: " + peer);
-			while (!Thread.currentThread().isInterrupted() &&
-				   	bitField == null) {
-				readMessage();
+			readBitfield();
+			if (bitField == null || bitField.isEmpty()) {
+				return;
 			}
 		} catch (Exception e) {
 			LOGGER.error("Error while connecting to peer: " + peer, e);
 			connector.disconnect();
 			return;
 		}
-		while (!Thread.currentThread().isInterrupted() && !pieceQueue.isEmpty()) {
+		connector.sendMessage(Message.INTERESTED);
+		Message message = connector.readMessage();
+		while (message.id() != MessageId.UNCHOKE) {
+			message = connector.readMessage();
+		}
+		while (!Thread.currentThread().isInterrupted() &&
+			   !pieceQueue.isEmpty() &&
+			   !connector.isDisconnected()) {
 			tryToDownloadPiece();
 		}
 	}
@@ -79,7 +85,7 @@ public class ClientWorker implements Runnable {
 		}
 	}
 
-	private void readMessage() {
+	private void readBitfield() {
 		Message message = connector.readMessage();
 		if (isValidMessage(message)) {
 			LOGGER.debug("Received message from peer: " + peer + "id: " + message.id()

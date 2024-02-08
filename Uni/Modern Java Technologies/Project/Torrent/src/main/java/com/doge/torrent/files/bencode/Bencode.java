@@ -6,12 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class Bencode implements TorrentDecoder, TorrentEncoder {
+import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
-	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+public class Bencode implements TorrentDecoder, TorrentEncoder {
 
 	static final char NUMBER = 'i';
 

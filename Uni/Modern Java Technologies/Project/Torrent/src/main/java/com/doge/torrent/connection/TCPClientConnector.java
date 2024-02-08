@@ -18,12 +18,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.doge.torrent.files.hasher.TorrentHasher.hash;
-import static com.doge.torrent.utils.Constants.DEFAULT_CHARSET;
 
 public class TCPClientConnector implements ClientConnector {
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TCPClientConnector.class);
 	private static final int MAX_BLOCK_SIZE = 16384;
 	private static final int INT_BYTE_SIZE = 4;
+	private boolean disconnected = true;
 	private Peer peer;
 	private final String infoHash;
 	private final String peerId;
@@ -58,7 +58,7 @@ public class TCPClientConnector implements ClientConnector {
 			Handshake responseHandshake = Handshake.fromMessage(response);
 			LOGGER.debug("Received handshake from peer: " + peer + "Handshake: " + responseHandshake);
 			responseHandshake.validatePeerHandshake(handshake);
-
+			disconnected = false;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -73,6 +73,7 @@ public class TCPClientConnector implements ClientConnector {
 			socket.close();
 			in.close();
 			out.close();
+			disconnected = true;
 			LOGGER.info("Disconnected from peer: " + peer);
 		} catch (IOException e) {
 			LOGGER.error("Failed to close socket");
@@ -82,10 +83,6 @@ public class TCPClientConnector implements ClientConnector {
 	@Override
 	public PieceProgress downloadPiece(TorrentPiece piece) {
 		PieceProgress progress = new PieceProgress(piece);
-		Message response = readMessage();
-		while (response.isKeepAlive()) {
-			response = readMessage();
-		}
 		boolean requestedPiece = false;
 		while (!progress.isComplete()) {
 			Message message = Message.request(piece.index(), progress.requested(),
@@ -94,7 +91,7 @@ public class TCPClientConnector implements ClientConnector {
 				sendMessage(message);
 				requestedPiece = true;
 			}
-			response = readMessage();
+			Message response = readMessage();
 			if (response.isPiece()) {
 				progress.addBlock(response);
 				requestedPiece = false;
@@ -107,7 +104,7 @@ public class TCPClientConnector implements ClientConnector {
 	}
 
 	private boolean validatePiece(PieceProgress progress) {
-		byte[] hash = hash(progress.data()).getBytes(DEFAULT_CHARSET);
+		byte[] hash = hash(progress.data()).getBytes(StandardCharsets.UTF_8);
 		if (!Arrays.equals(progress.hash(), hash)) {
 			LOGGER.error("Piece hash does not match");
 			return false;
@@ -129,8 +126,6 @@ public class TCPClientConnector implements ClientConnector {
 			if (length == 0) {
 				return Message.KEEP_ALIVE;
 			}
-			LOGGER.debug("Received " + length + " bytes" +
-				 new String(bytes, StandardCharsets.ISO_8859_1) + " from peer: " + peer);
 			byte[] messageBytes = new byte[length + INT_BYTE_SIZE];
 			ByteBuffer buffer = ByteBuffer.wrap(messageBytes);
 			buffer.putInt(length);
@@ -139,6 +134,10 @@ public class TCPClientConnector implements ClientConnector {
 		} catch (IOException e) {
 			throw new ClientConnectionException(e);
 		}
+	}
+
+	@Override public boolean isDisconnected() {
+		return disconnected;
 	}
 
 	@Override

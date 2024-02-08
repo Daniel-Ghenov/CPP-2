@@ -37,9 +37,7 @@ public class TorrentHasher {
 		try {
 			MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
 			byte[] hashedBytes = digest.digest(bytes);
-			String hashedString = new String(hashedBytes, charset);
-			LOGGER.debug("Hashed bytes: " + hashedString);
-			return hashedString;
+			return new String(hashedBytes, charset);
 		} catch (NoSuchAlgorithmException e) {
 			throw new HashingException(e);
 		}
