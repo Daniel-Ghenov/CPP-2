@@ -9,7 +9,6 @@ import com.doge.torrent.files.model.TorrentInfo;
 import com.doge.torrent.files.model.TorrentPiece;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;

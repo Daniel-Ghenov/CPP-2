@@ -73,7 +73,7 @@ public class TorrentDownloader {
 		BlockingQueue<PieceProgress> finishedQueue = new LinkedBlockingQueue<>();
 		BlockingQueue<TorrentPiece> pieceQueue = new LinkedBlockingQueue<>(file.info().pieces());
 
-		TorrentSaver saver = new FileTorrentSaver(path + file.info().name());
+		TorrentSaver saver = new FileTorrentSaver(getPath(path, file));
 
 		peers.forEach(peer -> runDownloadForPeer(finishedQueue, pieceQueue, file, peer));
 		AtomicBoolean hasFinished = new AtomicBoolean(false);
@@ -85,6 +85,14 @@ public class TorrentDownloader {
 				LOGGER.error("Error while waiting for download to finish", e);
 			}
 		}
+	}
+
+	private static String getPath(String path, TorrentFile file) {
+		String separator = System.getProperty("file.separator");
+		int lastSeperator = path.lastIndexOf(separator);
+		String newPath = path.substring(0, lastSeperator + 1) + file.info().name();
+		LOGGER.info("File path: " + newPath);
+		return newPath;
 	}
 
 	private void runDownloadedWorker(BlockingQueue<PieceProgress> finishedQueue,
