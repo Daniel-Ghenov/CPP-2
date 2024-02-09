@@ -122,6 +122,9 @@ public class TCPClientConnector implements ClientConnector {
 			if (length == -1) {
 				throw new ClientConnectionException("Connection closed");
 			}
+			if (length < -1) {
+				return Message.KEEP_ALIVE;
+			}
 			byte[] bytes = new byte[length];
 			in.read(bytes);
 			if (length == 0) {
