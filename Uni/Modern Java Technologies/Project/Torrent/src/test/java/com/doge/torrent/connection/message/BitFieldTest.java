@@ -20,14 +20,14 @@ class BitFieldTest
 	@Test
 	void testHasPieceWhenPieceIsSetShouldReturnTrue()
 	{
-		BitField bitField = new BitField(new byte[]{1});
+		BitField bitField = new BitField(new byte[]{(byte) 0b10000000});
 		assertTrue(bitField.hasPiece(0), "hasPiece(0) should return true");
 	}
 
 	@Test
 	void testHasPieceWhenPiece7IsSetShouldReturnTrue()
 	{
-		BitField bitField = new BitField(new byte[]{(byte) 0b10000000});
+		BitField bitField = new BitField(new byte[]{(byte) 0b00000001});
 		assertTrue(bitField.hasPiece(7), "hasPiece(7) should return true");
 	}
 

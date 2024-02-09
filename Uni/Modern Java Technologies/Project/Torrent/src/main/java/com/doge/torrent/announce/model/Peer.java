@@ -11,7 +11,7 @@ public record Peer(
 ) {
 
 	public static final int PEER_BYTE_LENGTH_NO_ID = 6;
-	public static final int PEER_BYTE_LENGTH_WITH_ID = 10;
+	public static final int PEER_BYTE_LENGTH_WITH_ID = 26;
 	private static final int IP_LENGTH = 4;
 	private static final int PORT_START = 4;
 	private static final int PORT_END = 5;
@@ -25,15 +25,15 @@ public record Peer(
 		String ip = getIp(bytes);
 		Integer port = getPort(bytes);
 		String peerId = getPeerId(bytes);
-		return new Peer(new InetSocketAddress(ip, port), null);
+		return new Peer(new InetSocketAddress(ip, port), peerId);
 	}
 
 	private static String getPeerId(byte[] bytes) {
 		if (bytes.length < PEER_BYTE_LENGTH_WITH_ID) {
 			return null;
 		}
-		return new String(bytes, PEER_BYTE_LENGTH_NO_ID - 1,
-						  PEER_BYTE_LENGTH_WITH_ID - PEER_BYTE_LENGTH_NO_ID - 1,
+		return new String(bytes, PEER_BYTE_LENGTH_NO_ID,
+						  PEER_BYTE_LENGTH_WITH_ID - PEER_BYTE_LENGTH_NO_ID,
 						  DEFAULT_CHARSET);
 	}
 

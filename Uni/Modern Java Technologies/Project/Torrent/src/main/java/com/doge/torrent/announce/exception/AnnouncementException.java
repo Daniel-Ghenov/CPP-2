@@ -1,7 +1,7 @@
 package com.doge.torrent.announce.exception;
 
 public class AnnouncementException extends RuntimeException {
-	AnnouncementError error;
+	private AnnouncementError error;
 
 	public AnnouncementException(String message) {
 		super(message);
