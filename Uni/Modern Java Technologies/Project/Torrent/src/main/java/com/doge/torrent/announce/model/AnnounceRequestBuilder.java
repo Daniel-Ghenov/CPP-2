@@ -7,6 +7,7 @@ public class AnnounceRequestBuilder {
 	private Long downloaded;
 	private Long uploaded;
 	private Long left;
+	private Integer port;
 	private Boolean compact;
 	private Event event;
 
@@ -68,6 +69,11 @@ public class AnnounceRequestBuilder {
 		return this;
 	}
 
+	public AnnounceRequestBuilder port(Integer port) {
+		this.port = port;
+		return this;
+	}
+
 	public AnnounceRequest build() {
 		return new AnnounceRequest(trackerAnnounceUrl,
 								   infoHash,
@@ -75,6 +81,7 @@ public class AnnounceRequestBuilder {
 								   downloaded,
 								   uploaded,
 								   left,
+								   port,
 								   compact,
 								   event);
 	}

@@ -6,6 +6,10 @@ public record BitField(
 
 	public static final int BYTE_LENGTH = 8;
 
+	public BitField(int pieceCount) {
+		this(new byte[(int) Math.ceil(pieceCount / (double) BYTE_LENGTH)]);
+	}
+
 	public boolean hasPiece(int piece) {
 		if (piece >= bitField.length * BYTE_LENGTH
 				|| piece < 0) {
@@ -29,6 +33,10 @@ public record BitField(
 		}
 
 		return new BitField(message.payload());
+	}
+
+	public byte[] toBytes() {
+		return new Message(MessageId.BITFIELD, bitField).toBytes();
 	}
 
 	public boolean isEmpty() {

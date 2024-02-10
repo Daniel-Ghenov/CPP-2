@@ -30,7 +30,6 @@ public class AnnouncerImpl implements Announcer {
 
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(AnnouncerImpl.class);
 
-	public static final Integer DEFAULT_PORT = 50420;
 
 	private static final int MIN_SUCCESS_STATUS_CODE = 200;
 	private static final int MAX_SUCCESS_STATUS_CODE = 299;
@@ -171,7 +170,7 @@ public class AnnouncerImpl implements Announcer {
 						 .queryParam("uploaded", request.uploaded())
 						 .queryParam("left", request.left())
 						 .queryParam("compact", request.compact())
-						 .queryParam("port", DEFAULT_PORT)
+						 .queryParam("port", request.port())
 						 .queryParam("event", request.event().value())
 						 .buildURI();
 	}
