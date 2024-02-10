@@ -8,7 +8,8 @@ public enum AnnouncementError {
 	INVALID_INFO_HASH("Invalid info hash"),
 	INVALID_PEER_ID("Invalid peer id"),
 	MISSING_INFO_HASH("Missing info hash"),
-	UNKNOWN_ERROR("Unknown error");
+	UNKNOWN_ERROR("Unknown error"),
+	MISSING_PORT("Missing port");
 
 	private final String message;
 

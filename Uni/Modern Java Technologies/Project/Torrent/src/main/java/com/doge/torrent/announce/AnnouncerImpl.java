@@ -118,6 +118,10 @@ public class AnnouncerImpl implements Announcer {
 			return null;
 		}
 		if (peers instanceof List) {
+			if ( ((List<?>) peers).isEmpty()) {
+				return List.of();
+			}
+
 			return ((List<Map<String, Object>>) peers).stream()
 					.map(AnnouncerImpl::getPeerFromMap)
 					.toList();

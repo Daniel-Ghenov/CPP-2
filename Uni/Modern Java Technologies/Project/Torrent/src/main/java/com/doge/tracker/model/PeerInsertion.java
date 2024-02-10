@@ -5,11 +5,33 @@ import com.doge.tracker.cleanup.Inserted;
 
 import java.time.LocalDateTime;
 
-public record PeerInsertion(
-		Peer peer,
-		LocalDateTime insertionTime
-) implements Inserted {
+public class  PeerInsertion implements Inserted {
+
+	private Peer peer;
+
+	private LocalDateTime insertionTime;
+
+	public PeerInsertion(Peer peer, LocalDateTime insertionTime) {
+		this.peer = peer;
+		this.insertionTime = insertionTime;
+	}
+
 	@Override public LocalDateTime getInsertionTime() {
 		return insertionTime;
+	}
+
+	public Peer getPeer() {
+		return peer;
+	}
+
+	public void setInsertionTime(LocalDateTime insertionTime) {
+		this.insertionTime = insertionTime;
+	}
+
+	@Override public String toString() {
+		return "PeerInsertion{" +
+			   "peer=" + peer +
+			   ", insertionTime=" + insertionTime +
+			   '}';
 	}
 }

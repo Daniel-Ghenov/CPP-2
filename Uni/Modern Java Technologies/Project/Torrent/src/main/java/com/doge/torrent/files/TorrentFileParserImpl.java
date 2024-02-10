@@ -10,6 +10,7 @@ import com.doge.torrent.files.model.TorrentPiece;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,5 +99,28 @@ public class TorrentFileParserImpl implements TorrentFileParser {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override public List<TorrentFile> parseAllFromPath(String path) {
+		Path dir = Paths.get(path);
+		List<TorrentFile> files = new ArrayList<>();
+
+		try (var stream = Files.walk(dir)) {
+			stream.filter(Files::isRegularFile)
+				 .forEach(file -> tryToAdd(file, files));
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return files;
+	}
+
+	private boolean tryToAdd(Path file, List<TorrentFile> files) {
+		try {
+			files.add(parseFromPath(file.toString()));
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 }

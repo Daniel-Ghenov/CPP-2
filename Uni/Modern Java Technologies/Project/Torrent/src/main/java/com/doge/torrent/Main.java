@@ -11,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		TorrentFileParser parser = new TorrentFileParserImpl();
 
-		String path = "C:\\Users\\PC-Admin\\Desktop\\Torrent\\hbotev.torrent";
+		String path = "C:\\Users\\PC-Admin\\Desktop\\Torrent\\Shrek.torrent";
 
 		Announcer announcer = new AnnouncerImpl();
 		TorrentDownloader downloader = new TorrentDownloader(parser, announcer);

@@ -5,7 +5,8 @@ public enum Level {
 	DEBUG(1),
 	INFO(2),
 	WARN(3),
-	ERROR(4);
+	ERROR(4),
+	OFF(5);
 
 	private final int level;
 
