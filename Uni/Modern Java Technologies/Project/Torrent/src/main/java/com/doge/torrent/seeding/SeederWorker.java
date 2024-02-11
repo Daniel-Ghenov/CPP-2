@@ -12,11 +12,13 @@ import java.nio.ByteBuffer;
 
 public class SeederWorker implements Runnable {
 	private static final int INTEGER_BYTE_SIZE = 4;
+	private final String peerId;
 	private final Socket socket;
 	private final TorrentSeeder seeder;
 	private String infoHash;
 
-	public SeederWorker(Socket socket, TorrentSeeder seeder) {
+	public SeederWorker(String peerId, Socket socket, TorrentSeeder seeder) {
+		this.peerId = peerId;
 		this.socket = socket;
 		this.seeder = seeder;
 	}
@@ -81,16 +83,19 @@ public class SeederWorker implements Runnable {
 		try {
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
-			byte[] handshake = new byte[Handshake.HANDSHAKE_LENGTH];
-			in.read(handshake);
-			Handshake handshakeMessage = Handshake.fromMessage(handshake);
+			byte[] clientHandshake = new byte[Handshake.HANDSHAKE_LENGTH];
+			in.read(clientHandshake);
+			Handshake handshakeMessage = Handshake.fromMessage(clientHandshake);
 			this.infoHash = handshakeMessage.infoHash();
-			if (seeder.hasInfoHash(infoHash)) {
-				out.write(seeder.getBitField(infoHash).toBytes());
-				writeMessage(Message.UNCHOKE);
-			} else {
+			if (!seeder.hasInfoHash(infoHash)) {
 				socket.close();
 			}
+
+			Handshake handshake = new Handshake(infoHash, peerId);
+			byte[] message = handshake.toMessage();
+			out.write(message);
+			out.write(seeder.getBitField(infoHash).toBytes());
+			writeMessage(Message.UNCHOKE);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

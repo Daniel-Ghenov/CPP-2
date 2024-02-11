@@ -24,7 +24,7 @@ public record BitField(
 	public void setPiece(int piece) {
 		int bytePos = piece / BYTE_LENGTH;
 		int bitPos = piece % BYTE_LENGTH;
-		bitField[bytePos] |= (byte) (1 << bitPos);
+		bitField[bytePos] |= (byte) (1 << BYTE_LENGTH - bitPos - 1);
 	}
 
 	public static BitField fromMessage(Message message) {

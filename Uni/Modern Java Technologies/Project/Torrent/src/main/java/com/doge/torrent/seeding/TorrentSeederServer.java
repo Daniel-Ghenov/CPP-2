@@ -13,13 +13,14 @@ public class TorrentSeederServer {
 
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TorrentSeederServer.class);
 	private final TorrentSeeder seeder;
+	private final String peerId;
 	private final int port;
 	private boolean running = true;
 
-	public TorrentSeederServer(TorrentSeeder seeder, int port) {
+	public TorrentSeederServer(TorrentSeeder seeder, String peerId, int port) {
 		this.seeder = seeder;
+		this.peerId = peerId;
 		this.port = port;
-		start();
 	}
 
 	public void start() {
@@ -31,7 +32,7 @@ public class TorrentSeederServer {
 			while (running) {
 				socket = serverSocket.accept();
 				LOGGER.info("New connection from " + socket.getInetAddress());
-				executor.execute(new SeederWorker(socket, seeder));
+				executor.execute(new SeederWorker(peerId, socket, seeder));
 			}
 		} catch (IOException e) {
 			LOGGER.error("Error while starting seeder server", e);

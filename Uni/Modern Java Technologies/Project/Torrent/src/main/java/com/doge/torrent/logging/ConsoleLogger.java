@@ -2,6 +2,8 @@ package com.doge.torrent.logging;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 public class ConsoleLogger implements Logger {
 
@@ -59,8 +61,8 @@ public class ConsoleLogger implements Logger {
 		if (!isErrorEnabled()) {
 			return;
 		}
-		log(message, Level.ERROR);
-		throwable.printStackTrace();
+		List<String> trace = Arrays.stream(throwable.getStackTrace()).map(StackTraceElement::toString).toList();
+		log(message + String.join("\n", trace), Level.ERROR);
 	}
 
 	@Override
@@ -76,8 +78,8 @@ public class ConsoleLogger implements Logger {
 		if (!isWarnEnabled()) {
 			return;
 		}
-		log(message, Level.WARN);
-		throwable.printStackTrace();
+		List<String> trace = Arrays.stream(throwable.getStackTrace()).map(StackTraceElement::toString).toList();
+		log(message + String.join("\n", trace), Level.WARN);
 	}
 
 	@Override
@@ -93,8 +95,8 @@ public class ConsoleLogger implements Logger {
 		if (!isTraceEnabled()) {
 			return;
 		}
-		log(message, Level.TRACE);
-		throwable.printStackTrace();
+		List<String> trace = Arrays.stream(throwable.getStackTrace()).map(StackTraceElement::toString).toList();
+		log(message + String.join("\n\t", trace), Level.TRACE);
 	}
 
 	private void log(String message, Level level) {

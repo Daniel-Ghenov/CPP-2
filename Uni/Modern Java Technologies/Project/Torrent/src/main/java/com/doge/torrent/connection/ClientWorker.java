@@ -67,6 +67,7 @@ public class ClientWorker implements Runnable {
 				LOGGER.info("Peer: " + peer + " has piece: " + piece + "starting download");
 				PieceProgress downloaded = connector.downloadPiece(piece);
 				if (downloaded.isComplete()) {
+					LOGGER.info("Downloaded piece: " + piece + " from peer: " + peer);
 					finishedQueue.put(downloaded);
 				} else {
 					pieceQueue.put(piece);

@@ -28,12 +28,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.doge.torrent.logging.Logger;
 import com.doge.torrent.logging.TorrentLoggerFactory;
+import com.doge.torrent.seeding.TorrentSeeder;
+import com.doge.torrent.seeding.TorrentSeederServer;
 
 public class TorrentDownloader {
 
 	private static final Logger LOGGER = TorrentLoggerFactory.getLogger(TorrentDownloader.class);
 	private static final String DEFAULT_PEER_ID = "DOGE-TORRENT";
-	public static final Integer DEFAULT_PORT = 50420;
+	public static final Integer DEFAULT_PORT = 50421;
 	private static final int PEER_ID_INT_MIN_NUMBER = 1_000_000;
 	private static final int PEER_ID_INT_MAX_NUMBER = 9_999_999;
 	private static final int WAIT_TIME = 100;
@@ -42,8 +44,8 @@ public class TorrentDownloader {
 	private final Announcer announcer;
 	private final String peerId;
 	private Map<String, List<Peer>> peersByInfoHash = new ConcurrentHashMap<>();
-
 	private Map<String, Map<Integer, PieceProgress>> piecesByIndexByInfoHash;
+	private Map<String, Integer> pieceCountByInfoHash = new ConcurrentHashMap<>();
 
 	public TorrentDownloader(TorrentFileParser parser, Announcer announcer) {
 		this.parser = parser;
@@ -51,6 +53,11 @@ public class TorrentDownloader {
 		this.executorService = Executors.newVirtualThreadPerTaskExecutor();
 		this.peerId = generatePeerId();
 		piecesByIndexByInfoHash = new ConcurrentHashMap<>();
+
+		TorrentSeeder seeder = new TorrentSeeder(piecesByIndexByInfoHash, pieceCountByInfoHash);
+		TorrentSeederServer seederServer = new TorrentSeederServer(seeder, this.peerId, DEFAULT_PORT);
+		Thread thread = new Thread(seederServer::start);
+		executorService.submit(thread);
 	}
 
 	private String generatePeerId() {
@@ -70,7 +77,9 @@ public class TorrentDownloader {
 
 		TorrentSaver saver = new FileTorrentSaver(getPath(path, file));
 
-		peersByInfoHash.get(file.infoHash()).forEach(peer -> runDownloadForPeer(finishedQueue, pieceQueue, file, peer));
+		peersByInfoHash.get(file.infoHash())
+				   .forEach(peer -> runDownloadForPeer(finishedQueue, pieceQueue, file, peer));
+		pieceCountByInfoHash.put(file.infoHash(), file.info().pieces().size());
 		AtomicBoolean hasFinished = new AtomicBoolean(false);
 		runDownloadedWorker(finishedQueue, hasFinished, saver, file, file.info().pieces().size());
 		while (!hasFinished.get()) {
@@ -127,10 +136,10 @@ public class TorrentDownloader {
 									BlockingQueue<TorrentPiece> pieceQueue,
 									TorrentFile file,
 									Peer peer) {
-		//TODO: remove this temporary check
-		if (peer.peerId().contains("DOGE")) {
-			return;
-		}
+//		//TODO: remove this temporary check
+//		if (peer.peerId() != null && peer.peerId().contains("DOGE")) {
+//			return;
+//		}
 		ClientConnector connector = new TCPClientConnector(file.infoHash(), peerId);
 		ClientWorker worker = new ClientWorker(pieceQueue, finishedQueue, connector, peer);
 		executorService.submit(worker);
