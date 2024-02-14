@@ -7,7 +7,6 @@ import java.util.List;
 public record RecipeClientResponse(
 		List<Recipe> recipes,
 		String nextPageToken
-)
-{
+) {
 
 }

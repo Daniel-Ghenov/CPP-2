@@ -2,9 +2,9 @@ package bg.sofia.uni.fmi.mjt.cooking.client;
 
 import bg.sofia.uni.fmi.mjt.cooking.client.model.ClientException;
 import bg.sofia.uni.fmi.mjt.cooking.client.model.ClientExceptionParams;
+import bg.sofia.uni.fmi.mjt.cooking.client.model.EdamamClientResponseDTO;
 import bg.sofia.uni.fmi.mjt.cooking.client.model.RecipeSearchParams;
 import bg.sofia.uni.fmi.mjt.cooking.client.model.RecipeClientResponse;
-import bg.sofia.uni.fmi.mjt.cooking.models.Recipe;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,7 +15,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 
 public class EdamamClient implements RecipeClient {
 
@@ -43,21 +42,21 @@ public class EdamamClient implements RecipeClient {
 	@Override
 	public RecipeClientResponse getRecipes(RecipeSearchParams recepieSearchParams) {
 		URI uri = recepieSearchParams.toUri(BASE_URL);
-
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(uri)
-				.GET()
-				.build();
+		HttpRequest request = getHttpRequest(uri);
 
 		return getRecipeClientResponse(request);
 	}
 
+	private static HttpRequest getHttpRequest(URI uri) {
+		return HttpRequest.newBuilder()
+						  .uri(uri)
+						  .GET()
+						  .build();
+	}
+
 	@Override
 	public RecipeClientResponse getRecipes(String nextPageToken) {
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(nextPageToken))
-				.GET()
-				.build();
+		HttpRequest request = getHttpRequest(URI.create(nextPageToken));
 
 		return getRecipeClientResponse(request);
 	}
@@ -78,8 +77,9 @@ public class EdamamClient implements RecipeClient {
 		Gson gson = new Gson();
 		JsonElement bodyJsonElement = JsonParser.parseString(body);
 		JsonObject bodyJson = bodyJsonElement.getAsJsonObject();
-		JsonElement error = bodyJson.get("errors").getAsJsonArray().get(0);
-		return gson.fromJson(error, ClientExceptionParams.class);
+		String error = bodyJson.get("status").toString();
+		String message = bodyJson.get("message").toString();
+		return new ClientExceptionParams(error, message);
 	}
 
 	private static boolean isSuccessful(int statusCode) {
@@ -88,19 +88,8 @@ public class EdamamClient implements RecipeClient {
 
 	private RecipeClientResponse parseResponse(String body) {
 		Gson gson = new Gson();
-		JsonElement bodyJsonElement = JsonParser.parseString(body);
-		JsonObject bodyJson = bodyJsonElement.getAsJsonObject();
-		JsonElement nextPageTokenElement = bodyJson.get("_links").getAsJsonObject().get("next");
-		String nextPageToken = null;
-		if (nextPageTokenElement != null) {
-		 	nextPageToken = nextPageTokenElement.getAsJsonObject().get("href").getAsString();
-		}
-		List<Recipe> recipes = bodyJson.get("hits").getAsJsonArray().asList().stream()
-									   .map(JsonElement::getAsJsonObject)
-									   .map(jsonObject -> jsonObject.get("recipe").getAsJsonObject())
-									   .map(recipeJson -> gson.fromJson(recipeJson, Recipe.class))
-									   .toList();
-		return new RecipeClientResponse(recipes, nextPageToken);
+		EdamamClientResponseDTO responseDTO = gson.fromJson(body, EdamamClientResponseDTO.class);
+		return responseDTO.toRecipeClientResponse();
 	}
 
 }

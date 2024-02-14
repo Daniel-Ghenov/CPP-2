@@ -2,8 +2,7 @@ package bg.sofia.uni.fmi.mjt.cooking.client.model;
 
 import java.util.List;
 
-public class RecipeSearchParamsBuilder
-{
+public class RecipeSearchParamsBuilder {
 	private List<String> keywords;
 
 	private List<String> mealType;

@@ -12,6 +12,6 @@ public record Recipe(
 	List<String> mealType,
 	List<String> dishType,
 	List<String> ingredientLines
-){
+) {
 
 }

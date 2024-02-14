@@ -41,9 +41,9 @@ public class RecipeService {
 		}
 
 		RecipeSearchParams params = RecipeSearchParamsBuilder.withKeywords(keywords)
-															 .withMealType(mealType)
-															 .withHealthRequest(healthRequest)
-															 .build();
+										 .withMealType(mealType)
+										 .withHealthRequest(healthRequest)
+										 .build();
 
 		List<Recipe> localRecipes = getLocalRecipes(params, recipeCount);
 		if (localRecipes.size() == recipeCount) {

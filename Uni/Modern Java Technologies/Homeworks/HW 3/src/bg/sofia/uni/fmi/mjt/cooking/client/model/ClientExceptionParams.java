@@ -4,7 +4,6 @@ public record ClientExceptionParams(
 
 		String error,
 		String property
-)
-{
+) {
 
 }
